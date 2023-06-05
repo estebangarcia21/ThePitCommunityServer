@@ -3,8 +3,7 @@ import os
 import sys
 
 MAX_SERVER_MEMORY_GB = 4
-
-root_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
+PROJECT_ROOT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 
 
 def run_gradle_task(task):
@@ -12,7 +11,7 @@ def run_gradle_task(task):
 
     process = subprocess.Popen(
         command,
-        cwd=root_dir,
+        cwd=PROJECT_ROOT_DIR,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         universal_newlines=True,
@@ -33,7 +32,7 @@ def run_gradle_task(task):
 
 
 def start_minecraft_server(max_memory):
-    local_server_dir = os.path.join(root_dir, '.local-server')
+    local_server_dir = os.path.join(PROJECT_ROOT_DIR, '.local-server')
 
     command = [
         'java',
