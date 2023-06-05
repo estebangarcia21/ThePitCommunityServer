@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.google.inject:guice:4.1.0")
     implementation("com.google.code.gson:gson:2.8.9")
     implementation("org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT")
@@ -38,11 +39,18 @@ kotlin {
     jvmToolchain(11)
 }
 
+
 project.setProperty("mainClassName", "org.thepitcommunityserver.Main")
 
-tasks.register<ShadowJar>("localBuild") {
-    archiveFileName.set("ThePitCommunityServer.jar")
-    destinationDirectory.set(file(".local-server/plugins"))
+tasks.named<ShadowJar>("shadowJar") {
+    archiveFileName.set(findProperty("archiveFileName") as String)
+}
 
-    from (project.sourceSets["main"].output)
+tasks.register<Copy>("localBuild") {
+    dependsOn("shadowJar")
+
+    val out = findProperty("archiveFileName") as String
+
+    from(layout.buildDirectory.file("libs/$out"))
+    into(".local-server/plugins")
 }

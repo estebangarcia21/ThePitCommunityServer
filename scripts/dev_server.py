@@ -3,10 +3,30 @@ import os
 
 MAX_SERVER_MEMORY_GB = 4
 
+root_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
+
+
+def run_gradle_task(task):
+    command = ["./gradlew", task]
+
+    process = subprocess.Popen(
+        command,
+        cwd=root_dir,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+    )
+
+    while process.poll() is None:
+        output = process.stdout.readline().rstrip()
+        if output:
+            print(output)
+
+    return process.poll()
+
 
 def start_minecraft_server(max_memory):
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    local_server_dir = os.path.join(current_dir, '..', '.local-server')
+    local_server_dir = os.path.join(root_dir, '.local-server')
 
     command = [
         'java',
@@ -28,6 +48,9 @@ def start_minecraft_server(max_memory):
 
     return process.poll()
 
+
+print('Building plugin...')
+run_gradle_task('localBuild')
 
 exit_code = start_minecraft_server(MAX_SERVER_MEMORY_GB)
 
