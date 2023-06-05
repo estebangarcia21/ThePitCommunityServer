@@ -1,7 +1,6 @@
 @file:Suppress("VulnerableLibrariesLocal")
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.8.21"
@@ -27,6 +26,8 @@ dependencies {
     implementation("com.google.inject:guice:4.1.0")
     implementation("com.google.code.gson:gson:2.8.9")
     implementation("org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT")
+    implementation("software.amazon.awssdk:dynamodb:2.17.34")
+    implementation("software.amazon.awssdk:apache-client:2.17.34")
 }
 
 tasks.test {
