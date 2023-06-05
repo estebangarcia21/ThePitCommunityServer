@@ -6,13 +6,14 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.Mirror
-import org.thepitcommunityserver.game.enchants.lib.NON_EXISTENT
 import org.thepitcommunityserver.game.enchants.lib.getEnchantTierForItem
 import org.thepitcommunityserver.util.leggings
 
 object DamageManager : Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     fun onDamageEvent(event: EntityDamageByEntityEvent) {}
+
+    fun applyDamage(damagee: Player, raw: Double, damager: Player? = null) {}
 
     fun applyTrueDamage(damagee: Player, damager: Player, raw: Double) {
         fun subtractHealth(player: Player, amount: Double) {
@@ -22,7 +23,7 @@ object DamageManager : Listener {
         val leggings = damagee.leggings
         val mirrorTier = getEnchantTierForItem(Mirror, leggings)
 
-        if (mirrorTier == NON_EXISTENT) {
+        if (mirrorTier == null) {
             subtractHealth(damagee, raw)
             return
         }

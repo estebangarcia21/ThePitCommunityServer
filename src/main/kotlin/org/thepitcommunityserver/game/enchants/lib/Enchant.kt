@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.enchants.DevilChicks
 import org.thepitcommunityserver.game.enchants.Gamble
 import org.thepitcommunityserver.game.enchants.Mirror
+import org.thepitcommunityserver.util.syncLoreWithEnchantments
 
 val Enchants = listOf(
     Gamble,
@@ -31,10 +32,6 @@ enum class EnchantType {
     PANTS
 }
 
-data class EnchantContext(val tier: Number)
-
-typealias TierAttributes = Map<String, String>
-
 typealias EnchantDescription = (tier: Int) -> String
 
 data class EnchantConfig(
@@ -46,49 +43,55 @@ data class EnchantConfig(
     val description: EnchantDescription,
 )
 
+fun enchantByName(name: String): Enchant? {
+    return Enchants.find { it.config.name.equals(name, ignoreCase = true)}
+}
+
 /**
  * Gets enchantments in `Name -> Level` manner.
  */
-fun getItemMysticEnchantments(item: ItemStack?): Map<String, Number> {
+fun getItemMysticEnchantments(item: ItemStack?): Map<String, Int> {
     if (item == null) return emptyMap()
 
     val nmsItemStack = CraftItemStack.asNMSCopy(item)
     val compound = nmsItemStack.tag ?: return emptyMap()
 
-    val gson = Gson()
-    val serializedJson = compound.getString("MysticEnchantments")
+    val enchantments = mutableMapOf<String, Int>()
+    val enchantmentCompound = compound.getCompound("MysticEnchantments")
+    val keySet = enchantmentCompound.c()
 
-    @Suppress("UNCHECKED_CAST")
-    return gson.fromJson(serializedJson, Map::class.java) as? Map<String, Double> ?: emptyMap()
+    for (key in keySet) {
+        val value = enchantmentCompound.getInt(key)
+        enchantments[key] = value
+    }
+
+    return enchantments
 }
 
-/**
- * Sets enchantments in a `Name -> Level` format.
- */
-fun setItemMysticEnchantments(item: ItemStack?, enchantments: Map<String, Number>) {
+fun setItemMysticEnchantments(item: ItemStack?, enchantments: Map<String, Int>) {
     if (item == null) return
 
     val nmsItemStack = CraftItemStack.asNMSCopy(item)
     val compound = nmsItemStack.tag ?: NBTTagCompound()
 
-    val gson = Gson()
-    val serializedJson = gson.toJson(enchantments)
+    val enchantmentCompound = NBTTagCompound()
 
-    compound.setString("MysticEnchantments", serializedJson)
+    for ((key, value) in enchantments) {
+        enchantmentCompound.setInt(key, value)
+    }
+
+    compound.set("MysticEnchantments", enchantmentCompound)
     nmsItemStack.tag = compound
     item.itemMeta = CraftItemStack.getItemMeta(nmsItemStack)
+
+    syncLoreWithEnchantments(item)
 }
 
 /**
  * Returns -1 if the item does not have an enchant.
  */
-fun getEnchantTierForItem(enchant: Enchant, item: ItemStack?): Int {
-    if (item == null) return NON_EXISTENT
+fun getEnchantTierForItem(enchant: Enchant, item: ItemStack?): Int? {
+    if (item == null) return null
 
-    val enchantments = getItemMysticEnchantments(item)
-    val tierValue = enchantments[enchant.config.name]
-
-    return tierValue?.toInt() ?: -1
+    return getItemMysticEnchantments(item)[enchant.config.name]
 }
-
-const val NON_EXISTENT = -1

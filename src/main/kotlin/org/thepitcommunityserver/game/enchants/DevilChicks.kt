@@ -54,15 +54,14 @@ object DevilChicks : Enchant {
 
         if (shooter is Player) {
             val bow = shooter.inventory.itemInHand
-            val tier = getEnchantTierForItem(this, bow)
-
-            if (tier == NON_EXISTENT) return
+            val tier = getEnchantTierForItem(this, bow) ?: return
 
             spawnChicks(tier, shooter, projectile)
         }
     }
 
     // TODO: Legacy code, cleanup in the future?
+    // TODO: Force remove chickens after certain time.
     private fun spawnChicks(level: Int, shooter: Player, arrow: Projectile) {
         val world = shooter.world
         val arrowUuid = UUID.randomUUID()

@@ -7,9 +7,6 @@ import org.bukkit.entity.Player
 import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.enchants.lib.getItemMysticEnchantments
 import org.thepitcommunityserver.game.enchants.lib.setItemMysticEnchantments
-import org.thepitcommunityserver.util.applyEnchantmentLore
-import org.thepitcommunityserver.util.parseLore
-import org.thepitcommunityserver.util.updateEnchantmentLore
 
 object MysticEnchantCommand : CommandExecutor {
     const val name = "pitenchant"
@@ -33,7 +30,6 @@ object MysticEnchantCommand : CommandExecutor {
 
         setItemMysticEnchantments(targetItem, enchants)
 
-        applyEnchantmentLore(targetItem, enchant, tier)
         sender.sendMessage("Successfully enchanted.")
 
         return true

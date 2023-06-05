@@ -2,6 +2,7 @@ package org.thepitcommunityserver.util
 
 object Text {
     const val HEART = "❤"
+    const val INFINITY = "∞"
 }
 
 fun formatPercentage(percent: Double?): String {

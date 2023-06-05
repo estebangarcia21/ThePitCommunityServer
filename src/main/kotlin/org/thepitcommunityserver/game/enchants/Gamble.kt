@@ -34,12 +34,14 @@ object Gamble : Enchant {
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerMeleeHitPlayerWithEnchant(this) { damager, damagee, tier ->
+            val damage = damageAmount[tier]
+
             if (chance(PROC_CHANCE)) {
-                damageAmount[tier]?.let { DamageManager.applyTrueDamage(damagee, damager, it) }
+                damage?.let { DamageManager.applyTrueDamage(damagee, damager, it) }
 
                 damager.playSound(damager.location, Sound.NOTE_PLING, 1f, 3f)
             } else {
-                damageAmount[tier]?.let { DamageManager.applyTrueDamage(damager, damager, it) }
+                damage?.let { DamageManager.applyTrueDamage(damager, damager, it) }
 
                 damager.playSound(damager.location, Sound.NOTE_PLING, 1f, 3f)
                 damagee.playSound(damager.location, Sound.NOTE_PLING, 1f, 1.5f)

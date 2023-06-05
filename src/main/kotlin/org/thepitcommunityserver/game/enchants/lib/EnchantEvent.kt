@@ -13,7 +13,7 @@ fun EntityDamageByEntityEvent.damagerMeleeHitPlayerWithEnchant(enchant: Enchant,
 
     if (damager is Player && damagee is Player) {
         val tier = getEnchantTierForItem(enchant, damager.itemInHand)
-        if (tier != NON_EXISTENT) {
+        if (tier != null) {
             callback(damager, damagee, tier)
         }
     }
@@ -28,7 +28,7 @@ fun EntityDamageByEntityEvent.damagerArrowHitPlayerWithEnchant(enchant: Enchant,
 
         if (shooter is Player) {
             val tier = getEnchantTierForItem(enchant, shooter.itemInHand)
-            if (tier != NON_EXISTENT) {
+            if (tier != null) {
                 callback(shooter, damagee, tier)
             }
         }
