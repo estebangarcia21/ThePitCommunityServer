@@ -2,3 +2,8 @@ name: ThePitCommunityServer
 version: 1.0.0
 main: org.thepitcommunityserver.Main
 description: A community driven pit server.
+
+commands:
+  pitenchant:
+    description: Use it to enchant some weapons xD xD
+    usage: /pitenchant

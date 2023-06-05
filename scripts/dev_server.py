@@ -1,5 +1,6 @@
 import subprocess
 import os
+import sys
 
 MAX_SERVER_MEMORY_GB = 4
 
@@ -22,7 +23,13 @@ def run_gradle_task(task):
         if output:
             print(output)
 
-    return process.poll()
+    exit_code = process.poll()
+
+    if exit_code != 0:
+        print("Gradle task failed with exit code:", exit_code)
+        sys.exit(1)
+
+    return exit_code
 
 
 def start_minecraft_server(max_memory):

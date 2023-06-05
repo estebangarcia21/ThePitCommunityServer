@@ -13,10 +13,16 @@ object Gamble : Enchant {
             name = "Gamble",
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
-            rare = true
-        ) { tier -> "<light-purple>50% chance</light-purple> to deal <red>${hearts[tier]}${Text.HEART}</red> true<br/>damage to whoever you hit, or to<br/>yourself" }
+            rare = true,
+            type = EnchantType.SWORD,
+            description
+        )
 
-    private const val procChance = 0.5
+    private val description: EnchantDescription = { tier ->
+        "<light-purple>50% chance</light-purple> to deal <red>${hearts[tier]}${Text.HEART}</red> true<br/>damage to whoever you hit, or to<br/>yourself"
+    }
+
+    private const val PROC_CHANCE = 0.5
 
     private val damageAmount = mapOf(
         1 to 2.0,
@@ -28,7 +34,7 @@ object Gamble : Enchant {
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerMeleeHitPlayerWithEnchant(this) { damager, damagee, tier ->
-            if (chance(procChance)) {
+            if (chance(PROC_CHANCE)) {
                 damageAmount[tier]?.let { DamageManager.applyTrueDamage(damagee, damager, it) }
 
                 damager.playSound(damager.location, Sound.NOTE_PLING, 1f, 3f)
