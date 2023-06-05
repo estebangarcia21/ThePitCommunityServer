@@ -14,11 +14,11 @@ object Mirror : Enchant {
             description
         )
 
-    private val description: EnchantDescription = { tier ->
-        if (tier == 1) {
+    private val description: EnchantDescription = {
+        if (it == 1) {
             "You are immune to true damage"
         } else {
-            "You do not take true damage and<br/>instead reflect <yellow>${formatPercentage(reflectionAmounts[tier])}</yellow> of it to<br/>your attacker"
+            "You do not take true damage and<br/>instead reflect <yellow>${formatPercentage(reflectionAmounts[it])}</yellow> of it to<br/>your attacker"
         }
     }
 

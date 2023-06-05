@@ -18,9 +18,7 @@ object Gamble : Enchant {
             description
         )
 
-    private val description: EnchantDescription = { tier ->
-        "<light-purple>50% chance</light-purple> to deal <red>${hearts[tier]}${Text.HEART}</red> true<br/>damage to whoever you hit, or to<br/>yourself"
-    }
+    private val description: EnchantDescription = { "<light-purple>50% chance</light-purple> to deal <red>${hearts[it]}${Text.HEART}</red> true<br/>damage to whoever you hit, or to<br/>yourself" }
 
     private const val PROC_CHANCE = 0.5
 

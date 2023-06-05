@@ -29,12 +29,12 @@ object DevilChicks : Enchant {
             description
         )
 
-    private val description: EnchantDescription = { tier ->
+    private val description: EnchantDescription = {
         val word = mapOf(
             1 to "with",
             2 to "many",
             3 to "too many"
-        )[tier]
+        )[it]
 
         "Arrows spawn with $word explosive chickens."
     }
