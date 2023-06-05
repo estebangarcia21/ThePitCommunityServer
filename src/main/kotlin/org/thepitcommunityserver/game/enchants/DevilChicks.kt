@@ -62,6 +62,7 @@ object DevilChicks : Enchant {
         }
     }
 
+    // TODO: Legacy code, cleanup in the future?
     private fun spawnChicks(level: Int, shooter: Player, arrow: Projectile) {
         val world = shooter.world
         val arrowUuid = UUID.randomUUID()
