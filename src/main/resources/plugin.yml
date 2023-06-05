@@ -1,0 +1,4 @@
+name: ThePitCommunityServer
+version: 1.0.0
+main: org.thepitcommunityserver.Main
+description: A community driven pit server.

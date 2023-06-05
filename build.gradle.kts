@@ -1,11 +1,16 @@
+@file:Suppress("VulnerableLibrariesLocal")
+
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
+
 plugins {
     kotlin("jvm") version "1.8.21"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     application
 }
 
 group = "org.thepitcommunityserver"
-version = "1.0-SNAPSHOT"
+version = "0.0.1-BETA"
 
 repositories {
     mavenCentral()
@@ -32,6 +37,11 @@ kotlin {
     jvmToolchain(11)
 }
 
-application {
-    mainClass.set("MainKt")
+project.setProperty("mainClassName", "org.thepitcommunityserver.Main")
+
+tasks.register<ShadowJar>("localBuild") {
+    archiveFileName.set("ThePitCommunityServer.jar")
+    destinationDirectory.set(file(".local-server/plugins"))
+
+    from (project.sourceSets["main"].output)
 }

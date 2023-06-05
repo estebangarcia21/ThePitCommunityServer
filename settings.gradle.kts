@@ -1,3 +1,3 @@
 
-rootProject.name = "ThePitCommunityServer"
+rootProject.name = "ThePitCommunityServer.jar"
 
