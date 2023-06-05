@@ -58,9 +58,9 @@ def start_minecraft_server(max_memory):
 print('Building plugin...')
 run_gradle_task('localBuild')
 
-exit_code = start_minecraft_server(MAX_SERVER_MEMORY_GB)
+mc_server_exit_code = start_minecraft_server(MAX_SERVER_MEMORY_GB)
 
-if exit_code == 0:
+if mc_server_exit_code == 0:
     print("Server stopped successfully.")
 else:
-    print("Server stopped with an error. Exit code:", exit_code)
+    print("Server stopped with an error. Exit code:", mc_server_exit_code)
