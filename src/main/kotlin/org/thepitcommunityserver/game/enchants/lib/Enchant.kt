@@ -5,15 +5,18 @@ import net.minecraft.server.v1_8_R3.NBTTagCompound
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
+import org.thepitcommunityserver.game.enchants.Chipping
 import org.thepitcommunityserver.game.enchants.DevilChicks
 import org.thepitcommunityserver.game.enchants.Gamble
 import org.thepitcommunityserver.game.enchants.Mirror
 import org.thepitcommunityserver.util.syncLoreWithEnchantments
 
+
 val Enchants = listOf(
     Gamble,
     Mirror,
-    DevilChicks
+    DevilChicks,
+    Chipping,
 )
 
 interface Enchant : Listener {
