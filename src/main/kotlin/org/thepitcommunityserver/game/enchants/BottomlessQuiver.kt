@@ -5,7 +5,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.enchants.lib.*
-import org.thepitcommunityserver.util.Text
 
 object BottomlessQuiver : Enchant {
     override val config: EnchantConfig
@@ -28,7 +27,7 @@ object BottomlessQuiver : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerArrowHitPlayerWithEnchant(this) { damager, damagee, tier ->
+        event.damagerArrowHitPlayerWithEnchant(this) { damager, _, tier, _ ->
             val arrows = arrowsGiven[tier]?.let { ItemStack(Material.ARROW, it) }
 
             arrows?.let { damager.inventory.addItem(arrows) }
