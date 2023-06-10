@@ -5,6 +5,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.Text
+import org.thepitcommunityserver.util.undefPropErr
 
 object Chipping : Enchant{
     override val config: EnchantConfig
@@ -30,10 +31,10 @@ object Chipping : Enchant{
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerArrowHitPlayerWithEnchant(this) { damager, damagee, tier, _ ->
-            val damage = damageAmount[tier]
+        event.damagerArrowHitPlayerWithEnchant(this) { damager, damaged, tier, _ ->
+            val damage = damageAmount[tier] ?: undefPropErr("damageAmount", tier)
 
-            damage?.let { DamageManager.applyTrueDamage(damagee, damager, it) }
+            DamageManager.applyTrueDamage(damaged, damager, damage)
         }
     }
 }
