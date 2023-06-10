@@ -28,9 +28,9 @@ object BottomlessQuiver : Enchant {
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerArrowHitPlayerWithEnchant(this) { damager, _, tier, _ ->
-            val arrows = arrowsGiven[tier]?.let { ItemStack(Material.ARROW, it) }
+            val arrows = arrowsGiven[tier]?.let { ItemStack(Material.ARROW, it) } ?: error("arrows is undefined for tier $tier")
 
-            arrows?.let { damager.inventory.addItem(arrows) }
+            damager.inventory.addItem(arrows)
         }
     }
 }
