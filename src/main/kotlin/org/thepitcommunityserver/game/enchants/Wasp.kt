@@ -15,9 +15,8 @@ object Wasp : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.BOW,
-            description
-        )
+            type = EnchantType.BOW
+        ) { "Apply <red>Weakness ${intToRoman(amplifier[it])}</red> (${duration[it]}s) on hit" }
 
     private val amplifier = mapOf(
         1 to 1,
@@ -30,11 +29,9 @@ object Wasp : Enchant {
         3 to 16
     )
 
-    private val description: EnchantDescription = { "Apply <red>Weakness ${intToRoman(amplifier[it])}</red> (${duration[it]}s) on hit" }
-
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerArrowHitPlayerWithEnchant(this) { damager, damaged, tier, _ ->
+        event.damagerArrowHitPlayerWithEnchant(this) { _, damaged, tier, _ ->
             val amplifier = amplifier[tier] ?: undefPropErr("amplifier", tier)
             val duration = duration[tier] ?: undefPropErr("duration", tier)
 

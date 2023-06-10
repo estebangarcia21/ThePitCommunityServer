@@ -3,6 +3,7 @@ package org.thepitcommunityserver.game.enchants.lib
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.thepitcommunityserver.util.leggings
 import kotlin.random.Random
 
 typealias EntityDamageByEntityEventCallback<C> = (damager: Player, damaged: Player, tier: Int, ctx: C) -> Unit
@@ -43,6 +44,34 @@ fun EntityDamageByEntityEvent.arrowHitBlockingPlayer(enchant: Enchant, callback:
             if (damaged.isBlocking) {
                 callback(damager, damaged, tier, ctx)
             }
+        }
+    }
+}
+
+data class DamagedReceivedAnyHitWithPantsEnchantContext(val arrow: ArrowHitPlayerContext?) {
+    val hitByMelee = arrow == null
+    val hitByArrow = arrow != null
+}
+
+fun EntityDamageByEntityEvent.damagedReceivedAnyHitWithPantsEnchant(enchant: Enchant, callback: EntityDamageByEntityEventCallback<DamagedReceivedAnyHitWithPantsEnchantContext>) {
+    val damaged = this.entity
+    val damager = this.damager
+
+    if (damaged !is Player) return
+
+    val tier = getEnchantTierForItem(enchant, damaged.leggings) ?: return
+
+    when (damager) {
+        is Player -> {
+            callback(damager, damaged, tier, DamagedReceivedAnyHitWithPantsEnchantContext(null))
+        }
+        is Arrow -> {
+            val shooter = damager.shooter
+            if (damager.shooter !is Player) return
+
+            callback(shooter as Player, damaged, tier, DamagedReceivedAnyHitWithPantsEnchantContext(
+                ArrowHitPlayerContext(damager)
+            ))
         }
     }
 }

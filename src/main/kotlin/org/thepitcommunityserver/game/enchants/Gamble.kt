@@ -16,10 +16,7 @@ object Gamble : Enchant {
             group = EnchantGroup.A,
             rare = true,
             type = EnchantType.SWORD,
-            description
-        )
-
-    private val description: EnchantDescription = { "<light-purple>50% chance</light-purple> to deal <red>${hearts[it]}${Text.HEART}</red> true<br/>damage to whoever you hit, or to<br/>yourself" }
+        ) { "<light-purple>50% chance</light-purple> to deal <red>${hearts[it]}${Text.HEART}</red> true<br/>damage to whoever you hit, or to<br/>yourself" }
 
     private const val PROC_CHANCE = 0.5
 
