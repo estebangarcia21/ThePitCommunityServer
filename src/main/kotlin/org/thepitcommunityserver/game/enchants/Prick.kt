@@ -7,30 +7,30 @@ import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.Text
 import org.thepitcommunityserver.util.undefPropErr
 
-object Parasite : Enchant {
+object Prick : Enchant {
     override val config: EnchantConfig
         get() = EnchantConfig(
-            name = "Wasp",
+            name = "Prick",
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.BOW
-        ) { "Heal <red>${hearts[it]}${Text.HEART}</red>"}
+            type = EnchantType.PANTS
+        ) { "Heal <red>${hearts[it]}${Text.HEART}</red> on arrow hit" }
 
-    private val healAmount = mapOf(
+    private val damageAmount = mapOf(
         1 to 0.5,
-        2 to 1.0,
-        3 to 2.0
+        2 to 0.75,
+        3 to 1.0
     )
 
-    private val hearts = healAmount.mapValues { it.value / 2f }
+    private val hearts = damageAmount.mapValues { it.value / 2f }
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerArrowHitPlayerWithEnchant(this) { damager, _, tier, _ ->
-            val heal = healAmount[tier] ?: undefPropErr("healAmount", tier)
+        event.damagedReceivedAnyHitWithPantsEnchant(this) { damager, damaged, tier, _ ->
+            val damage = damageAmount[tier] ?: undefPropErr("damageAmount", tier)
 
-            DamageManager.applyHeal(damager, heal)
+            DamageManager.applyTrueDamage(damager, damaged, damage)
         }
     }
 }

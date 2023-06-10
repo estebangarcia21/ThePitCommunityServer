@@ -6,7 +6,9 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.thepitcommunityserver.game.enchants.lib.Enchant
 import org.thepitcommunityserver.game.enchants.lib.*
+import org.thepitcommunityserver.util.Timer
 import org.thepitcommunityserver.util.intToRoman
+import org.thepitcommunityserver.util.seconds
 import org.thepitcommunityserver.util.undefPropErr
 
 object Crush : Enchant {
@@ -16,9 +18,8 @@ object Crush : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.SWORD,
-            description
-        )
+            type = EnchantType.SWORD
+        ) { "Strikes apply <red>Weakness ${intToRoman(amplifier[it])}</red><br/>(lasts, ${durationName[it]}, 2s cooldown)" }
 
     private val amplifier = mapOf(
         1 to 4,
@@ -30,9 +31,12 @@ object Crush : Enchant {
         2 to 8,
         3 to 10
     )
+
+    private val cooldown = 2L.seconds()
+
     private val durationName = duration.mapValues { it.value / 20f }
 
-    private val description: EnchantDescription = { "Strikes apply <red>Weakness ${intToRoman(amplifier[it])}</red><br/>(lasts, ${durationName[it]}, 2s cooldown)" }
+    private val timer = Timer()
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
@@ -40,8 +44,9 @@ object Crush : Enchant {
             val amplifier = amplifier[tier] ?: undefPropErr("amplifier", tier)
             val duration = duration[tier] ?: undefPropErr("duration", tier)
 
-            damaged.player.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, duration, amplifier, true))
-            //TODO Create Global timer for the cooldown ... can work on later on
+            timer.cooldown(damager.uniqueId, cooldown) {
+                damaged.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, duration, amplifier, true))
+            }
         }
     }
 }

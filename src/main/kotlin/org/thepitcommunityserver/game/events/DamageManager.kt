@@ -13,18 +13,16 @@ object DamageManager : Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     fun onDamageEvent(event: EntityDamageByEntityEvent) {}
 
-    fun applyDamage(damagee: Player, raw: Double, damager: Player? = null) {}
-
-    fun applyTrueDamage(damagee: Player, damager: Player, raw: Double) {
+    fun applyTrueDamage(target: Player, damager: Player, raw: Double) {
         fun subtractHealth(player: Player, amount: Double) {
             player.health = (player.health - amount).coerceAtLeast(0.0)
         }
 
-        val leggings = damagee.leggings
+        val leggings = target.leggings
         val mirrorTier = getEnchantTierForItem(Mirror, leggings)
 
         if (mirrorTier == null) {
-            subtractHealth(damagee, raw)
+            subtractHealth(target, raw)
             return
         }
 
@@ -32,9 +30,7 @@ object DamageManager : Listener {
         reflectionAmount?.let { subtractHealth(damager, raw * it) }
     }
 
-    fun applyHeal(damagee: Player, damager: Player, raw:Double) {
-        fun addHealth(player: Player, amount: Double) {
-            player.health = (player.health + amount).coerceAtMost(player.maxHealth)
-        }
+    fun applyHeal(target: Player, amount: Double) {
+        target.health = (target.health + amount).coerceAtMost(target.maxHealth)
     }
 }

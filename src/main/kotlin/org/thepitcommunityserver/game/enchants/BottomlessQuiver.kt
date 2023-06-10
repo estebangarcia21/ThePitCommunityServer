@@ -13,17 +13,14 @@ object BottomlessQuiver : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.BOW,
-            description
-        )
+            type = EnchantType.BOW
+        ) { "Get <white>${arrowsGiven[it]} arrows</white> on arrow hit" }
 
     private val arrowsGiven = mapOf(
         1 to 1,
         2 to 3,
         3 to 8
     )
-
-    private val description: EnchantDescription = { "Get <white>${arrowsGiven[it]} arrows</white> on arrow hit" }
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
