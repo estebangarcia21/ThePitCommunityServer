@@ -2,10 +2,13 @@ package org.thepitcommunityserver.game.enchants
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.thepitcommunityserver.game.enchants.lib.Enchant
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.Text
 import org.thepitcommunityserver.util.intToRoman
+import org.thepitcommunityserver.util.undefPropErr
 
 object Crush : Enchant {
     override val config: EnchantConfig
@@ -35,8 +38,11 @@ object Crush : Enchant {
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerMeleeHitPlayerWithEnchant(this) { damager, damaged, tier, _ ->
-            val amp = amplifier[tier]
-            val duration = duration[tier]
+            val amp = amplifier[tier] ?: undefPropErr("amplifier", tier)
+            val duration = duration[tier] ?: undefPropErr("duration", tier)
+
+            damaged.player.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, duration, amp, true))
+            //TODO Create Global timer for the cooldown ... can work on later on
         }
     }
 }
