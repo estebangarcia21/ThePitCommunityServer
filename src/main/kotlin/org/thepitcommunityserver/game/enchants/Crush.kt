@@ -38,7 +38,5 @@ object Crush : Enchant {
             val amp = amplifier[tier]
             val duration = duration[tier]
         }
-
-
     }
 }

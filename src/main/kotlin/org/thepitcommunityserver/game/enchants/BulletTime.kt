@@ -5,6 +5,7 @@ import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
+import org.thepitcommunityserver.util.undefPropErr
 
 object BulletTime : Enchant {
     override val config: EnchantConfig
@@ -35,6 +36,7 @@ object BulletTime : Enchant {
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.arrowHitBlockingPlayer(this) { _, damaged, tier, ctx ->
             val arrow = ctx.arrow
+            val healAmount = healAmount[tier] ?: undefPropErr("healAmount", tier)
 
             event.isCancelled = true
 
@@ -46,7 +48,7 @@ object BulletTime : Enchant {
             arrow.world.playEffect(arrow.location, Effect.EXPLOSION, 0, 30)
             arrow.remove()
 
-            healAmount[tier]?.let { damaged.health = (damaged.health + it).coerceAtMost(damaged.maxHealth) }
+            damaged.health = (damaged.health + healAmount).coerceAtMost(damaged.maxHealth)
         }
     }
 }
