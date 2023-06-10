@@ -2,9 +2,10 @@ package org.thepitcommunityserver.game.enchants
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.thepitcommunityserver.game.enchants.lib.Enchant
 import org.thepitcommunityserver.game.enchants.lib.*
-import org.thepitcommunityserver.util.Text
 import org.thepitcommunityserver.util.intToRoman
 
 object Crush : Enchant {
@@ -28,17 +29,17 @@ object Crush : Enchant {
         2 to 8,
         3 to 10
     )
+
     private val durationName = duration.mapValues { it.value / 10f }
 
-    private val description: EnchantDescription = { "Strikes apply <red>Weakness ${intToRoman(it)}</red><br/>(lasts, ${durationName[it]}, 2s cooldown)" }
+    private val description: EnchantDescription = { "Strikes apply <red>Weakness ${intToRoman(amplifier[it])}</red><br/>(lasts, ${durationName[it]}, 2s cooldown)" }
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerMeleeHitPlayerWithEnchant(this) { damager, damaged, tier, _ ->
-            val amp = amplifier[tier]
-            val duration = duration[tier]
-        }
 
+            damaged.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, duration[tier], amplifier[tier],true))
+        }
 
     }
 }
