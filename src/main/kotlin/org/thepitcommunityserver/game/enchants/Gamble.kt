@@ -6,6 +6,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.Text
+import org.thepitcommunityserver.util.undefPropErr
 
 object Gamble : Enchant {
     override val config: EnchantConfig
@@ -31,18 +32,18 @@ object Gamble : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerMeleeHitPlayerWithEnchant(this) { damager, damagee, tier, _ ->
-            val damage = damageAmount[tier]
+        event.damagerMeleeHitPlayerWithEnchant(this) { damager, damaged, tier, _ ->
+            val damage = damageAmount[tier] ?: undefPropErr("damageAmount", tier)
 
             if (chance(PROC_CHANCE)) {
-                damage?.let { DamageManager.applyTrueDamage(damagee, damager, it) }
+                DamageManager.applyTrueDamage(damaged, damager, damage)
 
                 damager.playSound(damager.location, Sound.NOTE_PLING, 1f, 3f)
             } else {
-                damage?.let { DamageManager.applyTrueDamage(damager, damager, it) }
+                DamageManager.applyTrueDamage(damager, damager, damage)
 
                 damager.playSound(damager.location, Sound.NOTE_PLING, 1f, 3f)
-                damagee.playSound(damager.location, Sound.NOTE_PLING, 1f, 1.5f)
+                damaged.playSound(damager.location, Sound.NOTE_PLING, 1f, 1.5f)
             }
         }
     }
