@@ -1,33 +1,36 @@
 package org.thepitcommunityserver.game.enchants
 
-import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.enchants.lib.*
+import org.thepitcommunityserver.game.events.DamageManager
+import org.thepitcommunityserver.util.Text
+import org.thepitcommunityserver.util.undefPropErr
 
-object BottomlessQuiver : Enchant {
+object Parasite : Enchant {
     override val config: EnchantConfig
         get() = EnchantConfig(
-            name = "Bottomless Quiver",
+            name = "Wasp",
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
             type = EnchantType.BOW
-        ) { "Get <white>${arrowsGiven[it]} arrows</white> on arrow hit" }
+        ) { "Heal <red>${hearts[it]}${Text.HEART}</red>"}
 
-    private val arrowsGiven = mapOf(
-        1 to 1,
-        2 to 3,
-        3 to 8
+    private val healAmount = mapOf(
+        1 to 0.5,
+        2 to 1.0,
+        3 to 2.0
     )
+
+    private val hearts = healAmount.mapValues { it.value / 2f }
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerArrowHitPlayerWithEnchant(this) { damager, _, tier, _ ->
-            val arrows = arrowsGiven[tier]?.let { ItemStack(Material.ARROW, it) } ?: error("arrows is undefined for tier $tier")
+            val heal = healAmount[tier] ?: undefPropErr("healAmount", tier)
 
-            damager.inventory.addItem(arrows)
+            DamageManager.applyHeal(damager, heal)
         }
     }
 }

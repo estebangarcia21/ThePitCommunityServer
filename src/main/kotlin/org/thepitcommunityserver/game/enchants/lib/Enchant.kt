@@ -14,7 +14,11 @@ val Enchants = listOf(
     DevilChicks,
     Chipping,
     BottomlessQuiver,
-    BulletTime
+    BulletTime,
+    Crush,
+    Wasp,
+    Parasite,
+    Prick
 )
 
 interface Enchant : Listener {
