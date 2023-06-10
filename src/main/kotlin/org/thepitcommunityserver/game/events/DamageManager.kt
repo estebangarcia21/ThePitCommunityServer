@@ -31,4 +31,10 @@ object DamageManager : Listener {
         val reflectionAmount = Mirror.reflectionAmounts[mirrorTier]
         reflectionAmount?.let { subtractHealth(damager, raw * it) }
     }
+
+    fun applyHeal(damagee: Player, damager: Player, raw:Double) {
+        fun addHealth(player: Player, amount: Double) {
+            player.health = (player.health + amount).coerceAtMost(player.maxHealth)
+        }
+    }
 }
