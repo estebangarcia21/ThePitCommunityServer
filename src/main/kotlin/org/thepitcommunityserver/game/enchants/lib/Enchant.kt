@@ -1,6 +1,5 @@
 package org.thepitcommunityserver.game.enchants.lib
 
-import com.google.gson.Gson
 import net.minecraft.server.v1_8_R3.NBTTagCompound
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
 import org.bukkit.event.Listener
@@ -14,7 +13,8 @@ val Enchants = listOf(
     Mirror,
     DevilChicks,
     Chipping,
-    BottomlessQuiver
+    BottomlessQuiver,
+    BulletTime
 )
 
 interface Enchant : Listener {

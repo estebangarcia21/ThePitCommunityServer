@@ -31,7 +31,7 @@ object Gamble : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerMeleeHitPlayerWithEnchant(this) { damager, damagee, tier ->
+        event.damagerMeleeHitPlayerWithEnchant(this) { damager, damagee, tier, _ ->
             val damage = damageAmount[tier]
 
             if (chance(PROC_CHANCE)) {

@@ -5,31 +5,43 @@ import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import kotlin.random.Random
 
-typealias EntityDamageByEntityEventCallback = (damager: Player, damagee: Player, tier: Int) -> Unit
+typealias EntityDamageByEntityEventCallback<C> = (damager: Player, damaged: Player, tier: Int, ctx: C) -> Unit
 
-fun EntityDamageByEntityEvent.damagerMeleeHitPlayerWithEnchant(enchant: Enchant, callback: EntityDamageByEntityEventCallback) {
-    val damagee = this.entity
+fun EntityDamageByEntityEvent.damagerMeleeHitPlayerWithEnchant(enchant: Enchant, callback: EntityDamageByEntityEventCallback<Unit>) {
+    val damaged = this.entity
     val damager = this.damager
 
-    if (damager is Player && damagee is Player) {
+    if (damager is Player && damaged is Player) {
         val tier = getEnchantTierForItem(enchant, damager.itemInHand)
         if (tier != null) {
-            callback(damager, damagee, tier)
+            callback(damager, damaged, tier, Unit)
         }
     }
 }
 
-fun EntityDamageByEntityEvent.damagerArrowHitPlayerWithEnchant(enchant: Enchant, callback: EntityDamageByEntityEventCallback) {
-    val damagee = this.entity
+data class ArrowHitPlayerContext(val arrow: Arrow)
 
-    if (this.damager is Arrow && damagee is Player) {
+fun EntityDamageByEntityEvent.damagerArrowHitPlayerWithEnchant(enchant: Enchant, callback: EntityDamageByEntityEventCallback<ArrowHitPlayerContext>) {
+    val damaged = this.entity
+
+    if (this.damager is Arrow && damaged is Player) {
         val arrow = this.damager as Arrow
         val shooter = arrow.shooter
 
         if (shooter is Player) {
             val tier = getEnchantTierForItem(enchant, shooter.itemInHand)
             if (tier != null) {
-                callback(shooter, damagee, tier)
+                callback(shooter, damaged, tier, ArrowHitPlayerContext(arrow))
+            }
+        }
+    }
+}
+
+fun EntityDamageByEntityEvent.arrowHitBlockingPlayer(enchant: Enchant, callback: EntityDamageByEntityEventCallback<ArrowHitPlayerContext>) {
+    this.damagerArrowHitPlayerWithEnchant(enchant) { damager, damaged, tier, ctx ->
+        run {
+            if (damaged.isBlocking) {
+                callback(damager, damaged, tier, ctx)
             }
         }
     }

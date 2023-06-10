@@ -30,7 +30,7 @@ object Chipping : Enchant{
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerArrowHitPlayerWithEnchant(this) { damager, damagee, tier ->
+        event.damagerArrowHitPlayerWithEnchant(this) { damager, damagee, tier, _ ->
             val damage = damageAmount[tier]
 
             damage?.let { DamageManager.applyTrueDamage(damagee, damager, it) }
