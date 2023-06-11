@@ -43,3 +43,4 @@ venv
 ### Mac OS ###
 .DS_Store
 .local-server
+tmp

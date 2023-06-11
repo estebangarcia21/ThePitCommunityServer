@@ -37,7 +37,7 @@ object MegaLongbow : Enchant {
 
             timer.cooldown(damager.uniqueId, cooldown) {
                 arrow.isCritical = true
-                arrow.velocity = damager.location.direction.multiply(100.0)
+                arrow.velocity = damager.location.direction.multiply(2.9)
                 damager.addPotionEffect(PotionEffect(PotionEffectType.JUMP, 2L.seconds().toInt(), amplifier, true))
             }
         }

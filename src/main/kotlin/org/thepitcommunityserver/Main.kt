@@ -5,12 +5,10 @@ import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import org.thepitcommunityserver.game.commands.MysticEnchantCommand
-import org.thepitcommunityserver.game.enchants.DevilChicks
-import org.thepitcommunityserver.game.enchants.Gamble
-import org.thepitcommunityserver.game.enchants.Mirror
 import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.game.events.PlayerJoinLeaveMessages
+import org.thepitcommunityserver.game.experience.Spawn
 
 @Suppress("unused")
 class Main : JavaPlugin() {
@@ -28,8 +26,20 @@ class Main : JavaPlugin() {
 
         registerEvents(DamageManager)
         registerEvents(PlayerJoinLeaveMessages)
+        registerEvents(Spawn)
+
+        enableGameRulesForDefaultWorld()
 
         plugin.getCommand(MysticEnchantCommand.name).executor = MysticEnchantCommand
+    }
+
+    private fun enableGameRulesForDefaultWorld() {
+        Bukkit.getWorlds().forEach {
+            it.setGameRuleValue("doFireTick", "false")
+            it.setGameRuleValue("doImmediateFireSpread", "false")
+            it.setGameRuleValue("doMobSpawning", "false")
+            it.setGameRuleValue("keepInventory", "true")
+        }
     }
 
     private fun registerEvents(listener: Listener) {

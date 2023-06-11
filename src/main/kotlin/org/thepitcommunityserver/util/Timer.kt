@@ -38,10 +38,11 @@ class Timer {
     }
 
     fun removeCooldown(uuid: UUID) {
-        timer.remove(uuid)
-
         val taskId = tasks[uuid] ?: return
+
         Bukkit.getScheduler().cancelTask(taskId)
+        timer.remove(uuid)
+        tasks.remove(uuid)
     }
 
      private fun scheduleTimer(uuid: UUID, post: Runnable?) {
