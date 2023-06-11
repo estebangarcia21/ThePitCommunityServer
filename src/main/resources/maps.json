@@ -1,0 +1,19 @@
+{
+  "$schema": "maps.schema.json",
+  "elemental": {
+    "shopVillager": [2.5, 114, 12.5],
+    "perkVillager": [-1.5, 114, 12.5],
+    "prestigeVillager": [0.5, 115, -11.5],
+    "questMaster": [10, 114, -4.5],
+    "leaderboard": [13.5, 114, 0.5],
+    "statsVillager": [11.5, 114, 5.5],
+    "unlockedFeatures": [-6.5, 114, 11.5],
+    "enderChest": [-12.5, 11.5, 7.5],
+    "keeper": [-11.5, 114, -4.5],
+    "center": [0.5, 115, 0.5],
+    "spawnPoints": [
+      [-10.5, 114, -4.5],
+      [10.5, 114, -4.5]
+    ]
+  }
+}
