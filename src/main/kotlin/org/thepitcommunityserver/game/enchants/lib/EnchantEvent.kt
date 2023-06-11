@@ -3,10 +3,12 @@ package org.thepitcommunityserver.game.enchants.lib
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityShootBowEvent
 import org.thepitcommunityserver.util.leggings
 import kotlin.random.Random
 
 typealias EntityDamageByEntityEventCallback<C> = (damager: Player, damaged: Player, tier: Int, ctx: C) -> Unit
+typealias EntityShootBowEventCallback<C> = (shooter: Player, tier: Int, ctx: C) -> Unit
 
 fun EntityDamageByEntityEvent.damagerMeleeHitPlayerWithEnchant(enchant: Enchant, callback: EntityDamageByEntityEventCallback<Unit>) {
     val damaged = this.entity
@@ -74,6 +76,20 @@ fun EntityDamageByEntityEvent.damagedReceivedAnyHitWithPantsEnchant(enchant: Enc
             ))
         }
     }
+}
+
+data class ArrowShotWithEnchantContext(val arrow: Arrow)
+
+fun EntityShootBowEvent.arrowShotWithEnchant(enchant: Enchant, callback: EntityShootBowEventCallback<ArrowShotWithEnchantContext>) {
+    val shooter = this.entity
+    val arrow = this.projectile
+
+    if (shooter !is Player || arrow !is Arrow) return
+
+    val bow = shooter.itemInHand
+    val tier = getEnchantTierForItem(enchant, bow) ?: return
+
+    callback(shooter, tier, ArrowShotWithEnchantContext(arrow))
 }
 
 fun chance(percent: Double): Boolean {
