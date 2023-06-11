@@ -42,10 +42,8 @@ fun EntityDamageByEntityEvent.damagerArrowHitPlayerWithEnchant(enchant: Enchant,
 
 fun EntityDamageByEntityEvent.arrowHitBlockingPlayer(enchant: Enchant, callback: EntityDamageByEntityEventCallback<ArrowHitPlayerContext>) {
     this.damagerArrowHitPlayerWithEnchant(enchant) { damager, damaged, tier, ctx ->
-        run {
-            if (damaged.isBlocking) {
-                callback(damager, damaged, tier, ctx)
-            }
+        if (damaged.isBlocking) {
+            callback(damager, damaged, tier, ctx)
         }
     }
 }
