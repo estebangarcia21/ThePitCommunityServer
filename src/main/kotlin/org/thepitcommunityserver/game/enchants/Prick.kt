@@ -15,7 +15,7 @@ object Prick : Enchant {
             group = EnchantGroup.A,
             rare = false,
             type = EnchantType.PANTS
-        ) { "Heal <red>${hearts[it]}${Text.HEART}</red> on arrow hit" }
+        ) { "Enemies hitting you receive <red>${hearts[it]}${Text.HEART}</red> true damage" }
 
     private val damageAmount = mapOf(
         1 to 0.5,
