@@ -10,7 +10,7 @@ import org.thepitcommunityserver.game.enchants.lib.getEnchantTierForItem
 import org.thepitcommunityserver.util.leggings
 
 object DamageManager : Listener {
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun onDamageEvent(event: EntityDamageByEntityEvent) {}
 
     fun applyTrueDamage(target: Player, damager: Player, raw: Double) {

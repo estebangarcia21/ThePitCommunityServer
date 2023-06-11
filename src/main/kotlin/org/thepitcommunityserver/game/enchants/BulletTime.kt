@@ -3,6 +3,7 @@ package org.thepitcommunityserver.game.enchants
 import org.bukkit.Effect
 import org.bukkit.Sound
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.undefPropErr
@@ -32,7 +33,7 @@ object BulletTime : Enchant {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.arrowHitBlockingPlayer(this) { _, damaged, tier, ctx ->
             val arrow = ctx.arrow

@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.thepitcommunityserver.game.commands.MysticEnchantCommand
 import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.events.DamageManager
+import org.thepitcommunityserver.game.events.NoFallDamage
 import org.thepitcommunityserver.game.events.PlayerJoinLeaveMessages
 import org.thepitcommunityserver.game.experience.Spawn
 
@@ -25,8 +26,12 @@ class Main : JavaPlugin() {
         Enchants.forEach(::registerEvents)
 
         registerEvents(DamageManager)
-        registerEvents(PlayerJoinLeaveMessages)
-        registerEvents(Spawn)
+
+        listOf(
+            Spawn,
+            NoFallDamage,
+            PlayerJoinLeaveMessages
+        ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
 
