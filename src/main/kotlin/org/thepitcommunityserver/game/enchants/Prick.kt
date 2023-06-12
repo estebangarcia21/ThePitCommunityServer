@@ -24,7 +24,6 @@ object Prick : Enchant {
     )
 
     private val hearts = damageAmount.mapValues { it.value / 2f }
-
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagedReceivedAnyHitWithPantsEnchant(this) { damager, damaged, tier, _ ->

@@ -15,7 +15,7 @@ object Assassin : Enchant {
             group = EnchantGroup.A,
             rare = true,
             type = EnchantType.PANTS,
-            {"Sneaking teleports you behind<br/>your attacker ${cooldownTime[it]?.seconds()}s cooldown)"}
+            { "Sneaking teleports you behind<br/>your attacker ${cooldownTime[it]?.seconds()}s cooldown)" }
         )
 
     private val cooldownTime = mapOf(

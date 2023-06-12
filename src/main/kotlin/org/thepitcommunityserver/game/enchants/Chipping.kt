@@ -15,7 +15,7 @@ object Chipping : Enchant{
             group = EnchantGroup.B,
             rare = false,
             type = EnchantType.BOW,
-            description
+            { "Deals <red>${hearts[it]}${Text.HEART}</red> extra true damage" }
         )
 
     private val damageAmount = mapOf(
@@ -26,9 +26,6 @@ object Chipping : Enchant{
         5 to 4.0,
     )
     private val hearts = damageAmount.mapValues { it.value / 2f }
-
-    private val description: EnchantDescription = {"Deals <red>${hearts[it]}${Text.HEART}</red> extra true damage"}
-
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerArrowHitPlayerWithEnchant(this) { damager, damaged, tier, _ ->
