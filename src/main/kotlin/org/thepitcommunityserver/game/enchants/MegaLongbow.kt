@@ -5,10 +5,7 @@ import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.thepitcommunityserver.game.enchants.lib.*
-import org.thepitcommunityserver.util.Timer
-import org.thepitcommunityserver.util.intToRoman
-import org.thepitcommunityserver.util.seconds
-import org.thepitcommunityserver.util.undefPropErr
+import org.thepitcommunityserver.util.*
 
 object MegaLongbow : Enchant {
     override val config: EnchantConfig
@@ -18,16 +15,17 @@ object MegaLongbow : Enchant {
         group = EnchantGroup.B,
         rare = false,
         type = EnchantType.BOW
-    ) { "One shot per second, this bow is<br/>automatically fully drawn and<br/>grants <green>Jump Boost ${intToRoman(amplifier[it])}</green> (2s)" }
+    ) { "One shot per second, this bow is<br/>automatically fully drawn and<br/>grants <green>Jump Boost ${intToRoman(amplifier[it]?.inc())}</green> (2s)" }
 
     private val amplifier = mapOf(
-        1 to 2,
-        2 to 3,
-        3 to 4
+        1 to 1,
+        2 to 2,
+        3 to 3
     )
 
     private val timer = Timer()
-    private val cooldown = 1L.seconds()
+    private val cooldown = Time(1L * SECONDS)
+    private val potionCooldown = Time(2L * SECONDS)
 
     @EventHandler
     fun onArrowShoot(event: EntityShootBowEvent) {
@@ -35,10 +33,10 @@ object MegaLongbow : Enchant {
             val arrow = ctx.arrow
             val amplifier = amplifier[tier] ?: undefPropErr("amplifier", tier)
 
-            timer.cooldown(damager.uniqueId, cooldown) {
+            timer.cooldown(damager.uniqueId, cooldown.ticks()) {
                 arrow.isCritical = true
                 arrow.velocity = damager.location.direction.multiply(2.9)
-                damager.addPotionEffect(PotionEffect(PotionEffectType.JUMP, 2L.seconds().toInt(), amplifier, true))
+                damager.addPotionEffect(PotionEffect(PotionEffectType.JUMP, potionCooldown.ticks().toInt(), amplifier, true))
             }
         }
     }
