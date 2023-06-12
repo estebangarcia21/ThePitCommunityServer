@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.enchants.*
 import org.thepitcommunityserver.util.syncLoreWithEnchantments
 
-
 val Enchants = listOf(
     Gamble,
     Mirror,
@@ -19,7 +18,10 @@ val Enchants = listOf(
     Wasp,
     Parasite,
     Prick,
-    MegaLongbow
+    MegaLongbow,
+    Assassin,
+    Peroxide,
+    SpeedyHit
 )
 
 interface Enchant : Listener {

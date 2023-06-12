@@ -4,11 +4,10 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.thepitcommunityserver.game.enchants.lib.Enchant
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.*
 
-object Crush : Enchant {
+object SpeedyHit : Enchant {
     override val config: EnchantConfig
         get() = EnchantConfig(
             name = "Crush",
@@ -16,31 +15,30 @@ object Crush : Enchant {
             group = EnchantGroup.A,
             rare = false,
             type = EnchantType.SWORD
-        ) { "Strikes apply <red>Weakness ${intToRoman(amplifier[it])}</red><br/>(lasts, ${duration[it]?.seconds()}, 2s cooldown)" }
+        ) { "Gain Speed I for <${duration[it]?.seconds()}s</yellow> on hit(${cooldownTime[it]?.seconds()}s<br/>cooldown)" }
 
-    private val amplifier = mapOf(
-        1 to 4,
-        2 to 5,
-        3 to 6
-    )
     private val duration = mapOf(
-        1 to Time(4L * TICK),
-        2 to Time(8L * TICK),
-        3 to Time(10L * TICK)
+        1 to Time(5L * SECONDS),
+        2 to Time(7L * SECONDS),
+        3 to Time(9L * SECONDS)
     )
-
-    private val cooldown = Time(2L * SECONDS)
 
     private val timer = Timer()
 
+    private val cooldownTime  = mapOf(
+        1 to Time(3L * SECONDS),
+        2 to Time(2L * SECONDS),
+        3 to Time(1L * SECONDS)
+    )
+
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerMeleeHitPlayerWithEnchant(this) { damager, damaged, tier, _ ->
-            val amplifier = amplifier[tier] ?: undefPropErr("amplifier", tier)
+        event.damagerMeleeHitPlayerWithEnchant(this){damager, _, tier, _ ->
             val duration = duration[tier] ?: undefPropErr("duration", tier)
+            val cooldownTime = cooldownTime[tier] ?: undefPropErr("cooldownTime", tier)
 
-            timer.cooldown(damager.uniqueId, cooldown.seconds()) {
-                damaged.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, duration.ticks().toInt(), amplifier, true))
+            timer.cooldown(damager.uniqueId, cooldownTime.ticks()) {
+                damager.addPotionEffect(PotionEffect(PotionEffectType.SPEED, duration.ticks().toInt(), 0, true))
             }
         }
     }
