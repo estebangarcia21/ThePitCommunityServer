@@ -10,7 +10,7 @@ import org.thepitcommunityserver.util.Time
 import org.thepitcommunityserver.util.intToRoman
 import org.thepitcommunityserver.util.undefPropErr
 
-object Wasp : Enchant {
+object  Wasp : Enchant {
     override val config: EnchantConfig
         get() = EnchantConfig(
             name = "Wasp",
