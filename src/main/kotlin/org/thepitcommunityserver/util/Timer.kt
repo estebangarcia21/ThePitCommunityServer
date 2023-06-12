@@ -15,12 +15,12 @@ class Timer {
      */
     private val tasks = mutableMapOf<UUID, Int>()
 
-    fun cooldown(uuid: UUID, time: Tick, post: Runnable? = null, resetTime: Boolean = false, operation: Runnable) {
+    fun cooldown(uuid: UUID, ticks: Tick, post: Runnable? = null, resetTime: Boolean = false, operation: Runnable) {
         val cooldown = getCooldown(uuid)
         if (cooldown == null) {
             operation.run()
 
-            setCooldown(uuid, time, resetTime, post)
+            setCooldown(uuid, ticks, resetTime, post)
         }
     }
 
