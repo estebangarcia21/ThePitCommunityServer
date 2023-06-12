@@ -26,7 +26,6 @@ object Gamble : Enchant {
         3 to 6.0
     )
     private val hearts = damageAmount.mapValues { it.value / 2f }
-
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerMeleeHitPlayerWithEnchant(this) { damager, damaged, tier, _ ->

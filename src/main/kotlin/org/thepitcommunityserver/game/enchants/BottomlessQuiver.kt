@@ -21,7 +21,6 @@ object BottomlessQuiver : Enchant {
         2 to 3,
         3 to 8
     )
-
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerArrowHitPlayerWithEnchant(this) { damager, _, tier, _ ->

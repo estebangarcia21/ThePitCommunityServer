@@ -30,7 +30,6 @@ object Wasp : Enchant {
         2 to Time(11L * SECONDS),
         3 to Time(16L * SECONDS)
     )
-
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerArrowHitPlayerWithEnchant(this) { _, damaged, tier, _ ->

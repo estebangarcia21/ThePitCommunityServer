@@ -46,7 +46,6 @@ object DevilChicks : Enchant {
     )
 
     private val devilChickAnimations = HashMap<UUID, Int>()
-
     @EventHandler
     fun onArrowLand(event: ProjectileHitEvent) {
         val projectile = event.entity

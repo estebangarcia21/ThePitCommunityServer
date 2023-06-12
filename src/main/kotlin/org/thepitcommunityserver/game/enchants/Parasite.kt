@@ -24,7 +24,6 @@ object Parasite : Enchant {
     )
 
     private val hearts = healAmount.mapValues { it.value / 2f }
-
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerArrowHitPlayerWithEnchant(this) { damager, _, tier, _ ->

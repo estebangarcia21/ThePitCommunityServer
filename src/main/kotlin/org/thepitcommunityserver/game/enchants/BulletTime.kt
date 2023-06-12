@@ -18,13 +18,14 @@ object BulletTime : Enchant {
             type = EnchantType.SWORD,
             description
         )
+
     private val healAmount = mapOf(
         1 to 0.0,
         2 to 2.0,
         3 to 3.0
     )
-    private val hearts = healAmount.mapValues { it.value / 2f }
 
+    private val hearts = healAmount.mapValues { it.value / 2f }
     private val description: EnchantDescription = {
         if (it == 1) {
             "Blocking destroys arrows that hit<br/>you"
@@ -32,7 +33,6 @@ object BulletTime : Enchant {
             "Blocking destroys arrows that hit<br/>you. Destroying arrows this way heals <red>${hearts[it]}❤</red>"
         }
     }
-
     @EventHandler(priority = EventPriority.HIGH)
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.arrowHitBlockingPlayer(this) { _, damaged, tier, ctx ->

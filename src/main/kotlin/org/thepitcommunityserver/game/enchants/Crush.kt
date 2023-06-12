@@ -29,9 +29,8 @@ object Crush : Enchant {
         3 to Time(10L * TICK)
     )
 
-    private val cooldown = Time(2L * SECONDS)
-
     private val timer = Timer()
+    private val cooldown = Time(2L * SECONDS)
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {

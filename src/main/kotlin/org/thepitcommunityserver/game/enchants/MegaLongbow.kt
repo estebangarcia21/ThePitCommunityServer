@@ -26,7 +26,6 @@ object MegaLongbow : Enchant {
     private val timer = Timer()
     private val cooldown = Time(1L * SECONDS)
     private val potionCooldown = Time(2L * SECONDS)
-
     @EventHandler
     fun onArrowShoot(event: EntityShootBowEvent) {
         event.arrowShotWithEnchant(this) { damager, tier, ctx ->

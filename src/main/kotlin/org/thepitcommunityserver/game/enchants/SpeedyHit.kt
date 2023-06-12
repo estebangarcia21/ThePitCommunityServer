@@ -15,7 +15,9 @@ object SpeedyHit : Enchant {
             group = EnchantGroup.A,
             rare = false,
             type = EnchantType.SWORD
-        ) { "Gain Speed I for <${duration[it]?.seconds()}s</yellow> on hit(${cooldownTime[it]?.seconds()}s<br/>cooldown)" }
+        ) { "Gain Speed I for <${duration[it]?.seconds() }s</yellow> on hit(${cooldownTime[it]?.seconds()}s<br/>cooldown)" }
+
+    private val timer = Timer()
 
     private val duration = mapOf(
         1 to Time(5L * SECONDS),
@@ -23,14 +25,11 @@ object SpeedyHit : Enchant {
         3 to Time(9L * SECONDS)
     )
 
-    private val timer = Timer()
-
     private val cooldownTime  = mapOf(
         1 to Time(3L * SECONDS),
         2 to Time(2L * SECONDS),
         3 to Time(1L * SECONDS)
     )
-
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerMeleeHitPlayerWithEnchant(this){damager, _, tier, _ ->
