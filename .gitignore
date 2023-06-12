@@ -44,3 +44,4 @@ venv
 .DS_Store
 .local-server
 tmp
+scripts/buildtools
