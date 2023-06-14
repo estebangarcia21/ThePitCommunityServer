@@ -1,5 +1,6 @@
 import os
 import platform
+import shutil
 import subprocess
 import urllib.request
 
@@ -17,7 +18,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 build_tools_dir = os.path.join(script_dir, "buildtools")
 
 try:
-    os.rmdir(build_tools_dir)
+    shutil.rmtree(build_tools_dir)
     print("Previous buildtools directory removed.")
 except FileNotFoundError:
     pass
