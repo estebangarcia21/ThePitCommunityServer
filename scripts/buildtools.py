@@ -44,9 +44,9 @@ java_command = "java"
 if platform.system() == "Windows":
     java_command = "javaw"
 
-subprocess.run([java_command, f"-jar {os.path.join(script_dir, 'buildtools', build_tools_file)} --rev {spigot_version}"],
-               cwd=os.path.join(script_dir, "buildtools"), shell=True)
+subprocess.run(f"{java_command} -jar {build_tools_file} --rev {spigot_version}",
+               cwd=build_tools_dir, shell=True)
 
-os.rmdir(build_tools_dir)
+shutil.rmtree(build_tools_dir)
 
 print("Spigot build completed.")
