@@ -44,8 +44,7 @@ java_command = "java"
 if platform.system() == "Windows":
     java_command = "javaw"
 
-subprocess.run(f"{java_command} -jar {build_tools_file} --rev {spigot_version}",
-               cwd=build_tools_dir, shell=True)
+subprocess.run(f"{java_command} -jar {build_tools_file} --rev {spigot_version}", cwd=build_tools_dir, shell=True)
 
 shutil.rmtree(build_tools_dir)
 
