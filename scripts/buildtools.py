@@ -14,8 +14,13 @@ build_tools_file = "buildtools.jar"
 
 # Determine the absolute path of the script's directory
 script_dir = os.path.dirname(os.path.abspath(__file__))
+build_tools_dir = os.path.join(script_dir, "buildtools")
 
-os.rmdir(os.path.join(script_dir, "buildtools"))
+try:
+    os.rmdir(build_tools_dir)
+    print("Previous buildtools directory removed.")
+except FileNotFoundError:
+    pass
 
 # Create the buildtools/ directory if it doesn't exist
 os.makedirs(os.path.join(script_dir, "buildtools"), exist_ok=True)
@@ -41,6 +46,6 @@ if platform.system() == "Windows":
 subprocess.run([java_command, f"-jar {os.path.join(script_dir, 'buildtools', build_tools_file)} --rev {spigot_version}"],
                cwd=os.path.join(script_dir, "buildtools"), shell=True)
 
-os.rmdir(os.path.join(script_dir, "buildtools"))
+os.rmdir(build_tools_dir)
 
 print("Spigot build completed.")
