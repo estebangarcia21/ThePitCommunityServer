@@ -15,6 +15,8 @@ build_tools_file = "buildtools.jar"
 # Determine the absolute path of the script's directory
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
+os.rmdir(os.path.join(script_dir, "buildtools"))
+
 # Create the buildtools/ directory if it doesn't exist
 os.makedirs(os.path.join(script_dir, "buildtools"), exist_ok=True)
 
