@@ -15,26 +15,26 @@ class Timer {
      */
     private val tasks = mutableMapOf<UUID, Int>()
 
-    fun after(uuid: UUID, ticks: Tick, operation: Runnable) {
-        setCooldown(uuid, ticks, false, operation)
+    fun after(uuid: UUID, ticks: Tick, onTick: Runnable? = null, operation: Runnable) {
+        setCooldown(uuid, ticks, false, onTick, operation)
     }
 
-    fun cooldown(uuid: UUID, ticks: Tick, post: Runnable? = null, resetTime: Boolean = false, operation: Runnable) {
+    fun cooldown(uuid: UUID, ticks: Tick, post: Runnable? = null, resetTime: Boolean = false, onTick: Runnable? = null, operation: Runnable) {
         val cooldown = getCooldown(uuid)
         if (cooldown == null) {
             operation.run()
 
-            setCooldown(uuid, ticks, resetTime, post)
+            setCooldown(uuid, ticks, resetTime, onTick, post)
         }
     }
 
-    fun setCooldown(uuid: UUID, time: Tick, resetTime: Boolean, post: Runnable?) {
+    fun setCooldown(uuid: UUID, time: Tick, resetTime: Boolean, onTick: Runnable?, post: Runnable?) {
         if (getCooldown(uuid) == null || resetTime) {
             timer[uuid] = time
         }
 
         if (tasks.contains(uuid)) return
-        scheduleTimer(uuid, post)
+        scheduleTimer(uuid, post, onTick)
     }
 
     fun getCooldown(uuid: UUID): Tick? {
@@ -49,13 +49,16 @@ class Timer {
         tasks.remove(uuid)
     }
 
-     private fun scheduleTimer(uuid: UUID, post: Runnable?) {
+     private fun scheduleTimer(uuid: UUID, post: Runnable?, onTick: Runnable? = null) {
         val rate = 1L
         val taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.plugin, {
             val currentTime = timer[uuid] ?: error("Attempted to schedule a timer with a null player UUID")
             val newTime = currentTime - rate
+            val isFinalTick = newTime <= 0
 
-            if (newTime <= 0) {
+            onTick?.run()
+
+            if (isFinalTick) {
                 removeCooldown(uuid)
                 post?.run()
                 return@scheduleSyncRepeatingTask
