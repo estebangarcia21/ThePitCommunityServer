@@ -1,7 +1,6 @@
 package org.thepitcommunityserver.game.enchants
 
 import com.google.common.util.concurrent.AtomicDouble
-import org.bukkit.Bukkit
 import org.bukkit.Effect
 import org.bukkit.Location
 import org.bukkit.Sound
@@ -12,14 +11,10 @@ import org.bukkit.entity.Projectile
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.util.Vector
-import org.thepitcommunityserver.Main
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
-import org.thepitcommunityserver.util.SECONDS
 import org.thepitcommunityserver.util.TICK
-import org.thepitcommunityserver.util.Time
 import org.thepitcommunityserver.util.Timer
-import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
 object DevilChicks : Enchant {
@@ -49,8 +44,6 @@ object DevilChicks : Enchant {
         3 to 3
     )
 
-    private val devilChickAnimations = HashMap<UUID, Int>()
-
     private val timer = Timer()
 
     @EventHandler
@@ -66,16 +59,13 @@ object DevilChicks : Enchant {
         }
     }
 
-    // TODO: Legacy code, cleanup in the future?
-    // TODO: Force remove chickens after certain time.
     private fun spawnChicks(level: Int, shooter: Player, arrow: Projectile) {
         val world = shooter.world
-        val arrowUuid = UUID.randomUUID()
         val shooterLocation = shooter.location
         val arrowLocation = arrow.location
         val chickenAmount = chickAmount[level] ?: error("Chicken amount can't be null.")
 
-        val pitchIncrement = 0.1
+        val pitchIncrement = 0.15
         val volume = 0.5f
         val blastRadius = 0.75f
         val pitch = AtomicDouble(0.6)
@@ -93,13 +83,17 @@ object DevilChicks : Enchant {
             chickens[i] = chicken
         }
 
-        timer.after(arrowUuid, Time(10 * TICK).ticks()) {
-            if (animationIndex.get() == 10) {
-                Bukkit.getScheduler().cancelTask(devilChickAnimations[arrowUuid]!!)
-                devilChickAnimations.remove(arrowUuid)
-                world.playSound(shooterLocation, Sound.CHICKEN_HURT, 1f, 2f)
+        fun playDevilChicksAnimation() {
+            world.playSound(shooterLocation, Sound.NOTE_SNARE_DRUM, volume, pitch.get().toFloat())
+            pitch.addAndGet(pitchIncrement)
+            animationIndex.incrementAndGet()
+        }
 
-                chickens.forEach { chicken -> chicken!!.getNearbyEntities(1.0, 1.0, 1.0).forEach { entity ->
+        timer.after(arrow.uniqueId, 10 * TICK, onTick = ::playDevilChicksAnimation) {
+            world.playSound(shooterLocation, Sound.CHICKEN_HURT, 1f, 2f)
+
+            chickens.filterNotNull().forEach { chicken ->
+                chicken.getNearbyEntities(1.0, 1.0, 1.0).forEach { entity ->
                     if (entity is Player) {
                         DamageManager.applyTrueDamage(entity, shooter, 2.4)
                         createExplosion(entity, chicken.location)
@@ -107,13 +101,10 @@ object DevilChicks : Enchant {
 
                     world.playSound(arrowLocation, Sound.EXPLODE, volume, 1.6f)
                     world.playEffect(chicken.location, Effect.EXPLOSION_LARGE, Effect.EXPLOSION_LARGE.data, 100)
-                    chicken.remove()
-                } }
-            }
+                }
 
-            world.playSound(shooterLocation, Sound.NOTE_SNARE_DRUM, volume, pitch.get().toFloat())
-            pitch.addAndGet(pitchIncrement)
-            animationIndex.incrementAndGet()
+                chicken.remove()
+            }
         }
     }
 
