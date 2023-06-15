@@ -18,5 +18,9 @@ By default, the script will use java from the `JAVA_HOME` environment variable t
 want to override the Java executable, set the `BUILD_TOOLS_JAVA_PATH` environment variable to the full path of the Java
 executable. For example:
 ```shell
-BUILD_TOOLS_JAVA_PATH="C:\Program Files\Java\jdk1.8.0_202\bin\java.exe" python scripts/buildtools.py
+# Powershell
+$env:BUILD_TOOLS_JAVA_PATH = "C:\Program Files\Java\jdk1.8.0_202\bin\java.exe"; python scripts/buildtools.py
+
+# CMD
+set "BUILD_TOOLS_JAVA_PATH=C:\Program Files\Java\jdk1.8.0_202\bin\java.exe" && python scripts\buildtools.py
 ```
