@@ -41,8 +41,6 @@ os.chdir(script_dir)
 
 # Determine the Java command based on the platform
 java_command = "java"
-if platform.system() == "Windows":
-    java_command = "javaw"
 
 subprocess.run(f"{java_command} -jar {build_tools_file} --rev {spigot_version}", cwd=build_tools_dir, shell=True)
 
