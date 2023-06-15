@@ -42,7 +42,11 @@ os.chdir(script_dir)
 # Determine the Java command based on the platform
 java_command = "java"
 
-subprocess.run(f"{java_command} -jar {build_tools_file} --rev {spigot_version}", cwd=build_tools_dir, shell=True)
+if platform.system() == "Windows":
+    # Adjust the Java command for Windows
+    java_command = os.environ.get("JAVA_PATH", "")
+
+subprocess.run([java_command, "-jar", build_tools_file, "--rev", spigot_version], cwd=build_tools_dir, shell=True)
 
 shutil.rmtree(build_tools_dir)
 
