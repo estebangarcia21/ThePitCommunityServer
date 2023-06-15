@@ -1,8 +1,12 @@
 ## Setup
 
-1. Install Amazon Corretto 17 https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html
-2. Run `python3 scripts/download_dev_server.py`
-3. Run `python3 scripts/dev_server.py` to compile the plugin and run the development server
+You must have Java 17 and Java 8 installed on your system to run various scripts and compilation steps.
+
+1. [Install Java 17 (Amazon Corretto)](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html)
+2. Install Java 8. I recommend [downloading the LTS JDK 8 from AdoptOpenJDK](https://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot).
+3. Run `python3 scripts/download_dev_server.py` to download the development server.
+4. Run `python3 scripts/dev_server.py` to compile the plugin and run the development server.
+5. You are ready to start developing! Simply rerun the development server script to refresh any changes.
 
 ## Running Spigot buildtools
 
