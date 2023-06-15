@@ -15,6 +15,10 @@ import org.bukkit.util.Vector
 import org.thepitcommunityserver.Main
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
+import org.thepitcommunityserver.util.SECONDS
+import org.thepitcommunityserver.util.TICK
+import org.thepitcommunityserver.util.Time
+import org.thepitcommunityserver.util.Timer
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -47,6 +51,8 @@ object DevilChicks : Enchant {
 
     private val devilChickAnimations = HashMap<UUID, Int>()
 
+    private val timer = Timer()
+
     @EventHandler
     fun onArrowLand(event: ProjectileHitEvent) {
         val projectile = event.entity
@@ -67,8 +73,7 @@ object DevilChicks : Enchant {
         val arrowUuid = UUID.randomUUID()
         val shooterLocation = shooter.location
         val arrowLocation = arrow.location
-        val chickenAmount = chickAmount[level]
-        require(chickenAmount != null) { "Chicken amount can't be null." }
+        val chickenAmount = chickAmount[level] ?: error("Chicken amount can't be null.")
 
         val pitchIncrement = 0.1
         val volume = 0.5f
@@ -88,9 +93,9 @@ object DevilChicks : Enchant {
             chickens[i] = chicken
         }
 
-        val taskId = Bukkit.getServer().scheduler.scheduleSyncRepeatingTask(Main.plugin, {
+        timer.after(arrowUuid, Time(10 * TICK).ticks()) {
             if (animationIndex.get() == 10) {
-                Bukkit.getServer().scheduler.cancelTask(devilChickAnimations[arrowUuid]!!)
+                Bukkit.getScheduler().cancelTask(devilChickAnimations[arrowUuid]!!)
                 devilChickAnimations.remove(arrowUuid)
                 world.playSound(shooterLocation, Sound.CHICKEN_HURT, 1f, 2f)
 
@@ -109,9 +114,7 @@ object DevilChicks : Enchant {
             world.playSound(shooterLocation, Sound.NOTE_SNARE_DRUM, volume, pitch.get().toFloat())
             pitch.addAndGet(pitchIncrement)
             animationIndex.incrementAndGet()
-        }, 0L, 1L)
-
-        devilChickAnimations[arrowUuid] = taskId
+        }
     }
 
     private fun createExplosion(target: Player, position: Location) {
