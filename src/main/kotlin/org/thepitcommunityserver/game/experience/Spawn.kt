@@ -5,8 +5,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerRespawnEvent
+import org.thepitcommunityserver.util.currentMap
 import org.thepitcommunityserver.util.listToLocation
-import org.thepitcommunityserver.util.getMapData
 
 object Spawn : Listener {
     @EventHandler
@@ -20,8 +20,7 @@ object Spawn : Listener {
     }
 
     private fun handleSpawn(player: Player) {
-        val mapData = getMapData()
-        val spawnLoc = mapData.elemental.spawnPoints.random()
+        val spawnLoc = currentMap.spawnPoints.random()
 
         player.teleport(listToLocation(player.world, spawnLoc))
     }
