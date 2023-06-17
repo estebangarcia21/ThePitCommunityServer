@@ -12,10 +12,10 @@ import org.thepitcommunityserver.util.undefPropErr
 object Executioner : Enchant {
     override val config: EnchantConfig
         get() = EnchantConfig(
-            name = "Crush",
+            name = "Executioner",
             tiers = listOf(1, 2, 3),
-            group = EnchantGroup.A,
-            rare = false,
+            group = EnchantGroup.B,
+            rare = true,
             type = EnchantType.SWORD
         ) { "Hitting an enemy below <red>${hearts[it]}${Text.HEART}</red> instantly kills them" }
 
