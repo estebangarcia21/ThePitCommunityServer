@@ -39,7 +39,7 @@ object Crush : Enchant {
             val amplifier = amplifier[tier] ?: undefPropErr("amplifier", tier)
             val duration = duration[tier] ?: undefPropErr("duration", tier)
 
-            timer.cooldown(damager.uniqueId, cooldown.seconds()) {
+            timer.cooldown(damager.uniqueId, cooldown.ticks()) {
                 damaged.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, duration.ticks().toInt(), amplifier, true))
             }
         }
