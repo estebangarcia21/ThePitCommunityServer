@@ -6,6 +6,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.*
+import org.thepitcommunityserver.util.Timer
+import java.util.*
 
 object Assassin : Enchant {
     override val config: EnchantConfig
@@ -24,7 +26,7 @@ object Assassin : Enchant {
         3 to Time(3L * SECONDS)
     )
 
-    private val timer = Timer()
+    private val timer = Timer<UUID>()
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {

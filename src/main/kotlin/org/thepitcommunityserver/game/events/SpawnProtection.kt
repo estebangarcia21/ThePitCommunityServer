@@ -5,10 +5,11 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
-import org.thepitcommunityserver.util.currentMap
-import org.thepitcommunityserver.util.isInsideRegion
-import org.thepitcommunityserver.util.listToLocation
-import org.thepitcommunityserver.util.world
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityShootBowEvent
+import org.thepitcommunityserver.game.enchants.lib.playerDamagedPlayer
+import org.thepitcommunityserver.game.enchants.lib.playerHitPlayer
+import org.thepitcommunityserver.util.isInsideSpawn
 
 object SpawnProtection : Listener {
     @EventHandler
@@ -20,16 +21,31 @@ object SpawnProtection : Listener {
 
     @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent) {
-        if (event.blockPlaced.type != Material.OBSIDIAN && event.blockPlaced.type != Material.COBBLESTONE) {
+        val block = event.blockPlaced
+
+        if (block.type != Material.OBSIDIAN && block.type != Material.COBBLESTONE) {
             event.isCancelled = true
             return
         }
 
-        if (isInsideRegion(
-                event.blockPlaced.location,
-                listToLocation(world, currentMap.bounds.spawn.lower),
-                listToLocation(world, currentMap.bounds.spawn.upper))) {
+        if (isInsideSpawn(block.location)) {
             event.isCancelled = true
         }
+    }
+
+    @EventHandler
+    fun onHit(event: EntityDamageByEntityEvent) {
+        event.playerHitPlayer { damager, damaged ->
+            if (isInsideSpawn(damager.location) || isInsideSpawn(damaged.location)) {
+                event.isCancelled = true
+            }
+        }
+    }
+
+    @EventHandler
+    fun onProjectileShoot(event: EntityShootBowEvent) {
+        if (!isInsideSpawn(event.projectile.location)) return
+
+        event.isCancelled = true
     }
 }

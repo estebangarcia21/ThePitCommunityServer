@@ -25,6 +25,7 @@ class Main : JavaPlugin() {
 
         registerEvents(DamageManager)
 
+        // Game events.
         listOf(
             Spawn,
             NoFallDamage,
@@ -32,20 +33,34 @@ class Main : JavaPlugin() {
             HungerControl,
             StopLiquidFlow,
             SpawnProtection,
-            ArrowControl
+            ArrowControl,
+            BlockControl,
+            ClearArrows,
+            ArrowWatch
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
 
         plugin.getCommand(MysticEnchantCommand.name).executor = MysticEnchantCommand
+
+        lifecycleListeners.forEach(PluginLifecycleListener::onPluginEnable)
+    }
+
+    override fun onDisable() {
+        lifecycleListeners.forEach(PluginLifecycleListener::onPluginDisable)
     }
 
     private fun enableGameRulesForDefaultWorld() {
-        Bukkit.getWorlds().forEach {
-            it.setGameRuleValue("doFireTick", "false")
-            it.setGameRuleValue("doImmediateFireSpread", "false")
-            it.setGameRuleValue("doMobSpawning", "false")
-            it.setGameRuleValue("keepInventory", "true")
+        Bukkit.getWorlds().forEach { world ->
+            mapOf(
+                "doFireTick" to "false",
+                "doImmediateFireSpread" to "false",
+                "doMobSpawning" to "false",
+                "keepInventory" to "true",
+                "doDaylightCycle" to "false"
+            ).entries.forEach { (key, value) -> world.setGameRuleValue(key, value) }
+
+            world.time = 1000
         }
     }
 
