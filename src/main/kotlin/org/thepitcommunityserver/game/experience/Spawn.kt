@@ -6,7 +6,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 import org.thepitcommunityserver.util.currentMap
-import org.thepitcommunityserver.util.listToLocation
+import org.thepitcommunityserver.util.toBukkitVector
 
 object Spawn : Listener {
     @EventHandler
@@ -22,6 +22,6 @@ object Spawn : Listener {
     private fun handleSpawn(player: Player) {
         val spawnLoc = currentMap.spawnPoints.random()
 
-        player.teleport(listToLocation(player.world, spawnLoc))
+        player.teleport(spawnLoc.toBukkitVector().toLocation(player.world))
     }
 }

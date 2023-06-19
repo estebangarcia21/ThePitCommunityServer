@@ -1,30 +1,40 @@
 package org.thepitcommunityserver.util
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.google.gson.Gson
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import java.io.BufferedReader
+import org.bukkit.World
+import org.bukkit.util.Vector
 import java.io.InputStreamReader
 
-val world = Bukkit.getWorld("world")
+val world: World = Bukkit.getWorld("world")
 val currentMap = getMapData().elemental
+
+typealias DeserializedLocation = List<Double>
 
 data class MapConfiguration(
     val elemental: MapData
 )
 
 data class MapData(
-    val shopVillager: List<Double>,
-    val perkVillager: List<Double>,
-    val prestigeVillager: List<Double>,
-    val questMaster: List<Double>,
-    val leaderboard: List<Double>,
-    val statsVillager: List<Double>,
-    val unlockedFeatures: List<Double>,
-    val enderChest: List<Double>,
-    val keeper: List<Double>,
-    val spawnPoints: List<List<Double>>,
-    val bounds: BoundsConfiguration
+    // Hologram locations.
+    val shopVillager: DeserializedLocation,
+    val perkVillager: DeserializedLocation,
+    val prestigeVillager: DeserializedLocation,
+    val questMaster: DeserializedLocation,
+    val leaderboard: DeserializedLocation,
+    val statsVillager: DeserializedLocation,
+    val unlockedFeatures: DeserializedLocation,
+    val enderChest: DeserializedLocation,
+    val keeper: DeserializedLocation,
+    val centerHologram: DeserializedLocation,
+
+    // Misc.
+    val spawnPoints: List<DeserializedLocation>,
+    val centerDropdown: CenterDropdown,
+    val bounds: BoundsConfiguration,
 )
 
 data class BoundsConfiguration(
@@ -32,16 +42,24 @@ data class BoundsConfiguration(
 )
 
 data class Bounds(
-    val lower: List<Double>,
-    val upper: List<Double>
+    val lower: DeserializedLocation,
+    val upper: DeserializedLocation
+)
+
+data class CenterDropdown(
+    val pos: DeserializedLocation,
+    val radius: Double
 )
 
 fun getMapData(): MapConfiguration {
-    val jsonFilePath = "maps.json"
-    val jsonInputStream = object {}.javaClass.getResourceAsStream("/$jsonFilePath")
-    val jsonString = jsonInputStream?.let { InputStreamReader(it) }?.let { it -> BufferedReader(it).use { it.readText() } }
+    val yamlFilePath = "maps.yaml"
+    val yamlInputStream = object {}.javaClass.getResourceAsStream("/$yamlFilePath")
+    val yamlString = yamlInputStream?.let { inputStream -> InputStreamReader(inputStream).use { it.readText() } }
+
+    val objectMapper = ObjectMapper(YAMLFactory())
+    val jsonNode = objectMapper.readTree(yamlString)
 
     val gson = Gson()
 
-    return gson.fromJson(jsonString, MapConfiguration::class.java)
+    return gson.fromJson(jsonNode.toString(), MapConfiguration::class.java)
 }

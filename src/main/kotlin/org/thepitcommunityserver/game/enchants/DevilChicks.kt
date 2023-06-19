@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.AtomicDouble
 import org.bukkit.Effect
 import org.bukkit.Location
 import org.bukkit.Sound
+import org.bukkit.entity.Arrow
 import org.bukkit.entity.Chicken
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -12,9 +13,12 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.util.Vector
 import org.thepitcommunityserver.game.enchants.lib.*
+import org.thepitcommunityserver.game.events.ArrowWatch
 import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.TICK
 import org.thepitcommunityserver.util.Timer
+import org.thepitcommunityserver.util.isInsideSpawn
+import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
 object DevilChicks : Enchant {
@@ -44,19 +48,22 @@ object DevilChicks : Enchant {
         3 to 3
     )
 
-    private val timer = Timer()
+    private val timer = Timer<UUID>()
 
     @EventHandler
     fun onArrowLand(event: ProjectileHitEvent) {
-        val projectile = event.entity
-        val shooter = projectile.shooter
+        val arrow = event.entity
+        val shooter = arrow.shooter
 
-        if (shooter is Player) {
-            val bow = shooter.inventory.itemInHand
-            val tier = getEnchantTierForItem(this, bow) ?: return
+        if (arrow !is Arrow) return
+        if (shooter !is Player) return
 
-            spawnChicks(tier, shooter, projectile)
-        }
+        if (isInsideSpawn(arrow.location)) return
+
+        val bow = ArrowWatch.getBowFromArrow(arrow)
+        val tier = getEnchantTierForItem(this, bow) ?: return
+
+        spawnChicks(tier, shooter, arrow)
     }
 
     private fun spawnChicks(level: Int, shooter: Player, arrow: Projectile) {
