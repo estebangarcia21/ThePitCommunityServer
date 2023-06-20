@@ -21,7 +21,8 @@ val Enchants = listOf(
     MegaLongbow,
     Assassin,
     Peroxide,
-    SpeedyHit
+    SpeedyHit,
+    SprintDrain
 )
 
 interface Enchant : Listener {
