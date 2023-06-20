@@ -29,6 +29,8 @@ dependencies {
     implementation("org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT")
     implementation("software.amazon.awssdk:dynamodb:2.17.34")
     implementation("software.amazon.awssdk:apache-client:2.17.34")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.12.5")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.5")
 }
 
 tasks.test {
