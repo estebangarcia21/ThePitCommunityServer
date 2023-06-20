@@ -6,9 +6,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import org.thepitcommunityserver.game.commands.MysticEnchantCommand
 import org.thepitcommunityserver.game.enchants.lib.Enchants
-import org.thepitcommunityserver.game.events.DamageManager
-import org.thepitcommunityserver.game.events.NoFallDamage
-import org.thepitcommunityserver.game.events.PlayerJoinLeaveMessages
+import org.thepitcommunityserver.game.events.*
 import org.thepitcommunityserver.game.experience.Spawn
 
 @Suppress("unused")
@@ -27,23 +25,42 @@ class Main : JavaPlugin() {
 
         registerEvents(DamageManager)
 
+        // Game events.
         listOf(
             Spawn,
             NoFallDamage,
-            PlayerJoinLeaveMessages
+            PlayerJoinLeaveMessages,
+            HungerControl,
+            StopLiquidFlow,
+            SpawnProtection,
+            ArrowControl,
+            BlockControl,
+            ClearArrows,
+            ArrowWatch
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
 
         plugin.getCommand(MysticEnchantCommand.name).executor = MysticEnchantCommand
+
+        lifecycleListeners.forEach(PluginLifecycleListener::onPluginEnable)
+    }
+
+    override fun onDisable() {
+        lifecycleListeners.forEach(PluginLifecycleListener::onPluginDisable)
     }
 
     private fun enableGameRulesForDefaultWorld() {
-        Bukkit.getWorlds().forEach {
-            it.setGameRuleValue("doFireTick", "false")
-            it.setGameRuleValue("doImmediateFireSpread", "false")
-            it.setGameRuleValue("doMobSpawning", "false")
-            it.setGameRuleValue("keepInventory", "true")
+        Bukkit.getWorlds().forEach { world ->
+            mapOf(
+                "doFireTick" to "false",
+                "doImmediateFireSpread" to "false",
+                "doMobSpawning" to "false",
+                "keepInventory" to "true",
+                "doDaylightCycle" to "false"
+            ).entries.forEach { (key, value) -> world.setGameRuleValue(key, value) }
+
+            world.time = 1000
         }
     }
 
