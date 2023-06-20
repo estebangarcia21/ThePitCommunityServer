@@ -7,6 +7,8 @@ import org.bukkit.potion.PotionEffectType
 import org.thepitcommunityserver.game.enchants.lib.Enchant
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.*
+import org.thepitcommunityserver.util.Timer
+import java.util.*
 
 object Crush : Enchant {
     override val config: EnchantConfig
@@ -31,7 +33,7 @@ object Crush : Enchant {
 
     private val cooldown = Time(2L * SECONDS)
 
-    private val timer = Timer()
+    private val timer = Timer<UUID>()
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
