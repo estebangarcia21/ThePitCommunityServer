@@ -6,6 +6,8 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.*
+import org.thepitcommunityserver.util.Timer
+import java.util.*
 
 object MegaLongbow : Enchant {
     override val config: EnchantConfig
@@ -23,7 +25,7 @@ object MegaLongbow : Enchant {
         3 to 3
     )
 
-    private val timer = Timer()
+    private val timer = Timer<UUID>()
     private val cooldown = Time(1L * SECONDS)
     private val potionCooldown = Time(2L * SECONDS)
 
