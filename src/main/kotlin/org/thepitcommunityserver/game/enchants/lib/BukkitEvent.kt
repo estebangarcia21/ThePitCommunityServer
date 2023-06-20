@@ -4,6 +4,7 @@ import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityShootBowEvent
+import org.thepitcommunityserver.game.events.ArrowWatch
 import org.thepitcommunityserver.util.leggings
 import kotlin.random.Random
 
@@ -32,7 +33,7 @@ fun EntityDamageByEntityEvent.damagerArrowHitPlayerWithEnchant(enchant: Enchant,
         val shooter = arrow.shooter
 
         if (shooter is Player) {
-            val tier = getEnchantTierForItem(enchant, shooter.itemInHand)
+            val tier = getEnchantTierForItem(enchant, ArrowWatch.getBowFromArrow(arrow))
             if (tier != null) {
                 callback(shooter, damaged, tier, ArrowHitPlayerContext(arrow))
             }
@@ -84,7 +85,7 @@ fun EntityShootBowEvent.arrowShotWithEnchant(enchant: Enchant, callback: EntityS
 
     if (shooter !is Player || arrow !is Arrow) return
 
-    val bow = shooter.itemInHand
+    val bow = ArrowWatch.getBowFromArrow(arrow)
     val tier = getEnchantTierForItem(enchant, bow) ?: return
 
     callback(shooter, tier, ArrowShotWithEnchantContext(arrow))
@@ -93,4 +94,21 @@ fun EntityShootBowEvent.arrowShotWithEnchant(enchant: Enchant, callback: EntityS
 fun chance(percent: Double): Boolean {
     require(percent in 0.0..1.0) { "Percent value must be between 0 and 1" }
     return Random.nextDouble() <= percent
+}
+
+fun playerDamagedPlayer(event: EntityDamageByEntityEvent): Boolean {
+    if (event.entity !is Player) return false
+
+    return event.damager is Player
+}
+
+fun EntityDamageByEntityEvent.playerHitPlayer(callback: (damager: Player, damaged: Player) -> Unit) {
+    if (!playerDamagedPlayer(this)) return
+
+    val damager = damager as? Player
+    val damaged = entity as? Player
+
+    if (damager != null && damaged != null) {
+        callback(damager, damaged)
+    }
 }
