@@ -6,6 +6,8 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.*
+import org.thepitcommunityserver.util.Timer
+import java.util.*
 
 object SpeedyHit : Enchant {
     override val config: EnchantConfig
@@ -23,7 +25,7 @@ object SpeedyHit : Enchant {
         3 to Time(9L * SECONDS)
     )
 
-    private val timer = Timer()
+    private val timer = Timer<UUID>()
 
     private val cooldownTime  = mapOf(
         1 to Time(3L * SECONDS),

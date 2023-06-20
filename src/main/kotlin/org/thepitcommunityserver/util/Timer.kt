@@ -2,71 +2,73 @@ package org.thepitcommunityserver.util
 
 import org.bukkit.Bukkit
 import org.thepitcommunityserver.Main
-import java.util.*
 
-class Timer {
+class Timer<K> {
     /**
      * The raw time amount for a player in ticks.
      */
-    private val timer = mutableMapOf<UUID, Tick>()
+    private val timer = mutableMapOf<K, Tick>()
 
     /**
      * Map of a player UUID to a Bukkit Task ID created by the scheduler.
      */
-    private val tasks = mutableMapOf<UUID, Int>()
+    private val tasks = mutableMapOf<K, Int>()
 
-    fun after(uuid: UUID, ticks: Tick, onTick: Runnable? = null, operation: Runnable) {
-        setCooldown(uuid, ticks, false, onTick, operation)
+    val items: MutableSet<K>
+        get() = timer.keys
+
+    fun after(id: K, ticks: Tick, onTick: Runnable? = null, operation: Runnable) {
+        setCooldown(id, ticks, false, onTick, operation)
     }
 
-    fun cooldown(uuid: UUID, ticks: Tick, post: Runnable? = null, resetTime: Boolean = false, onTick: Runnable? = null, operation: Runnable) {
-        val cooldown = getCooldown(uuid)
+    fun cooldown(id: K, ticks: Tick, post: Runnable? = null, resetTime: Boolean = false, onTick: Runnable? = null, operation: Runnable) {
+        val cooldown = getCooldown(id)
         if (cooldown == null) {
             operation.run()
 
-            setCooldown(uuid, ticks, resetTime, onTick, post)
+            setCooldown(id, ticks, resetTime, onTick, post)
         }
     }
 
-    fun setCooldown(uuid: UUID, time: Tick, resetTime: Boolean, onTick: Runnable?, post: Runnable?) {
-        if (getCooldown(uuid) == null || resetTime) {
-            timer[uuid] = time
+    fun setCooldown(id: K, time: Tick, resetTime: Boolean, onTick: Runnable?, post: Runnable?) {
+        if (getCooldown(id) == null || resetTime) {
+            timer[id] = time
         }
 
-        if (tasks.contains(uuid)) return
-        scheduleTimer(uuid, post, onTick)
+        if (tasks.contains(id)) return
+        scheduleTimer(id, post, onTick)
     }
 
-    fun getCooldown(uuid: UUID): Tick? {
-        return timer[uuid]
+    fun getCooldown(id: K): Tick? {
+        return timer[id]
     }
 
-    fun removeCooldown(uuid: UUID) {
-        val taskId = tasks[uuid] ?: return
+    fun stop(id: K) {
+        val taskId = tasks[id] ?: return
 
         Bukkit.getScheduler().cancelTask(taskId)
-        timer.remove(uuid)
-        tasks.remove(uuid)
+        timer.remove(id)
+        tasks.remove(id)
     }
 
-     private fun scheduleTimer(uuid: UUID, post: Runnable?, onTick: Runnable? = null) {
+     private fun scheduleTimer(id: K, post: Runnable?, onTick: Runnable? = null) {
         val rate = 1L
         val taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.plugin, {
-            val currentTime = timer[uuid] ?: error("Attempted to schedule a timer with a null player UUID")
+            val currentTime = timer[id] ?: error("Attempted to schedule a timer with a null player UUID")
             val newTime = currentTime - rate
             val isFinalTick = newTime <= 0
 
             onTick?.run()
 
             if (isFinalTick) {
-                removeCooldown(uuid)
+                stop(id)
                 post?.run()
                 return@scheduleSyncRepeatingTask
             }
 
-            timer[uuid] = newTime
+            timer[id] = newTime
         }, 0L, rate)
 
-        tasks[uuid] = taskId
+        tasks[id] = taskId
     }
 }
