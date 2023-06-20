@@ -15,7 +15,7 @@ object LastStand : Enchant {
             group = EnchantGroup.B,
             rare = false,
             type = EnchantType.PANTS
-        ) { "gitGain <blue>Resistance ${intToRoman(amplifier[it]?.inc())}</blue> (4<br/>seconds) when reaching <red>3❤</red>" }
+        ) { "Gain <blue>Resistance ${intToRoman(amplifier[it]?.inc())}</blue> (4<br/>seconds) when reaching <red>3❤</red>" }
 
     private val amplifier = mapOf(
         1 to 0,
@@ -31,8 +31,6 @@ object LastStand : Enchant {
             if (damaged.health < 10  ) {
                 damaged.addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Time(4L * SECONDS).ticks().toInt(), amplifier, true))
             }
-
         }
     }
-
 }
