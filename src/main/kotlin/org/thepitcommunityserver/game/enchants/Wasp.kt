@@ -33,11 +33,18 @@ object Wasp : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerArrowHitPlayerWithEnchant(this) { _, damaged, tier, _ ->
-            val amplifier = amplifier[tier] ?: undefPropErr("amplifier", tier)
-            val duration = duration[tier] ?: undefPropErr("duration", tier)
+        event.damagerArrowHitPlayerWithEnchant(this) {
+            val enchantTier = it.enchantTier
 
-            damaged.player.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, duration.ticks().toInt(), amplifier * 20, true))
+            val amplifier = amplifier[enchantTier] ?: undefPropErr("amplifier", enchantTier)
+            val duration = duration[enchantTier] ?: undefPropErr("duration", enchantTier)
+
+            it.damaged.player.addPotionEffect(PotionEffect(
+                PotionEffectType.WEAKNESS,
+                duration.ticks().toInt(),
+                amplifier * 20,
+                true)
+            )
         }
     }
 }
