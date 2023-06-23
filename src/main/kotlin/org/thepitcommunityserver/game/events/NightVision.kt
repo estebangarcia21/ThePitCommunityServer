@@ -12,6 +12,6 @@ object NightVision : Listener {
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
 
-        player.addPotionEffect(PotionEffect(PotionEffectType.NIGHT_VISION, 1, Int.MAX_VALUE, true))
+        player.addPotionEffect(PotionEffect(PotionEffectType.NIGHT_VISION, Int.MAX_VALUE, Integer.MAX_VALUE, true))
     }
 }
