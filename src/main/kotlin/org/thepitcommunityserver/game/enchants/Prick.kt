@@ -27,10 +27,10 @@ object Prick : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagedReceivedAnyHitWithPantsEnchant(this) { damager, damaged, tier, _ ->
-            val damage = damageAmount[tier] ?: undefPropErr("damageAmount", tier)
+        event.damagedReceivedAnyHitWithPantsEnchant(this) {
+            val damage = damageAmount[it.enchantTier] ?: undefPropErr("damageAmount", it.enchantTier)
 
-            DamageManager.applyTrueDamage(damager, damaged, damage)
+            DamageManager.applyTrueDamage(it.damager, it.damaged, damage)
         }
     }
 }
