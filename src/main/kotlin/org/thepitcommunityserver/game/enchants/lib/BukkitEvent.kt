@@ -4,12 +4,14 @@ import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityShootBowEvent
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.thepitcommunityserver.game.events.ArrowWatch
 import org.thepitcommunityserver.util.leggings
 import kotlin.random.Random
 
 typealias EntityDamageByEntityEventCallback<C> = (damager: Player, damaged: Player, tier: Int, ctx: C) -> Unit
 typealias EntityShootBowEventCallback<C> = (shooter: Player, tier: Int, ctx: C) -> Unit
+typealias ProjectileHitEventCallback<C> = (shooter: Player, tier: Int, ctx: C) -> Unit
 
 fun EntityDamageByEntityEvent.damagerMeleeHitPlayerWithEnchant(enchant: Enchant, callback: EntityDamageByEntityEventCallback<Unit>) {
     val damaged = this.entity
@@ -111,4 +113,16 @@ fun EntityDamageByEntityEvent.playerHitPlayer(callback: (damager: Player, damage
     if (damager != null && damaged != null) {
         callback(damager, damaged)
     }
+}
+
+fun ProjectileHitEvent.onArrowLand(enchant: Enchant, callback: ProjectileHitEventCallback<ArrowShotWithEnchantContext>) {
+    val shooter = this.entity.shooter
+    val arrow = this.entity
+
+    if (shooter !is Player || arrow !is Arrow) return
+
+    val bow = ArrowWatch.getBowFromArrow(arrow)
+    val tier = getEnchantTierForItem(enchant, bow) ?: return
+
+    callback(shooter, tier, ArrowShotWithEnchantContext(arrow))
 }
