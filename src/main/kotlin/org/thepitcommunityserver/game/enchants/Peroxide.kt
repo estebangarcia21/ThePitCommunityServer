@@ -3,7 +3,6 @@ package org.thepitcommunityserver.game.enchants
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionEffectType.*
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.SECONDS
@@ -35,11 +34,13 @@ object Peroxide : Enchant {
 
     @EventHandler
     fun onDamageEvent (event: EntityDamageByEntityEvent) {
-        event.damagedReceivedAnyHitWithPantsEnchant(this){ _, damaged , tier, _ ->
-            val amplifier = amplifier[tier] ?: undefPropErr("amplifier", tier)
-            val duration = duration[tier] ?: undefPropErr("duration", tier)
+        event.damagedReceivedAnyHitWithPantsEnchant(this) {
+            val enchantTier = it.enchantTier
 
-            damaged.addPotionEffect(PotionEffect(REGENERATION, duration.ticks().toInt(), amplifier, true))
+            val amplifier = amplifier[enchantTier] ?: undefPropErr("amplifier", enchantTier)
+            val duration = duration[enchantTier] ?: undefPropErr("duration", enchantTier)
+
+            it.damaged.addPotionEffect(PotionEffect(REGENERATION, duration.ticks().toInt(), amplifier, true))
         }
     }
 }

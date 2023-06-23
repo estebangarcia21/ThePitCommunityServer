@@ -35,12 +35,14 @@ object SpeedyHit : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerMeleeHitPlayerWithEnchant(this){damager, _, tier, _ ->
-            val duration = duration[tier] ?: undefPropErr("duration", tier)
-            val cooldownTime = cooldownTime[tier] ?: undefPropErr("cooldownTime", tier)
+        event.damagerMeleeHitPlayerWithEnchant(this) {
+            val enchantTier = it.enchantTier
 
-            timer.cooldown(damager.uniqueId, cooldownTime.ticks()) {
-                damager.addPotionEffect(PotionEffect(PotionEffectType.SPEED, duration.ticks().toInt(), 0, true))
+            val duration = duration[enchantTier] ?: undefPropErr("duration", enchantTier)
+            val cooldownTime = cooldownTime[enchantTier] ?: undefPropErr("cooldownTime", enchantTier)
+
+            timer.cooldown(it.damager.uniqueId, cooldownTime.ticks()) {
+                it.damager.addPotionEffect(PotionEffect(PotionEffectType.SPEED, duration.ticks().toInt(), 0, true))
             }
         }
     }

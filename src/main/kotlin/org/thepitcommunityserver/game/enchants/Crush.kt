@@ -37,12 +37,14 @@ object Crush : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerMeleeHitPlayerWithEnchant(this) { damager, damaged, tier, _ ->
-            val amplifier = amplifier[tier] ?: undefPropErr("amplifier", tier)
-            val duration = duration[tier] ?: undefPropErr("duration", tier)
+        event.damagerMeleeHitPlayerWithEnchant(this) {
+            val enchantTier = it.enchantTier
 
-            timer.cooldown(damager.uniqueId, cooldown.seconds()) {
-                damaged.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, duration.ticks().toInt(), amplifier, true))
+            val amplifier = amplifier[enchantTier] ?: undefPropErr("amplifier", enchantTier)
+            val duration = duration[enchantTier] ?: undefPropErr("duration", enchantTier)
+
+            timer.cooldown(it.damager.uniqueId, cooldown.seconds()) {
+                it.damaged.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, duration.ticks().toInt(), amplifier, true))
             }
         }
     }
