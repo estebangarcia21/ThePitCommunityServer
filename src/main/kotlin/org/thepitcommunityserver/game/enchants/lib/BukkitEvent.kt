@@ -8,87 +8,113 @@ import org.thepitcommunityserver.game.events.ArrowWatch
 import org.thepitcommunityserver.util.leggings
 import kotlin.random.Random
 
-typealias EntityDamageByEntityEventCallback<C> = (damager: Player, damaged: Player, tier: Int, ctx: C) -> Unit
-typealias EntityShootBowEventCallback<C> = (shooter: Player, tier: Int, ctx: C) -> Unit
+typealias EventCallback<C> = (ctx: C) -> Unit
 
-fun EntityDamageByEntityEvent.damagerMeleeHitPlayerWithEnchant(enchant: Enchant, callback: EntityDamageByEntityEventCallback<Unit>) {
-    val damaged = this.entity
-    val damager = this.damager
+data class PlayerMeleeHitPlayerContext(
+    val damager: Player,
+    val damaged: Player,
+    val enchantTier: Int
+)
 
-    if (damager is Player && damaged is Player) {
-        val tier = getEnchantTierForItem(enchant, damager.itemInHand)
-        if (tier != null) {
-            callback(damager, damaged, tier, Unit)
+fun EntityDamageByEntityEvent.damagerMeleeHitPlayerWithEnchant(enchant: Enchant, callback: EventCallback<PlayerMeleeHitPlayerContext>) {
+    val damaged = this.entity as? Player ?: return
+    val damager = this.damager as? Player ?: return
+    val enchantTier = getEnchantTierForItem(enchant, damager.itemInHand) ?: return
+
+    callback(PlayerMeleeHitPlayerContext(
+        damager = damager,
+        damaged = damaged,
+        enchantTier = enchantTier
+    ))
+}
+
+data class ArrowHitPlayerContext(
+    val damager: Player,
+    val damaged: Player,
+    val enchantTier: Int,
+    val arrow: Arrow
+)
+
+fun EntityDamageByEntityEvent.damagerArrowHitPlayerWithEnchant(enchant: Enchant, callback: EventCallback<ArrowHitPlayerContext>) {
+    val damaged = this.entity as? Player ?: return
+    val arrow = this.damager as? Arrow ?: return
+    val shooter = arrow.shooter as? Player ?: return
+    val enchantTier = getEnchantTierForItem(enchant, ArrowWatch.getBowFromArrow(arrow)) ?: return
+
+    callback(ArrowHitPlayerContext(
+        damager = shooter,
+        damaged = damaged,
+        enchantTier = enchantTier,
+        arrow = arrow
+    ))
+}
+
+fun EntityDamageByEntityEvent.arrowHitBlockingPlayer(enchant: Enchant, callback: EventCallback<ArrowHitPlayerContext>) {
+    this.damagerArrowHitPlayerWithEnchant(enchant) { ctx ->
+        if (ctx.damaged.isBlocking) {
+            callback(ctx)
         }
     }
 }
 
-data class ArrowHitPlayerContext(val arrow: Arrow)
-
-fun EntityDamageByEntityEvent.damagerArrowHitPlayerWithEnchant(enchant: Enchant, callback: EntityDamageByEntityEventCallback<ArrowHitPlayerContext>) {
-    val damaged = this.entity
-
-    if (this.damager is Arrow && damaged is Player) {
-        val arrow = this.damager as Arrow
-        val shooter = arrow.shooter
-
-        if (shooter is Player) {
-            val tier = getEnchantTierForItem(enchant, ArrowWatch.getBowFromArrow(arrow))
-            if (tier != null) {
-                callback(shooter, damaged, tier, ArrowHitPlayerContext(arrow))
-            }
-        }
-    }
-}
-
-fun EntityDamageByEntityEvent.arrowHitBlockingPlayer(enchant: Enchant, callback: EntityDamageByEntityEventCallback<ArrowHitPlayerContext>) {
-    this.damagerArrowHitPlayerWithEnchant(enchant) { damager, damaged, tier, ctx ->
-        if (damaged.isBlocking) {
-            callback(damager, damaged, tier, ctx)
-        }
-    }
-}
-
-data class DamagedReceivedAnyHitWithPantsEnchantContext(val arrow: ArrowHitPlayerContext?) {
+data class DamagedReceivedAnyHitWithPantsEnchantContext(
+    val damager: Player,
+    val damaged: Player,
+    val enchantTier: Int,
+    val arrow: Arrow?
+) {
     val hitByMelee = arrow == null
     val hitByArrow = arrow != null
 }
 
-fun EntityDamageByEntityEvent.damagedReceivedAnyHitWithPantsEnchant(enchant: Enchant, callback: EntityDamageByEntityEventCallback<DamagedReceivedAnyHitWithPantsEnchantContext>) {
-    val damaged = this.entity
+fun EntityDamageByEntityEvent.damagedReceivedAnyHitWithPantsEnchant(enchant: Enchant, callback: EventCallback<DamagedReceivedAnyHitWithPantsEnchantContext>) {
+    val damaged = this.entity as? Player ?: return
     val damager = this.damager
 
-    if (damaged !is Player) return
-
-    val tier = getEnchantTierForItem(enchant, damaged.leggings) ?: return
+    val enchantTier = getEnchantTierForItem(enchant, damaged.leggings) ?: return
 
     when (damager) {
         is Player -> {
-            callback(damager, damaged, tier, DamagedReceivedAnyHitWithPantsEnchantContext(null))
+            callback(
+                DamagedReceivedAnyHitWithPantsEnchantContext(
+                damager = damager,
+                damaged = damaged,
+                enchantTier = enchantTier,
+                arrow = null
+            )
+            )
         }
         is Arrow -> {
-            val shooter = damager.shooter
-            if (damager.shooter !is Player) return
+            val shooter = damager.shooter as? Player ?: return
 
-            callback(shooter as Player, damaged, tier, DamagedReceivedAnyHitWithPantsEnchantContext(
-                ArrowHitPlayerContext(damager)
+            callback(DamagedReceivedAnyHitWithPantsEnchantContext(
+                damager = shooter,
+                damaged = damaged,
+                enchantTier = enchantTier,
+                arrow = damager
             ))
         }
     }
 }
 
-data class ArrowShotWithEnchantContext(val arrow: Arrow)
+data class ArrowShotWithEnchantContext(
+    val shooter: Player,
+    val enchantTier: Int,
+    val arrow: Arrow
+)
 
-fun EntityShootBowEvent.arrowShotWithEnchant(enchant: Enchant, callback: EntityShootBowEventCallback<ArrowShotWithEnchantContext>) {
-    val shooter = this.entity
-    val arrow = this.projectile
-
-    if (shooter !is Player || arrow !is Arrow) return
+fun EntityShootBowEvent.arrowShotWithEnchant(enchant: Enchant, callback: EventCallback<ArrowShotWithEnchantContext>) {
+    val shooter = this.entity as? Player ?: return
+    val arrow = this.projectile as? Arrow ?: return
 
     val bow = ArrowWatch.getBowFromArrow(arrow)
-    val tier = getEnchantTierForItem(enchant, bow) ?: return
+    val enchantTier = getEnchantTierForItem(enchant, bow) ?: return
 
-    callback(shooter, tier, ArrowShotWithEnchantContext(arrow))
+    callback(ArrowShotWithEnchantContext(
+        shooter = shooter,
+        enchantTier = enchantTier,
+        arrow = arrow
+    ))
 }
 
 fun chance(percent: Double): Boolean {
