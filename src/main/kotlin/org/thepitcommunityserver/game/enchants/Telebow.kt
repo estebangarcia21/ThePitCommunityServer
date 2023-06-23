@@ -25,7 +25,7 @@ object Telebow : Enchant {
             group = EnchantGroup.A,
             rare = false,
             type = EnchantType.BOW
-        ) {"Sneak to shoot a teleportation<br/>arrow (${cooldownTime[it]?.seconds()} cooldown, -3 per bow<br/>hit)" }
+        ) {"Sneak to shoot a teleportation<br/>arrow (${cooldownTime[it]?.seconds()} cooldown, -3s per bow<br/>hit)" }
 
 
 
