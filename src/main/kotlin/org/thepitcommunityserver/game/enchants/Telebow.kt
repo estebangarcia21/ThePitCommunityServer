@@ -40,9 +40,10 @@ object Telebow : Enchant {
 
     @EventHandler
     fun onArrowLand(event: ProjectileHitEvent) {
-        event.onArrowLand(this) {shooter, tier, ctx ->
-            val arrow = ctx.arrow
-            val cooldownTime = cooldownTime[tier] ?: undefPropErr("cooldownTime", tier)
+        event.onArrowLand(this) {
+            val arrow = it.arrow
+            val shooter = it.shooter
+            val cooldownTime = cooldownTime[it.enchantTier] ?: undefPropErr("cooldownTime", tier)
 
             timer.cooldown(shooter.uniqueId, cooldownTime.ticks()) {
                 val isSneaking = ArrowWatch.isArrowSneaking(arrow)
@@ -57,7 +58,8 @@ object Telebow : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent){
-            event.damagerArrowHitPlayerWithEnchant(this){damager, _, _, _->
+            event.damagerArrowHitPlayerWithEnchant(this){
+                val damager = it.damager
                 if (timer.getCooldown(damager.uniqueId) == null) return@damagerArrowHitPlayerWithEnchant
 
                 timer.reduceCooldown(damager.uniqueId, cooldownReduction.ticks())
@@ -66,14 +68,17 @@ object Telebow : Enchant {
 
     @EventHandler
     fun onArrowShoot(event: EntityShootBowEvent) {
-        event.arrowShotWithEnchant(this) {shooter, _, _ ->
+        event.arrowShotWithEnchant(this) {
+            val shooter = it.shooter
             val cooldown = timer.getCooldown(shooter.uniqueId)
+
+            if (!shooter.isSneaking) return@arrowShotWithEnchant
             if (cooldown == null) return@arrowShotWithEnchant
 
             val packet = PacketPlayOutChat(
                 IChatBaseComponent.ChatSerializer.a(
                     "{\"text\":\""
-                            + ChatColor.RED + "Telebow Cooldown: " + (timer.getCooldown(shooter.uniqueId)?.div(20) ?: Tick ) + "(s)" + "\"}"
+                            + ChatColor.RED + "Telebow Cooldown: " + cooldown.seconds + "(s)" + "\"}"
                 ),
                 2.toByte()
             )
