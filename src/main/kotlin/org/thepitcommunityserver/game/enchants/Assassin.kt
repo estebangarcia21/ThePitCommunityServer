@@ -30,22 +30,22 @@ object Assassin : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagedReceivedAnyHitWithPantsEnchant(this) {damager, damaged, tier, _, ->
-            val cooldownTime = cooldownTime[tier] ?: undefPropErr("cooldownTime", tier)
+        event.damagedReceivedAnyHitWithPantsEnchant(this) {
+            val cooldownTime = cooldownTime[it.enchantTier] ?: undefPropErr("cooldownTime", it.enchantTier)
 
-            if (!damaged.isSneaking) return@damagedReceivedAnyHitWithPantsEnchant
+            if (!it.damaged.isSneaking) return@damagedReceivedAnyHitWithPantsEnchant
 
-            timer.cooldown(damaged.uniqueId, cooldownTime.ticks()) {
-                val tpLoc = damager.location.subtract(damager.eyeLocation.direction.normalize())
-                tpLoc.y = damager.location.y
+            timer.cooldown(it.damaged.uniqueId, cooldownTime.ticks()) {
+                val tpLoc = it.damager.location.subtract(it.damager.eyeLocation.direction.normalize())
+                tpLoc.y = it.damager.location.y
 
                 if (tpLoc.block.type == Material.AIR) {
-                    damaged.teleport(tpLoc)
+                    it.damaged.teleport(tpLoc)
                 } else {
-                    damaged.teleport(damager)
+                    it.damaged.teleport(it.damager)
                 }
 
-                damaged.world.playSound(damaged.location, Sound.ENDERMAN_TELEPORT, 1f, 2f)
+                it.damaged.world.playSound(it.damaged.location, Sound.ENDERMAN_TELEPORT, 1f, 2f)
             }
         }
     }
