@@ -43,7 +43,7 @@ object Telebow : Enchant {
         event.onArrowLand(this) {
             val arrow = it.arrow
             val shooter = it.shooter
-            val cooldownTime = cooldownTime[it.enchantTier] ?: undefPropErr("cooldownTime", tier)
+            val cooldownTime = cooldownTime[it.enchantTier] ?: undefPropErr("cooldownTime", it.enchantTier)
 
             timer.cooldown(shooter.uniqueId, cooldownTime.ticks()) {
                 val isSneaking = ArrowWatch.isArrowSneaking(arrow)
