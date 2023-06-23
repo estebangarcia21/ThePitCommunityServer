@@ -23,11 +23,9 @@ object Telebow : Enchant {
             name = "Telebow",
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
-            rare = false,
+            rare = true,
             type = EnchantType.BOW
         ) {"Sneak to shoot a teleportation<br/>arrow (${cooldownTime[it]?.seconds()} cooldown, -3s per bow<br/>hit)" }
-
-
 
     private val timer = Timer<UUID>()
     private val cooldownTime = mapOf(
