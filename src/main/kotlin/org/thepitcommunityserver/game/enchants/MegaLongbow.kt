@@ -31,9 +31,11 @@ object MegaLongbow : Enchant {
 
     @EventHandler
     fun onArrowShoot(event: EntityShootBowEvent) {
-        event.arrowShotWithEnchant(this) { damager, tier, ctx ->
-            val arrow = ctx.arrow
-            val amplifier = amplifier[tier] ?: undefPropErr("amplifier", tier)
+        event.arrowShotWithEnchant(this) {
+            val arrow = it.arrow
+            val damager = it.shooter
+
+            val amplifier = amplifier[it.enchantTier] ?: undefPropErr("amplifier", it.enchantTier)
 
             timer.cooldown(damager.uniqueId, cooldown.ticks()) {
                 arrow.isCritical = true

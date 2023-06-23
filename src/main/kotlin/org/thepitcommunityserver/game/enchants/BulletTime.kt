@@ -35,9 +35,10 @@ object BulletTime : Enchant {
 
     @EventHandler(priority = EventPriority.HIGH)
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.arrowHitBlockingPlayer(this) { _, damaged, tier, ctx ->
-            val arrow = ctx.arrow
-            val healAmount = healAmount[tier] ?: undefPropErr("healAmount", tier)
+        event.arrowHitBlockingPlayer(this) {
+            val arrow = it.arrow
+            val damaged = it.damaged
+            val healAmount = healAmount[it.enchantTier] ?: undefPropErr("healAmount", it.enchantTier)
 
             event.isCancelled = true
 
