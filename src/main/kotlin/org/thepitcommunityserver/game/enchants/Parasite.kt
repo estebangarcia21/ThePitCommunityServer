@@ -27,10 +27,10 @@ object Parasite : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerArrowHitPlayerWithEnchant(this) { damager, _, tier, _ ->
-            val heal = healAmount[tier] ?: undefPropErr("healAmount", tier)
+        event.damagerArrowHitPlayerWithEnchant(this) {
+            val heal = healAmount[it.enchantTier] ?: undefPropErr("healAmount", it.enchantTier)
 
-            DamageManager.applyHeal(damager, heal)
+            DamageManager.applyHeal(it.damager, heal)
         }
     }
 }
