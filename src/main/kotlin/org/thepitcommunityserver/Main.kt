@@ -36,7 +36,8 @@ class Main : JavaPlugin() {
             ArrowControl,
             BlockControl,
             ClearArrows,
-            ArrowWatch
+            ArrowWatch,
+            NightVision
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
