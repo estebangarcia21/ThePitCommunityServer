@@ -20,8 +20,23 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
       - name: Grant execute permission to Gradle wrapper
         run: chmod +x ./gradlew
+
+      - name: Install Python Packages
+        working-directory: scripts
+        run: |
+          python3 -m venv venv
+          pip install -r requirements.txt
+
+      - name: Build Maven Repositories
+        working-directory: scripts
+        run: python3 buildtools.py
 
       - name: Build with Gradle
         run: ./gradlew build --console=plain
