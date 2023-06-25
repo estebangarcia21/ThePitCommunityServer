@@ -1,22 +1,32 @@
 package org.thepitcommunityserver.util
 
-import org.bukkit.entity.Player
-import java.util.*
-import kotlin.collections.HashMap
-
-class HitCounter {
-
-    private val timer = Timer<UUID>()
+class HitCounter<K> {
+    private val timer = Timer<K>()
     private val cooldown = Time(3 * SECONDS)
 
-    private val playerHitsWithEnchant = HashMap<UUID, Int>()
+    private val hits = HashMap<K, Int>()
 
-    fun addHit(player: Player) {
-        val id = player.uniqueId
+    /**
+     * When calling this function, 1 will be added to the hit counter. When n is reached in hits, the hits will go back
+     * down to zero and the callback will be called.
+     */
+    fun onNthHit(id: K, n: Int, onHit: ((n: Int) -> Unit)? = null, onHitsReached: () -> Unit) {
+        val currentHits = hits.getOrDefault(id, 0)
+        val updatedHits = currentHits + 1
+
+        if (onHit != null) onHit(updatedHits)
+
+        if (updatedHits == n) {
+            onHitsReached()
+            hits[id] = 0
+            timer.stop(id)
+            return
+        }
+
+        hits[id] = updatedHits
 
         timer.cooldown(id, cooldown.ticks(), resetTime = true) {
-            val currentHits = playerHitsWithEnchant.getOrDefault(player.uniqueId, 0)
-            playerHitsWithEnchant[id] = currentHits + 1
+            hits[id] = 0
         }
     }
 }
