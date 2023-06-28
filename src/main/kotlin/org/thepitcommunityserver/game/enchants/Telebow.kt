@@ -1,13 +1,11 @@
 package org.thepitcommunityserver.game.enchants
 
-import net.minecraft.server.v1_8_R3.IChatBaseComponent
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat
 import org.bukkit.ChatColor
 import org.bukkit.Sound
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.thepitcommunityserver.game.enchants.lib.Enchant
 import org.thepitcommunityserver.game.enchants.lib.*
@@ -27,13 +25,13 @@ object Telebow : Enchant {
             type = EnchantType.BOW
         ) {"Sneak to shoot a teleportation<br/>arrow (${cooldownTime[it]?.seconds()} cooldown, -3s per bow<br/>hit)" }
 
-    private val timer = Timer<UUID>()
     private val cooldownTime = mapOf(
         1 to Time(90L * SECONDS),
         2 to Time(45L * SECONDS),
         3 to Time(20L * SECONDS)
     )
 
+    private val timer = Timer<UUID>()
     private val cooldownReduction = Time(3L * SECONDS)
 
     @EventHandler
@@ -51,36 +49,27 @@ object Telebow : Enchant {
                 shooter.teleport(arrow)
                 shooter.world.playSound(arrow.location, Sound.ENDERMAN_TELEPORT, 1f, 2f)
             }
-        }
-    }
 
-    @EventHandler
-    fun onDamageEvent(event: EntityDamageByEntityEvent){
-            event.damagerArrowHitPlayerWithEnchant(this){
-                val damager = it.damager
-                if (timer.getCooldown(damager.uniqueId) == null) return@damagerArrowHitPlayerWithEnchant
-
-                timer.reduceCooldown(damager.uniqueId, cooldownReduction.ticks())
+            if (timer.getCooldown(shooter.uniqueId) != null) {
+                sendCooldownMessage(shooter)
             }
+        }
     }
 
     @EventHandler
-    fun onArrowShoot(event: EntityShootBowEvent) {
-        event.arrowShotWithEnchant(this) {
-            val shooter = it.shooter
-            val cooldown = timer.getCooldown(shooter.uniqueId)
+    fun onDamageEvent(event: EntityDamageByEntityEvent) {
+        event.damagerArrowHitPlayerWithEnchant(this) {
+            val damager = it.damager
+            if (timer.getCooldown(damager.uniqueId) == null) return@damagerArrowHitPlayerWithEnchant
 
-            if (!shooter.isSneaking) return@arrowShotWithEnchant
-            if (cooldown == null) return@arrowShotWithEnchant
-
-            val packet = PacketPlayOutChat(
-                IChatBaseComponent.ChatSerializer.a(
-                    "{\"text\":\""
-                            + ChatColor.RED + "Telebow Cooldown: " + cooldown.seconds + "(s)" + "\"}"
-                ),
-                2.toByte()
-            )
-            (shooter as CraftPlayer).handle.playerConnection.sendPacket(packet)
+            timer.reduceCooldown(damager.uniqueId, cooldownReduction.ticks())
         }
+    }
+
+    private fun sendCooldownMessage(player: Player) {
+        val cooldown = timer.getCooldown(player.uniqueId) ?: return
+        val packet = createChatPacket(ChatColor.RED.toString() + "Telebow Cooldown: " + cooldown * SECONDS + "(s)")
+
+        sendPacketToPlayer(player, packet)
     }
 }
