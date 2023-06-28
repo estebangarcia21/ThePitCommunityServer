@@ -16,7 +16,7 @@ object ComboSwift: Enchant {
             group = EnchantGroup.A,
             rare = true,
             type = EnchantType.SWORD,
-        ) { "Every <yellow>${word[it]}</yellow> strike gain<br/><yellow>Speed ${intToRoman(amplifier[it]?.inc())}</yellow> (${duration[it].seconds()})" }
+        ) { "Every <yellow>${word[it]}</yellow> strike gain<br/><yellow>Speed ${intToRoman(amplifier[it]?.inc())}</yellow> (${duration[it]?.seconds()})" }
 
     private val word = mapOf(
         1 to "fourth",
