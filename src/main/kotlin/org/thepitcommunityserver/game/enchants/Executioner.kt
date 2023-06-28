@@ -29,11 +29,14 @@ object Executioner : Enchant {
 
     @EventHandler
     fun onDamageEvent(event : EntityDamageByEntityEvent) {
-        event.damagerMeleeHitPlayerWithEnchant(this) {damager, damaged, tier, _, ->
-            val killAmount = killAmount[tier] ?: undefPropErr("hearts", tier)
+        event.damagerMeleeHitPlayerWithEnchant(this) {
+            val damager = it.damager
+            val damaged = it.damaged
+
+            val killAmount = killAmount[it.enchantTier] ?: undefPropErr("hearts", it.enchantTier)
 
             if (damaged.health <= killAmount) {
-                damaged.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "EXECUTED!" + ChatColor.GRAY + " by " //                    + PermissionsManager.getInstance().getPlayerRank((Player) args[1]).getNameColor()
+                damaged.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "EXECUTED!" + ChatColor.GRAY + " by "
                         + damager.name
                         + damaged.name + ChatColor.GRAY + " (insta-kill below " + ChatColor.RED
                         + killAmount / 2f + "❤" + ChatColor.GRAY + ")"
@@ -41,7 +44,6 @@ object Executioner : Enchant {
 
                 damaged.world.playSound(damaged.location, Sound.VILLAGER_DEATH, 1f, 0.5f)
                 damaged.health = 0.0
-
             }
         }
     }
