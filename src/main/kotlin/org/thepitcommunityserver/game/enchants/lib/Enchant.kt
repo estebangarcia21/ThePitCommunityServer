@@ -21,7 +21,8 @@ val Enchants = listOf(
     MegaLongbow,
     Assassin,
     Peroxide,
-    SpeedyHit
+    SpeedyHit,
+    SlimePack
 )
 
 interface Enchant : Listener {
@@ -58,10 +59,11 @@ fun enchantByName(name: String): Enchant? {
 /**
  * Gets enchantments in `Name -> Level` manner.
  */
-fun getItemMysticEnchantments(item: ItemStack?): Map<String, Int> {
+fun getItemMysticEnchantments(item: ItemStack?): Map<String, Int>? {
     if (item == null) return emptyMap()
 
-    val nmsItemStack = CraftItemStack.asNMSCopy(item)
+    val nmsItemStack = CraftItemStack.asNMSCopy(item) ?: return null
+
     val compound = nmsItemStack.tag ?: return emptyMap()
 
     val enchantments = mutableMapOf<String, Int>()
@@ -101,5 +103,5 @@ fun setItemMysticEnchantments(item: ItemStack?, enchantments: Map<String, Int>) 
 fun getEnchantTierForItem(enchant: Enchant, item: ItemStack?): Int? {
     if (item == null) return null
 
-    return getItemMysticEnchantments(item)[enchant.config.name]
+    return getItemMysticEnchantments(item)?.get(enchant.config.name)
 }

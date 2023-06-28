@@ -5,6 +5,7 @@ import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import org.thepitcommunityserver.game.commands.MysticEnchantCommand
+import org.thepitcommunityserver.game.enchants.lib.ArmorChangeEventDispatcher
 import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.events.*
 import org.thepitcommunityserver.game.experience.Spawn
@@ -37,7 +38,8 @@ class Main : JavaPlugin() {
             BlockControl,
             ClearArrows,
             ArrowWatch,
-            NightVision
+            NightVision,
+            ArmorChangeEventDispatcher
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
