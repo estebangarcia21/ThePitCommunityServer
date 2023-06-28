@@ -25,8 +25,10 @@ object Knockback : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerMeleeHitPlayerWithEnchant(this){_, damaged, tier, _, ->
-            val knockbackAmount = knockbackAmount[tier] ?: undefPropErr("knockbackAmount", tier)
+        event.damagerMeleeHitPlayerWithEnchant(this){
+            val damaged = it.damaged
+
+            val knockbackAmount = knockbackAmount[it.enchantTier] ?: undefPropErr("knockbackAmount", it.enchantTier)
 
             damaged.velocity = Vector(
                 damaged.velocity.x * knockbackAmount,
