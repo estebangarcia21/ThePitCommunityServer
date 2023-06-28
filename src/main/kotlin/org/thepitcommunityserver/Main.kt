@@ -34,7 +34,6 @@ class Main : JavaPlugin() {
             HungerControl,
             StopLiquidFlow,
             SpawnProtection,
-            ArrowControl,
             BlockControl,
             ClearArrows,
             ArrowWatch,

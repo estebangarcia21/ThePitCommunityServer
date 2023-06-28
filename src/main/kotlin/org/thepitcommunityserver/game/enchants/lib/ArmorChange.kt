@@ -12,7 +12,7 @@ import org.thepitcommunityserver.Main
 import org.thepitcommunityserver.util.TICK
 import org.thepitcommunityserver.util.Timer
 
-data class PlayerArmorChangeEventContext(val enchantTier: Int)
+data class PlayerArmorChangeEventContext(val player: Player, val enchantTier: Int)
 typealias PlayerArmorChangeEventCallback = EventCallback<PlayerArmorChangeEventContext>
 
 typealias ArmorContents = Array<out ItemStack?>
@@ -52,13 +52,14 @@ class ArmorChangeEvent(val player: Player) : Event() {
             val enchantTier = getEnchantTierForItem(enchant, currentLeggings)
             if (enchantTier != null) {
                 callback(PlayerArmorChangeEventContext(
+                    player = player,
                     enchantTier = enchantTier
                 ))
             }
         }
     }
 
-    fun playerUnequippedLeggingsWithEnchant(enchant: Enchant, callback: EventCallback<Unit>) {
+    fun playerUnequippedLeggingsWithEnchant(enchant: Enchant, callback: PlayerArmorChangeEventCallback) {
         val previousArmorContents = previousArmor[player]
         val currentArmorContents = player.inventory.armorContents
 
@@ -68,7 +69,12 @@ class ArmorChangeEvent(val player: Player) : Event() {
         if (!isNullItemStack(previousLeggings) && isNullItemStack(currentLeggings)) {
             val enchantTier = getEnchantTierForItem(enchant, previousLeggings)
             if (enchantTier != null) {
-                callback(Unit)
+                callback(
+                    PlayerArmorChangeEventContext(
+                        player = player,
+                        enchantTier = enchantTier
+                    )
+                )
             }
         }
     }
@@ -112,6 +118,24 @@ object ArmorChangeEventDispatcher : Listener {
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
         callArmorChangeEvent(ArmorChangeEvent(event.player))
+    }
+}
+
+class LeggingsEnchantTracker(
+    val enchant: Enchant,
+    val onEquip: (player: Player, tier: Int) -> Unit,
+    val onUnequip: (player: Player, tier: Int) -> Unit
+) {
+    fun bind(event: ArmorChangeEvent) {
+        event.stream { e ->
+            e.playerEquippedLeggingsWithEnchant(enchant) {
+                onEquip(it.player, it.enchantTier)
+            }
+
+            e.playerUnequippedLeggingsWithEnchant(enchant) {
+                onUnequip(it.player, it.enchantTier)
+            }
+        }
     }
 }
 
