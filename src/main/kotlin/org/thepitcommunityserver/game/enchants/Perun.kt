@@ -15,9 +15,9 @@ import java.util.*
 object Perun : Enchant {
     override val config: EnchantConfig
         get() = EnchantConfig(
-            name = "Perun's Wrath",
+            name = "Combo: Perun's Wrath",
             tiers = listOf(1, 2, 3),
-            group = EnchantGroup.A,
+            group = EnchantGroup.B,
             rare = true,
             type = EnchantType.SWORD,
             description
