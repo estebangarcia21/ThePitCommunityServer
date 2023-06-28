@@ -23,7 +23,8 @@ val Enchants = listOf(
     Peroxide,
     SpeedyHit,
     BatPack,
-    SuperMonkey
+    SuperMonkey,
+    ComboHeal
 )
 
 interface Enchant : Listener {
