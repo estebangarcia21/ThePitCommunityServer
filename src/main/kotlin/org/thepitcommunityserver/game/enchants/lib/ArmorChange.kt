@@ -143,7 +143,7 @@ fun callArmorChangeEvent(event: ArmorChangeEvent) {
     Main.plugin.server.pluginManager.callEvent(event)
 }
 
-private fun isNullItemStack(itemStack: ItemStack?): Boolean {
+fun isNullItemStack(itemStack: ItemStack?): Boolean {
     if (itemStack == null) return true
 
     return itemStack.type == Material.AIR
