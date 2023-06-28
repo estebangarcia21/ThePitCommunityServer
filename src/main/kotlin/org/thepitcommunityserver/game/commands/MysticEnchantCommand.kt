@@ -25,7 +25,7 @@ object MysticEnchantCommand : CommandExecutor {
             return true
         }
 
-        val enchants = getItemMysticEnchantments(targetItem).toMutableMap()
+        val enchants = getItemMysticEnchantments(targetItem)?.toMutableMap() ?: return true
         enchants[enchant.config.name] = tier
 
         setItemMysticEnchantments(targetItem, enchants)
