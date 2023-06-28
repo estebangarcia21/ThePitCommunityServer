@@ -22,7 +22,7 @@ val Enchants = listOf(
     Assassin,
     Peroxide,
     SpeedyHit,
-    SlimePack
+    BatPack
 )
 
 interface Enchant : Listener {
