@@ -16,7 +16,7 @@ object ComboHeal : Enchant {
             name = "Combo: Heal",
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.B,
-            rare = true,
+            rare = false,
             type = EnchantType.SWORD,
         ) { "Every <yellow>fourth</yellow> strike heals<br/><red>${hearts[it]}❤</red> and grants <gold>${hearts[it]}❤</gold><br/>absorption" }
 
