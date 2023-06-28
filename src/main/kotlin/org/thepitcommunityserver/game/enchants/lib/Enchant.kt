@@ -23,7 +23,8 @@ val Enchants = listOf(
     Peroxide,
     SpeedyHit,
     Telebow,
-    SlimePack
+    SlimePack,
+    ComboStun
 
 )
 
