@@ -15,7 +15,7 @@ object MegaLongbow : Enchant {
         name = "Mega Longbow",
         tiers = listOf(1, 2, 3),
         group = EnchantGroup.B,
-        rare = false,
+        rare = true,
         type = EnchantType.BOW
     ) { "One shot per second, this bow is<br/>automatically fully drawn and<br/>grants <green>Jump Boost ${intToRoman(amplifier[it]?.inc())}</green> (2s)" }
 

@@ -1,6 +1,7 @@
 package org.thepitcommunityserver.game.enchants
 
 import org.bukkit.ChatColor
+import org.bukkit.Effect
 import org.bukkit.Sound
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
@@ -41,12 +42,14 @@ object Telebow : Enchant {
             val shooter = it.shooter
             val cooldownTime = cooldownTime[it.enchantTier] ?: undefPropErr("cooldownTime", it.enchantTier)
 
+            val isSneaking = ArrowWatch.isArrowSneaking(arrow)
+
+            if (!isSneaking) return@onArrowLand
+            if (isInsideSpawn(arrow.location)) return@onArrowLand
+
             timer.cooldown(shooter.uniqueId, cooldownTime.ticks()) {
-                val isSneaking = ArrowWatch.isArrowSneaking(arrow)
-
-                if (!isSneaking) return@cooldown
-
                 shooter.teleport(arrow)
+                shooter.world.playEffect(shooter.location, Effect.CLOUD, 100)
                 shooter.world.playSound(arrow.location, Sound.ENDERMAN_TELEPORT, 1f, 2f)
             }
 
@@ -68,7 +71,8 @@ object Telebow : Enchant {
 
     private fun sendCooldownMessage(player: Player) {
         val cooldown = timer.getCooldown(player.uniqueId) ?: return
-        val packet = createChatPacket(ChatColor.RED.toString() + "Telebow Cooldown: " + cooldown * SECONDS + "(s)")
+        val message = replaceChatColorTags("<yellow>Telebow:</yellow> <red>${cooldown/20}s cooldown!</red>")
+        val packet = createChatPacket(message)
 
         sendPacketToPlayer(player, packet)
     }
