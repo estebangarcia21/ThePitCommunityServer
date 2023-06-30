@@ -30,8 +30,11 @@ object Healer : Enchant {
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
-        event.damagerMeleeHitPlayerWithEnchant(this) {damager, damaged, tier, _, ->
-            val healAmount = healAmount[tier] ?: undefPropErr("healAmount", tier)
+        event.damagerMeleeHitPlayerWithEnchant(this) {
+            val damager = it.damager
+            val damaged = it.damaged
+
+            val healAmount = healAmount[it.enchantTier] ?: undefPropErr("healAmount", it.enchantTier)
 
             timer.cooldown(damager.uniqueId, cooldownTime.ticks()) {
                 DamageManager.applyHeal(damager, healAmount)
