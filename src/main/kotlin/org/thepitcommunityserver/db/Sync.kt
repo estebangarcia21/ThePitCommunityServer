@@ -1,35 +1,34 @@
 package org.thepitcommunityserver.db
 
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
-import software.amazon.awssdk.regions.Region
-import software.amazon.awssdk.services.dynamodb.DynamoDbClient
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbException
-import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
+import java.util.*
 
-class Sync(private val playerUuid: String) {
-    private val dynamoDbClient: DynamoDbClient = DynamoDbClient.builder()
-        .region(Region.US_WEST_2)
-        .credentialsProvider(DefaultCredentialsProvider.create())
-        .build()
+@DynamoDbBean
+data class Player(
+    // Partition key.
+    @get:DynamoDbPartitionKey
+    var playerId: String? = null,
 
-    fun sync() {
-        val tableName = "ThePitCommunityServer-Main"
+    // Fields.
+    var loginCount: Double? = null,
+    var xp: Int? = null,
+    var gold: Int? = null
+)
 
-        val values = mapOf(
-            "UUID" to AttributeValue.builder().s(playerUuid).build()
+fun sync(playerId: UUID) {
+    try {
+        PitTable.putItem(
+            Player(
+                playerId = playerId.toString(),
+                loginCount = 1.0,
+                xp = 100,
+                gold = 100000
+            )
         )
-
-        val putItemRequest = PutItemRequest.builder()
-            .tableName(tableName)
-            .item(values)
-            .build()
-
-        try {
-            dynamoDbClient.putItem(putItemRequest)
-            println("Item added successfully")
-        } catch (e: DynamoDbException) {
-            println("Error adding item: ${e.message}")
-        }
+        println("Item added successfully")
+    } catch (e: DynamoDbException) {
+        println("Error adding item: ${e.message}")
     }
 }
