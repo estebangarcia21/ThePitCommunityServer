@@ -1,6 +1,5 @@
 package org.thepitcommunityserver.game.events
 
-import net.minecraft.server.v1_8_R3.ItemBow
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -10,7 +9,6 @@ import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.PluginLifecycleListener
 import org.thepitcommunityserver.util.SECONDS
 import org.thepitcommunityserver.util.Timer
-import javax.swing.text.StyledEditorKit.BoldAction
 
 
 data class ArrowContext(
@@ -21,16 +19,10 @@ object ArrowWatch : Listener, PluginLifecycleListener {
     private val arrows = HashMap<Arrow, ArrowContext>()
     private val timer = Timer<Unit>()
 
-
     @EventHandler
     fun onArrowShoot(event: EntityShootBowEvent) {
-        val arrow = event.projectile
-
-
-        if (arrow !is Arrow) return
-
-        val shooter = arrow.shooter
-        if (shooter !is Player) return
+        val arrow = event.projectile as? Arrow ?: return
+        val shooter = arrow.shooter as? Player ?: return
 
         arrows[arrow] = ArrowContext(bow = shooter.itemInHand, isSneaking = shooter.isSneaking)
     }
