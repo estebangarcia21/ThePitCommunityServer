@@ -4,11 +4,10 @@ import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityShootBowEvent
-import org.bukkit.event.entity.ProjectileHitEvent
+import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.events.ArrowWatch
 import org.thepitcommunityserver.util.leggings
 import kotlin.random.Random
-
 
 typealias EventCallback<C> = (ctx: C) -> Unit
 
@@ -83,8 +82,7 @@ fun EntityDamageByEntityEvent.damagedReceivedAnyHitWithPantsEnchant(enchant: Enc
                 damaged = damaged,
                 enchantTier = enchantTier,
                 arrow = null
-            )
-            )
+            ))
         }
         is Arrow -> {
             val shooter = damager.shooter as? Player ?: return
@@ -105,11 +103,23 @@ data class ArrowShotWithEnchantContext(
     val arrow: Arrow
 )
 
-fun EntityShootBowEvent.arrowShotWithEnchant(enchant: Enchant, callback: EventCallback<ArrowShotWithEnchantContext>) {
-    val shooter = this.entity as? Player ?: return
+/**
+ * Execute code if an arrow was shot with a bow that has an enchant.
+ *
+ * Explicitly set `getBowOnShoot` to `true` if you are calling this from an `EntityShootBowEvent`. `ProjectileHitEvent`s
+ * should be set to false in order to use `ArrowWatch` to get the shooter's bow at the time of shooting the arrow upon
+ * hitting an entity.
+ */
+fun EntityShootBowEvent.arrowShotWithEnchant(enchant: Enchant, getBowOnShoot: Boolean = false, callback: EventCallback<ArrowShotWithEnchantContext>) {
     val arrow = this.projectile as? Arrow ?: return
+    val shooter = arrow.shooter as? Player ?: return
 
-    val bow = ArrowWatch.getBowFromArrow(arrow)
+    val bow: ItemStack? = if (getBowOnShoot) {
+        shooter.itemInHand
+    } else {
+        ArrowWatch.getBowFromArrow(arrow)
+    }
+
     val enchantTier = getEnchantTierForItem(enchant, bow) ?: return
 
     callback(ArrowShotWithEnchantContext(
@@ -139,20 +149,4 @@ fun EntityDamageByEntityEvent.playerHitPlayer(callback: (damager: Player, damage
     if (damager != null && damaged != null) {
         callback(damager, damaged)
     }
-}
-
-fun ProjectileHitEvent.onArrowLand(enchant: Enchant, callback: EventCallback<ArrowShotWithEnchantContext>) {
-    val shooter = this.entity.shooter
-    val arrow = this.entity
-
-    if (shooter !is Player || arrow !is Arrow) return
-
-    val bow = ArrowWatch.getBowFromArrow(arrow)
-    val enchantTier = getEnchantTierForItem(enchant, bow) ?: return
-
-    callback(ArrowShotWithEnchantContext(
-        shooter = shooter,
-        enchantTier = enchantTier,
-        arrow = arrow
-    ))
 }
