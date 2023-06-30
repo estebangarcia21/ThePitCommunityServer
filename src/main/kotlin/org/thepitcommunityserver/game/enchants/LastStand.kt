@@ -25,8 +25,10 @@ object LastStand : Enchant {
 
     @EventHandler
     fun onDamageEvent( event: EntityDamageByEntityEvent) {
-        event.damagedReceivedAnyHitWithPantsEnchant(this){ _, damaged, tier, _, ->
-            val amplifier = amplifier[tier] ?: undefPropErr("amplifier", tier)
+        event.damagedReceivedAnyHitWithPantsEnchant(this){
+            val damaged = it.damaged
+
+            val amplifier = amplifier[it.enchantTier] ?: undefPropErr("amplifier", it.enchantTier)
 
             if (damaged.health < 10  ) {
                 damaged.addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Time(4L * SECONDS).ticks().toInt(), amplifier, true))
