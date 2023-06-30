@@ -4,6 +4,7 @@ import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityShootBowEvent
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.events.ArrowWatch
 import org.thepitcommunityserver.util.leggings
@@ -149,4 +150,20 @@ fun EntityDamageByEntityEvent.playerHitPlayer(callback: (damager: Player, damage
     if (damager != null && damaged != null) {
         callback(damager, damaged)
     }
+}
+
+fun ProjectileHitEvent.onArrowLand(enchant: Enchant, callback: EventCallback<ArrowShotWithEnchantContext>) {
+    val shooter = this.entity.shooter
+    val arrow = this.entity
+
+    if (shooter !is Player || arrow !is Arrow) return
+
+    val bow = ArrowWatch.getBowFromArrow(arrow)
+    val enchantTier = getEnchantTierForItem(enchant, bow) ?: return
+
+    callback(ArrowShotWithEnchantContext(
+        shooter = shooter,
+        enchantTier = enchantTier,
+        arrow = arrow
+    ))
 }
