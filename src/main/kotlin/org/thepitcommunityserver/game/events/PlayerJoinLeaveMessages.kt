@@ -16,7 +16,5 @@ object PlayerJoinLeaveMessages : Listener {
         event.joinMessage =
             (ChatColor.GOLD.toString() + ChatColor.BOLD.toString() + "Welcome Back to The Pit Community Server! " + ChatColor.AQUA
                     + event.player.name + ChatColor.GREEN + ", thank you for coming back ${ChatColor.RED.toString() + Text.HEART}")
-
-        sync(event.player.uniqueId)
     }
 }
