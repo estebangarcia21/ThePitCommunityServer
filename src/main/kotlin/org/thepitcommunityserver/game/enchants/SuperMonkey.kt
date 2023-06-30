@@ -38,6 +38,5 @@ object SuperMonkey : Enchant {
 
         player.addPotionEffect(PotionEffect(PotionEffectType.JUMP, duration.ticks().toInt(), 1, true))
         player.addPotionEffect(PotionEffect(PotionEffectType.SPEED, duration.ticks().toInt(), 1, true))
-
     }
 }
