@@ -29,7 +29,10 @@ class Timer<K> {
             setCooldown(id, ticks, resetTime, onTick, post)
         }
     }
-
+    /**
+     *
+     *
+     */
     fun setCooldown(id: K, time: Tick, resetTime: Boolean, onTick: Runnable?, post: Runnable?) {
         if (getCooldown(id) == null || resetTime) {
             timer[id] = time
@@ -39,8 +42,20 @@ class Timer<K> {
         scheduleTimer(id, post, onTick)
     }
 
+    /**
+     * Returns the cooldown time if it exists, otherwise null
+     */
     fun getCooldown(id: K): Tick? {
         return timer[id]
+    }
+
+    fun reduceCooldown(id: K, ticksToReduce: Tick) {
+        val currentCooldown = getCooldown(id)
+        if (currentCooldown == null) return
+
+        val newCooldown = (currentCooldown - ticksToReduce).coerceAtLeast(0L)
+
+        timer[id] = newCooldown
     }
 
     fun stop(id: K) {
