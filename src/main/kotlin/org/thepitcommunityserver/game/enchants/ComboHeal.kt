@@ -33,14 +33,13 @@ object ComboHeal : Enchant {
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerMeleeHitPlayerWithEnchant(this) {
             val damager = it.damager
-
             val healAmount = healAmount[it.enchantTier] ?: undefPropErr("healAmount", it.enchantTier)
 
             hitCounter.onNthHit(damager.uniqueId, 4) {
                 val nmsDamager = (damager as CraftPlayer).handle
 
                 damager.playSound(damager.location, Sound.DONKEY_HIT, 1f, 0.5f)
-                DamageManager.applyHeal(damager,healAmount)
+                DamageManager.applyHeal(damager, healAmount)
                 nmsDamager.absorptionHearts = (nmsDamager.absorptionHearts + healAmount.coerceAtMost(8.0)).toFloat()
             }
         }
