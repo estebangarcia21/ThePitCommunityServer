@@ -3,7 +3,6 @@ package org.thepitcommunityserver.game.events
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.inventory.ItemStack
@@ -11,8 +10,13 @@ import org.thepitcommunityserver.PluginLifecycleListener
 import org.thepitcommunityserver.util.SECONDS
 import org.thepitcommunityserver.util.Timer
 
+
+data class ArrowContext(
+    val isSneaking: Boolean,
+    val bow: ItemStack?
+)
 object ArrowWatch : Listener, PluginLifecycleListener {
-    private val arrows = HashMap<Arrow, ItemStack?>()
+    private val arrows = HashMap<Arrow, ArrowContext>()
     private val timer = Timer<Unit>()
 
     @EventHandler
@@ -20,11 +24,15 @@ object ArrowWatch : Listener, PluginLifecycleListener {
         val arrow = event.projectile as? Arrow ?: return
         val shooter = arrow.shooter as? Player ?: return
 
-        arrows[arrow] = shooter.itemInHand
+        arrows[arrow] = ArrowContext(bow = shooter.itemInHand, isSneaking = shooter.isSneaking)
     }
 
     fun getBowFromArrow(arrow: Arrow): ItemStack? {
-        return arrows[arrow]
+        return arrows[arrow]?.bow
+    }
+
+    fun isArrowSneaking(arrow: Arrow): Boolean {
+        return arrows[arrow]?.isSneaking ?: false
     }
 
     /**
