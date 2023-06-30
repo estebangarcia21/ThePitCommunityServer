@@ -36,13 +36,13 @@ object ComboSwift: Enchant {
         3 to 1
     )
 
-    private val hitCounter = HitCounter<UUID>()
-
     private val hitsNeeded = mapOf(
         1 to 4,
         2 to 3,
         3 to 3
     )
+
+    private val hitCounter = HitCounter<UUID>()
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
