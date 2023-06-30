@@ -31,7 +31,7 @@ object MegaLongbow : Enchant {
 
     @EventHandler
     fun onArrowShoot(event: EntityShootBowEvent) {
-        event.arrowShotWithEnchant(this) {
+        event.arrowShotWithEnchant(this, getBowOnShoot = true) {
             val arrow = it.arrow
             val damager = it.shooter
 
