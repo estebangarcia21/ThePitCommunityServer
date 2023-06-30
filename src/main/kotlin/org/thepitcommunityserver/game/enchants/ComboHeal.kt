@@ -45,5 +45,3 @@ object ComboHeal : Enchant {
         }
     }
 }
-
-
