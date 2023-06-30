@@ -8,7 +8,7 @@ import org.thepitcommunityserver.game.enchants.lib.getItemMysticEnchantments
 import java.util.*
 
 fun syncLoreWithEnchantments(item: ItemStack?) {
-    val enchants = getItemMysticEnchantments(item)
+    val enchants = getItemMysticEnchantments(item) ?: return
 
     val lore = arrayListOf("""
         <gray>Lives: </gray><green>${Text.INFINITY}</green>/<gray>${Text.INFINITY}</green>
