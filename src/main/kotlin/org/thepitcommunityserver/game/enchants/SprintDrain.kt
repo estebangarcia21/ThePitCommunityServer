@@ -43,11 +43,14 @@ object SprintDrain: Enchant {
 
     @EventHandler
     fun onDamageEvent(event:EntityDamageByEntityEvent) {
-        event.damagerArrowHitPlayerWithEnchant(this){damager, damaged, tier, _ ->
-            val amplifier =  amplifier[tier] ?: undefPropErr("amplifier", tier)
-            val duration =  duration[tier] ?: undefPropErr("duration", tier)
+        event.damagerArrowHitPlayerWithEnchant(this){
+            val damager = it.damager
+            val damaged = it.damaged
 
-            if (tier == 1) {
+            val amplifier =  amplifier[it.enchantTier] ?: undefPropErr("amplifier", it.enchantTier)
+            val duration =  duration[it.enchantTier] ?: undefPropErr("duration", it.enchantTier)
+
+            if (it.enchantTier == 1) {
                 damager.addPotionEffect(PotionEffect(PotionEffectType.SPEED, amplifier, duration.ticks().toInt(),true))
             } else {
                 damager.addPotionEffect(PotionEffect(PotionEffectType.SPEED, amplifier, duration.ticks().toInt(),true))
