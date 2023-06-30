@@ -3,6 +3,7 @@ package org.thepitcommunityserver.game.events
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.inventory.ItemStack
@@ -16,12 +17,8 @@ object ArrowWatch : Listener, PluginLifecycleListener {
 
     @EventHandler
     fun onArrowShoot(event: EntityShootBowEvent) {
-        val arrow = event.projectile
-
-        if (arrow !is Arrow) return
-
-        val shooter = arrow.shooter
-        if (shooter !is Player) return
+        val arrow = event.projectile as? Arrow ?: return
+        val shooter = arrow.shooter as? Player ?: return
 
         arrows[arrow] = shooter.itemInHand
     }
