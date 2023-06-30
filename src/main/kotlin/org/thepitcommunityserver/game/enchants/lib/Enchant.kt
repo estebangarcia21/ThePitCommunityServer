@@ -24,6 +24,7 @@ val Enchants = listOf(
     SpeedyHit,
     BatPack,
     SuperMonkey,
+    Telebow,
     LastStand
 )
 

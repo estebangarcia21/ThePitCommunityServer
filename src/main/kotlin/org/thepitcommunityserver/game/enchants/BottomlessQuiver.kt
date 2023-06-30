@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.enchants.lib.*
+import org.thepitcommunityserver.util.undefPropErr
 
 object BottomlessQuiver : Enchant {
     override val config: EnchantConfig
@@ -25,7 +26,8 @@ object BottomlessQuiver : Enchant {
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagerArrowHitPlayerWithEnchant(this) {
-            val arrows = arrowsGiven[it.enchantTier]?.let { ItemStack(Material.ARROW, it) } ?: error("arrows is undefined for tier ${it.enchantTier}")
+            val arrowAmount = arrowsGiven[it.enchantTier] ?: undefPropErr("arrowsGiven", it.enchantTier)
+            val arrows = ItemStack(Material.ARROW, arrowAmount)
 
             it.damager.inventory.addItem(arrows)
         }
