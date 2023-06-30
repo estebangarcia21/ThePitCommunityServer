@@ -1,9 +1,11 @@
 package org.thepitcommunityserver.util
 
-import net.minecraft.server.v1_8_R3.*
+import net.minecraft.server.v1_8_R3.IChatBaseComponent
+import net.minecraft.server.v1_8_R3.Packet
+import net.minecraft.server.v1_8_R3.PacketListener
+import net.minecraft.server.v1_8_R3.PacketPlayOutChat
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
-
 
 fun createChatComponent(text: String): IChatBaseComponent? {
     val message = "{\"text\":\"$text\"}"
