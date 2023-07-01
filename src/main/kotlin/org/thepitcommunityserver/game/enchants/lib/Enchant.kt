@@ -25,6 +25,7 @@ val Enchants = listOf(
     BatPack,
     SuperMonkey,
     Telebow,
+    Knockback,
     SprintDrain,
     Perun,
     ComboSwift,
