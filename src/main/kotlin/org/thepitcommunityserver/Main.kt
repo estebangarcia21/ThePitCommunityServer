@@ -4,11 +4,13 @@ package org.thepitcommunityserver
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import org.thepitcommunityserver.db.MemoryToDBSynchronizer
 import org.thepitcommunityserver.game.commands.MysticEnchantCommand
 import org.thepitcommunityserver.game.enchants.lib.ArmorChangeEventDispatcher
 import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.events.*
 import org.thepitcommunityserver.game.experience.Spawn
+import org.thepitcommunityserver.game.qol.PitScoreboard
 
 @Suppress("unused")
 class Main : JavaPlugin() {
@@ -38,7 +40,9 @@ class Main : JavaPlugin() {
             ClearArrows,
             ArrowWatch,
             NightVision,
-            ArmorChangeEventDispatcher
+            ArmorChangeEventDispatcher,
+            PitScoreboard,
+            MemoryToDBSynchronizer
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()

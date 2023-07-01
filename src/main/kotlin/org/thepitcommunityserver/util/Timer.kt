@@ -2,6 +2,7 @@ package org.thepitcommunityserver.util
 
 import org.bukkit.Bukkit
 import org.thepitcommunityserver.Main
+import org.thepitcommunityserver.PluginLifecycleListener
 
 class Timer<K> {
     /**
@@ -50,8 +51,7 @@ class Timer<K> {
     }
 
     fun reduceCooldown(id: K, ticksToReduce: Tick) {
-        val currentCooldown = getCooldown(id)
-        if (currentCooldown == null) return
+        val currentCooldown = getCooldown(id) ?: return
 
         val newCooldown = (currentCooldown - ticksToReduce).coerceAtLeast(0L)
 
@@ -86,4 +86,32 @@ class Timer<K> {
 
         tasks[id] = taskId
     }
+}
+
+typealias GlobalTimerHandler = () -> Unit
+
+data class GlobalTimerHandlerConfig(
+    val handler: GlobalTimerHandler,
+    val step: Tick
+)
+
+object GlobalTimer : PluginLifecycleListener {
+    /**
+     * Maps a task name to a handler.
+     */
+    private val tasks = mutableMapOf<String, GlobalTimerHandlerConfig>()
+
+    fun registerTask(taskName: String, step: Tick, handler: GlobalTimerHandler) {
+        tasks[taskName] = GlobalTimerHandlerConfig(handler, step)
+    }
+
+    override fun onPluginEnable() {
+        tasks.values.forEach { t ->
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.plugin, {
+                t.handler()
+            }, 0L, t.step)
+        }
+    }
+
+    override fun onPluginDisable() {}
 }
