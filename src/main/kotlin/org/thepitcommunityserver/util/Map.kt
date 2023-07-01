@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.util.Vector
 import java.io.InputStreamReader
 
 val CurrentWorld: World = Bukkit.getWorld("world")
@@ -31,10 +32,25 @@ data class MapData(
     val centerHologram: DeserializedLocation,
 
     // Misc.
-    val spawnPoints: List<DeserializedLocation>,
+    val spawnPoints: List<SpawnPoint>,
     val centerDropdown: CenterDropdown,
     val bounds: BoundsConfiguration,
 )
+
+data class SpawnPoint(
+    val pos: DeserializedLocation,
+    val rot: Double
+) {
+    fun toBukkitVector(): Vector {
+        require(pos.size == 3) { "List must be a of size 3 to convert to org.bukkit.util.vector (x, y, z)" }
+
+        return Vector(pos[0], pos[1], pos[2])
+    }
+
+    fun toLocation(world: World = CurrentWorld): Location {
+        return pos.toLocation(world = world, rot = rot.toFloat())
+    }
+}
 
 data class BoundsConfiguration(
     val spawn: Bounds
@@ -51,7 +67,7 @@ data class CenterDropdown(
 )
 
 val randomSpawnLocation: Location
-    get() = CurrentWorldConfig.spawnPoints.random().toBukkitVector().toLocation(CurrentWorld)
+    get() = CurrentWorldConfig.spawnPoints.random().toLocation()
 
 fun getMapData(): MapConfiguration {
     val yamlFilePath = "maps.yaml"
@@ -64,4 +80,19 @@ fun getMapData(): MapConfiguration {
     val gson = Gson()
 
     return gson.fromJson(jsonNode.toString(), MapConfiguration::class.java)
+}
+
+fun DeserializedLocation.toBukkitVector(): Vector {
+    require(this.size == 3) { "List must be a of size 3 to convert to org.bukkit.util.vector (x, y, z)" }
+
+    return Vector(this[0], this[1], this[2])
+}
+
+fun DeserializedLocation.toLocation(world: World = CurrentWorld, rot: Float? = null): Location {
+    val loc = this.toBukkitVector().toLocation(world)
+    if (rot != null) {
+        loc.yaw = rot
+    }
+
+    return loc
 }

@@ -35,10 +35,11 @@ object SpawnProtection : Listener {
 
     @EventHandler
     fun onHit(event: EntityDamageByEntityEvent) {
-        event.playerHitPlayer { damager, damaged ->
-            if (isInsideSpawn(damager.location) || isInsideSpawn(damaged.location)) {
-                event.isCancelled = true
-            }
+        val damager = event.damager
+        val damaged = event.entity
+
+        if (isInsideSpawn(damager.location) || isInsideSpawn(damaged.location)) {
+            event.isCancelled = true
         }
     }
 
