@@ -9,6 +9,7 @@ object HungerControl : Listener {
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
+        player.maxHealth = 20.0
         player.foodLevel = 19
     }
 
