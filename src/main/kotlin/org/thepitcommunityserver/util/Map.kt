@@ -6,11 +6,10 @@ import com.google.gson.Gson
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.util.Vector
 import java.io.InputStreamReader
 
-val world: World = Bukkit.getWorld("world")
-val currentMap = getMapData().elemental
+val CurrentWorld: World = Bukkit.getWorld("world")
+val CurrentWorldConfig = getMapData().elemental
 
 typealias DeserializedLocation = List<Double>
 
@@ -50,6 +49,9 @@ data class CenterDropdown(
     val pos: DeserializedLocation,
     val radius: Double
 )
+
+val randomSpawnLocation: Location
+    get() = CurrentWorldConfig.spawnPoints.random().toBukkitVector().toLocation(CurrentWorld)
 
 fun getMapData(): MapConfiguration {
     val yamlFilePath = "maps.yaml"

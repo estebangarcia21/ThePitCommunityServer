@@ -25,7 +25,13 @@ val Enchants = listOf(
     BatPack,
     SuperMonkey,
     Telebow,
-    Healer
+    Healer,
+    Knockback,
+    SprintDrain,
+    Perun,
+    ComboSwift,
+    ComboStun,
+    ComboHeal
 )
 
 interface Enchant : Listener {
