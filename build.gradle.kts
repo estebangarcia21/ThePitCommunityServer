@@ -19,6 +19,7 @@ repositories {
     maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
     maven { url = uri("https://repo.dmulloy2.net/nexus/repository/public/") }
     maven { url = uri("https://dl.bintray.com/kotlin/kotlin-eap") }
+//    maven { url = uri("http://repo.tigerhix.me/content/repositories/snapshots/") }
 }
 
 dependencies {
@@ -33,6 +34,7 @@ dependencies {
     implementation("software.amazon.awssdk:dynamodb-enhanced")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.5")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.5")
+//    implementation("me.tigerhix.lib:scoreboard:1.0.1-SNAPSHOT")
 }
 
 tasks.test {
