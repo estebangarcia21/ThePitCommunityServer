@@ -14,12 +14,16 @@ version = "0.0.1-BETA"
 repositories {
     mavenCentral()
     mavenLocal()
+    jcenter()
 
+    maven { url = uri("https://dl.bintray.com/kotlin/kotlin-eap") }
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots") }
     maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
     maven { url = uri("https://repo.dmulloy2.net/nexus/repository/public/") }
-    maven { url = uri("https://dl.bintray.com/kotlin/kotlin-eap") }
-//    maven { url = uri("http://repo.tigerhix.me/content/repositories/snapshots/") }
+    maven {
+        name = "citizens-repo"
+        url = uri("https://maven.citizensnpcs.co/repo")
+    }
 }
 
 dependencies {
@@ -34,7 +38,9 @@ dependencies {
     implementation("software.amazon.awssdk:dynamodb-enhanced")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.5")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.5")
-//    implementation("me.tigerhix.lib:scoreboard:1.0.1-SNAPSHOT")
+    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
+        exclude(group = "*", module = "*")
+    }
     testImplementation("io.kotest:kotest-runner-junit5:4.6.3")
     testImplementation("io.kotest:kotest-assertions-core:4.6.3")
 }
