@@ -22,12 +22,14 @@ class Timer<K> {
         setCooldown(id, ticks, false, onTick, operation)
     }
 
-    fun cooldown(id: K, ticks: Tick, post: Runnable? = null, resetTime: Boolean = false, onTick: Runnable? = null, operation: Runnable) {
+    fun cooldown(id: K, ticks: Tick, post: (() -> Unit)? = null, resetTime: Boolean = false, onTick: (() -> Unit)? = null, cooldownAction: (() -> Unit)? = null, operation: () -> Unit) {
         val cooldown = getCooldown(id)
         if (cooldown == null) {
-            operation.run()
+            operation()
 
             setCooldown(id, ticks, resetTime, onTick, post)
+        } else if (cooldownAction != null ){
+            cooldownAction()
         }
     }
     /**
