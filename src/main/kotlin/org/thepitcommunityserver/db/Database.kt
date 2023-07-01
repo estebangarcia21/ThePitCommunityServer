@@ -51,19 +51,13 @@ object MemoryToDBSynchronizer : Listener {
                 count += 1
                 lastJoinedAt = Date().toString()
             }
-            level = 69
-            prestige = 23
         }
-
-        println("Login state: ${memoryPlayerData[event.player.uniqueId]}")
 
         syncMemoryPlayerToDB(playerId)
     }
 
     @EventHandler
     fun onPlayerQuit(event: PlayerQuitEvent) {
-        println("Logout state: ${memoryPlayerData[event.player.uniqueId]}")
-
         syncMemoryPlayerToDB(event.player.uniqueId)
     }
 }
