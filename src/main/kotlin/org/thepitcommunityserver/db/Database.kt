@@ -2,6 +2,7 @@ package org.thepitcommunityserver.db
 
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -38,7 +39,7 @@ object MemoryToDBSynchronizer : Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player
         val playerId = player.uniqueId
@@ -50,6 +51,8 @@ object MemoryToDBSynchronizer : Listener {
                 count += 1
                 lastJoinedAt = Date().toString()
             }
+            level = 69
+            prestige = 23
         }
 
         println("Login state: ${memoryPlayerData[event.player.uniqueId]}")
@@ -66,7 +69,16 @@ object MemoryToDBSynchronizer : Listener {
 }
 
 var Player.data: DBPlayer
-    get() = memoryPlayerData[this.uniqueId] ?: error("DB data for player ${this.uniqueId} is not bound to player instance!")
+    get() {
+        val uuid = this.uniqueId
+
+        var data = memoryPlayerData[uuid]
+        if (data == null) {
+            data = initPlayerEntryForMemoryDB(uuid)
+        }
+
+        return data
+    }
     set(data) {
         memoryPlayerData[this.uniqueId] = data
     }
@@ -82,18 +94,19 @@ fun modifyPlayerData(playerId: UUID, modifier: DBPlayer.() -> Unit) {
 /**
  * This function populates an entry in the `memoryPlayerData` map. If a user is new
  */
-fun initPlayerEntryForMemoryDB(playerId: UUID) {
+fun initPlayerEntryForMemoryDB(playerId: UUID): DBPlayer {
+    if (memoryPlayerData.containsKey(playerId)) return memoryPlayerData[playerId]!!
+
     val dbPlayer = PitPlayerTable.getItem(DBPlayer(playerId = playerId.toString()))
-    if (dbPlayer == null) {
-        registerNewPlayerToMemoryDB(playerId)
-        return
-    }
+        ?: initializePlayerDBBean(playerId)
 
     memoryPlayerData[playerId] = dbPlayer
+
+    return dbPlayer
 }
 
-private fun registerNewPlayerToMemoryDB(playerId: UUID) {
-    memoryPlayerData[playerId] = DBPlayer(
+private fun initializePlayerDBBean(playerId: UUID): DBPlayer {
+    return DBPlayer(
         playerId = playerId.toString(),
         login = LoginInformation()
     )
@@ -104,6 +117,7 @@ private fun syncMemoryPlayerToDB(playerId: UUID) {
 
     try {
         PitPlayerTable.putItem(playerStateInMemory)
+        memoryPlayerData.remove(playerId)
     } catch (e: DynamoDbException) {
         println(e.stackTrace)
         println("Could not synchronize player from memory to the database: PartitionKey/PlayerId=$playerId")
