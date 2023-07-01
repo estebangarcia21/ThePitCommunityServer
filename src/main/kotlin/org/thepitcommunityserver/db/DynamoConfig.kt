@@ -5,9 +5,12 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema
 import software.amazon.awssdk.enhanced.dynamodb.mapper.BeanTableSchema
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import java.net.URI
+import java.util.*
 
 const val PIT_TABLE_NAME = "ThePit"
 
@@ -17,7 +20,25 @@ private val llDynamoClient = DynamoDbClient.builder()
     .credentialsProvider(DefaultCredentialsProvider.create())
     .build()
 
-val dynamoClient = DynamoDbEnhancedClient.builder().dynamoDbClient(llDynamoClient).build()
+val dynamoClient: DynamoDbEnhancedClient = DynamoDbEnhancedClient.builder().dynamoDbClient(llDynamoClient).build()
 
-private val tableSchema: TableSchema<Player> = BeanTableSchema.create(Player::class.java)
-val PitTable: DynamoDbTable<Player> = dynamoClient.table(PIT_TABLE_NAME, tableSchema)
+private val tableSchema: TableSchema<DBPlayer> = BeanTableSchema.create(DBPlayer::class.java)
+val PitPlayerTable: DynamoDbTable<DBPlayer> = dynamoClient.table(PIT_TABLE_NAME, tableSchema)
+
+@DynamoDbBean
+data class DBPlayer(
+    @get:DynamoDbPartitionKey
+    var playerId: String = "",
+
+    var xp: Int = 0,
+    var gold: Double = 0.0,
+
+    var login: LoginInformation = LoginInformation()
+)
+
+@DynamoDbBean
+data class LoginInformation(
+    var count: Int = 0,
+    var firstJoinedAt: String = Date().toString(),
+    var lastJoinedAt: String = Date().toString()
+)
