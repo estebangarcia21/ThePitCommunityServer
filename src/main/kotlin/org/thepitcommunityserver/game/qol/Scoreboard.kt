@@ -9,10 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.thepitcommunityserver.db.data
 import org.thepitcommunityserver.external.NativeScoreboard
 import org.thepitcommunityserver.game.combat.CombatStatus
-import org.thepitcommunityserver.util.CurrentWorld
-import org.thepitcommunityserver.util.GlobalTimer
-import org.thepitcommunityserver.util.SECONDS
-import org.thepitcommunityserver.util.intToRoman
+import org.thepitcommunityserver.util.*
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,8 +40,15 @@ object PitScoreboard : Listener {
             optimizedBoard.line(formatLine("Prestige", ChatColor.YELLOW, intToRoman(playerData.prestige), false))
         }
 
-        optimizedBoard.line(formatLine("Level", ChatColor.AQUA, "[${playerData.level}]", true))
-        optimizedBoard.line(formatLine("Needed XP", ChatColor.AQUA, playerData.xp.toString(), false))
+        optimizedBoard.line(formatLine("Level", null, formatLevel(playerData.level, playerData.prestige), false))
+        optimizedBoard.line(
+            formatLine(
+                "Needed XP",
+                ChatColor.AQUA,
+                getRequiredXPForLevel(player.data.level, player.data.prestige).toString(),
+                false
+            )
+        )
         optimizedBoard.line("  ")
         optimizedBoard.line(
             formatLine(
@@ -60,6 +64,14 @@ object PitScoreboard : Listener {
         optimizedBoard.line(appendColors(ChatColor.YELLOW.toString() + "play.thebluehatspit.net"))
 
         player.scoreboard = scoreboard
+    }
+
+    private fun formatLevel(level: Int, prestigeLevel: Int): String {
+        val prestigeColor = getPrestigeColor(prestigeLevel)
+        val chatColor = getChatColorForLevel(level)
+        val formattedLevel = if (level >= 60) "${ChatColor.BOLD}$level" else level.toString()
+
+        return "${ChatColor.RESET}${prestigeColor}[${chatColor}$formattedLevel${prestigeColor}]"
     }
 
     private fun formatLine(key: String, color: ChatColor?, value: String, isBold: Boolean): String {
@@ -81,7 +93,7 @@ object PitScoreboard : Listener {
             val end = string.substring(16)
             val colors = ArrayList<String>()
 
-            run loop@ {
+            run loop@{
                 (base.length - 1 downTo 0).forEach { i ->
                     if (base[i] == ChatColor.COLOR_CHAR) {
                         colors.add(base.substring(i, i + 2))

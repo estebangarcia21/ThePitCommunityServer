@@ -1,5 +1,6 @@
 package org.thepitcommunityserver.util
 
+import org.bukkit.ChatColor
 import kotlin.math.ceil
 
 fun getRequiredXPForLevel(level: Int, prestige: Int): Int {
@@ -29,6 +30,40 @@ fun getXPBaseForLevel(level: Int): Double {
         else -> 0.0
     }
 }
+
+fun getChatColorForLevel(level: Int): ChatColor {
+    return when (level) {
+        in 1..9 -> ChatColor.GRAY
+        in 10..19 -> ChatColor.BLUE
+        in 20..29 -> ChatColor.DARK_AQUA
+        in 30..39 -> ChatColor.DARK_GREEN
+        in 40..49 -> ChatColor.GREEN
+        in 50..59 -> ChatColor.YELLOW
+        in 60..69 -> ChatColor.GOLD
+        in 70..79 -> ChatColor.RED
+        in 80..89 -> ChatColor.DARK_RED
+        in 90..99 -> ChatColor.DARK_PURPLE
+        in 100..109 -> ChatColor.LIGHT_PURPLE
+        in 110..119 -> ChatColor.WHITE
+        120 -> ChatColor.AQUA
+        else -> ChatColor.GRAY
+    }
+}
+
+fun getPrestigeColor(prestigeLevel: Int): ChatColor {
+    return when {
+        prestigeLevel == 0 -> ChatColor.GRAY
+        prestigeLevel in 1..4 -> ChatColor.BLUE
+        prestigeLevel in 5..9 -> ChatColor.YELLOW
+        prestigeLevel in 10..14 -> ChatColor.GOLD
+        prestigeLevel in 15..19 -> ChatColor.RED
+        prestigeLevel in 20..24 -> ChatColor.LIGHT_PURPLE
+        prestigeLevel in 25..29 -> ChatColor.DARK_PURPLE
+        prestigeLevel >= 30 -> ChatColor.WHITE
+        else -> ChatColor.WHITE // Default to white for negative or invalid prestige levels
+    }
+}
+
 
 fun getPrestigeModifier(prestigeLevel: Int): Double {
     val modifiers = listOf(
