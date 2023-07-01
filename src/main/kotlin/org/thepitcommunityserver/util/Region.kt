@@ -25,7 +25,7 @@ fun isInsideSpawn(pos: Location): Boolean {
 fun isInsideSpawn(pos: Vector): Boolean {
     return isInsideRegion(
         pos,
-        currentMap.bounds.spawn.lower.toBukkitVector(),
-        currentMap.bounds.spawn.upper.toBukkitVector()
+        CurrentWorldConfig.bounds.spawn.lower.toBukkitVector(),
+        CurrentWorldConfig.bounds.spawn.upper.toBukkitVector()
     )
 }
