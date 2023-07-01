@@ -24,21 +24,3 @@ val dynamoClient: DynamoDbEnhancedClient = DynamoDbEnhancedClient.builder().dyna
 
 private val tableSchema: TableSchema<DBPlayer> = BeanTableSchema.create(DBPlayer::class.java)
 val PitPlayerTable: DynamoDbTable<DBPlayer> = dynamoClient.table(PIT_TABLE_NAME, tableSchema)
-
-@DynamoDbBean
-data class DBPlayer(
-    @get:DynamoDbPartitionKey
-    var playerId: String = "",
-
-    var xp: Int = 0,
-    var gold: Double = 0.0,
-
-    var login: LoginInformation = LoginInformation()
-)
-
-@DynamoDbBean
-data class LoginInformation(
-    var count: Int = 0,
-    var firstJoinedAt: String = Date().toString(),
-    var lastJoinedAt: String = Date().toString()
-)

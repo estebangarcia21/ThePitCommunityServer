@@ -35,6 +35,8 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.5")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.5")
 //    implementation("me.tigerhix.lib:scoreboard:1.0.1-SNAPSHOT")
+    testImplementation("io.kotest:kotest-runner-junit5:4.6.3")
+    testImplementation("io.kotest:kotest-assertions-core:4.6.3")
 }
 
 tasks.test {

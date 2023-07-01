@@ -6,11 +6,13 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
+import org.thepitcommunityserver.db.data
 import org.thepitcommunityserver.external.NativeScoreboard
 import org.thepitcommunityserver.game.combat.CombatStatus
 import org.thepitcommunityserver.util.CurrentWorld
 import org.thepitcommunityserver.util.GlobalTimer
 import org.thepitcommunityserver.util.SECONDS
+import org.thepitcommunityserver.util.intToRoman
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,49 +33,24 @@ object PitScoreboard : Listener {
         val simpleDateFormat = SimpleDateFormat("MM/dd/yy")
         val date = Date()
         val decimalFormat = DecimalFormat("#0.00")
+        val playerData = player.data
 
         optimizedBoard.title(ChatColor.YELLOW.toString() + ChatColor.BOLD + "THE BLUE HATS PIT")
         optimizedBoard.line(appendColors(ChatColor.GRAY.toString() + simpleDateFormat.format(date) + " " + ChatColor.DARK_GRAY + "mega69L"))
         optimizedBoard.line(" ")
-        optimizedBoard.line(formatLine("Prestige", ChatColor.YELLOW, "XXXV", false))
-        optimizedBoard.line(formatLine("Level", ChatColor.AQUA, "[120]", true))
-        optimizedBoard.line(formatLine("XP", ChatColor.AQUA, "MAXED!", false))
+
+        if (player.data.prestige > 0) {
+            optimizedBoard.line(formatLine("Prestige", ChatColor.YELLOW, intToRoman(playerData.prestige), false))
+        }
+
+        optimizedBoard.line(formatLine("Level", ChatColor.AQUA, "[${playerData.level}]", true))
+        optimizedBoard.line(formatLine("Needed XP", ChatColor.AQUA, playerData.xp.toString(), false))
         optimizedBoard.line("  ")
         optimizedBoard.line(
             formatLine(
                 "Gold",
                 ChatColor.GOLD,
-                decimalFormat.format(0.0), // TODO: Get gold from DB.
-                false
-            )
-        )
-        optimizedBoard.line("   ")
-        optimizedBoard.line(formatLine("Status", null, formatStatus(player), false))
-        optimizedBoard.line("    ")
-        optimizedBoard.line(appendColors(ChatColor.YELLOW.toString() + "play.thebluehatspit.net"))
-
-        player.scoreboard = scoreboard
-    }
-
-    private fun _renderScoreboardView(player: Player) {
-        val scoreboard = Bukkit.getScoreboardManager().newScoreboard
-        val optimizedBoard = NativeScoreboard(scoreboard)
-        val simpleDateFormat = SimpleDateFormat("MM/dd/yy")
-        val date = Date()
-        val decimalFormat = DecimalFormat("#0.00")
-
-        optimizedBoard.title(ChatColor.YELLOW.toString() + ChatColor.BOLD + "THE BLUE HATS PIT")
-        optimizedBoard.line(appendColors(ChatColor.GRAY.toString() + simpleDateFormat.format(date) + " " + ChatColor.DARK_GRAY + "mega69L"))
-        optimizedBoard.line(" ")
-        optimizedBoard.line(formatLine("Prestige", ChatColor.YELLOW, "XXXV", false))
-        optimizedBoard.line(formatLine("Level", ChatColor.AQUA, "[120]", true))
-        optimizedBoard.line(formatLine("XP", ChatColor.AQUA, "MAXED!", false))
-        optimizedBoard.line("  ")
-        optimizedBoard.line(
-            formatLine(
-                "Gold",
-                ChatColor.GOLD,
-                decimalFormat.format(0.0), // TODO: Get gold from DB.
+                decimalFormat.format(playerData.gold),
                 false
             )
         )
