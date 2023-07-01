@@ -50,5 +50,8 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Build with Gradle
+      - name: Build
         run: ./gradlew build --console=plain
+
+      - name: Test
+        run: ./gradlew test --console=plain
