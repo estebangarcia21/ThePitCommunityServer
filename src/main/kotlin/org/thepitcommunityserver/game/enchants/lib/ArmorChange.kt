@@ -48,7 +48,7 @@ class ArmorChangeEvent(val player: Player) : Event() {
         val previousLeggings = previousArmorContents?.get(1)
         val currentLeggings = currentArmorContents[1]
 
-        if (!isNullItemStack(currentLeggings) && isNullItemStack(previousLeggings)) {
+        if (!isEmptyItemStack(currentLeggings) && isEmptyItemStack(previousLeggings)) {
             val enchantTier = getEnchantTierForItem(enchant, currentLeggings)
             if (enchantTier != null) {
                 callback(PlayerArmorChangeEventContext(
@@ -66,7 +66,7 @@ class ArmorChangeEvent(val player: Player) : Event() {
         val previousLeggings = previousArmorContents?.get(1)
         val currentLeggings = currentArmorContents[1]
 
-        if (!isNullItemStack(previousLeggings) && isNullItemStack(currentLeggings)) {
+        if (!isEmptyItemStack(previousLeggings) && isEmptyItemStack(currentLeggings)) {
             val enchantTier = getEnchantTierForItem(enchant, previousLeggings)
             if (enchantTier != null) {
                 callback(
@@ -143,7 +143,7 @@ fun callArmorChangeEvent(event: ArmorChangeEvent) {
     Main.plugin.server.pluginManager.callEvent(event)
 }
 
-fun isNullItemStack(itemStack: ItemStack?): Boolean {
+fun isEmptyItemStack(itemStack: ItemStack?): Boolean {
     if (itemStack == null) return true
 
     return itemStack.type == Material.AIR
