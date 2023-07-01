@@ -34,7 +34,7 @@ def run_gradle_task(task):
     return exit_code
 
 
-def start_minecraft_server(max_memory):
+def start_minecraft_server(max_memory, env_options):
     local_server_dir = os.path.join(PROJECT_ROOT_DIR, ".local-server")
 
     if platform.system() == "Windows":
@@ -44,19 +44,22 @@ def start_minecraft_server(max_memory):
             "java",
             f"-Xmx{max_memory}G",
             f"-Xms{max_memory}G",
-            "-jar",
-            "server.jar",
-            "nogui",
         ]
     else:
         command = [
             "java",
             f"-Xmx{max_memory}G",
             f"-Xms{max_memory}G",
-            "-jar",
-            "server.jar",
-            "nogui",
         ]
+
+    command += [
+        "-jar",
+        "server.jar",
+        "nogui",
+    ]
+
+    env = os.environ.copy()
+    env.update(env_options)
 
     process = subprocess.Popen(
         command,
@@ -65,6 +68,7 @@ def start_minecraft_server(max_memory):
         stderr=subprocess.STDOUT,
         universal_newlines=True,
         shell=True if platform.system() == "Windows" else False,
+        env=env,
     )
 
     while True:
@@ -80,7 +84,13 @@ def start_minecraft_server(max_memory):
 print("Building plugin...")
 run_gradle_task("localBuild")
 
-mc_server_exit_code = start_minecraft_server(MAX_SERVER_MEMORY_GB)
+env_options = {}
+if "--" in sys.argv:
+    env_index = sys.argv.index("--") + 1
+    if env_index < len(sys.argv):
+        env_options = dict(option.split("=") for option in sys.argv[env_index:])
+
+mc_server_exit_code = start_minecraft_server(MAX_SERVER_MEMORY_GB, env_options)
 
 if mc_server_exit_code == 0:
     print("Server stopped successfully.")

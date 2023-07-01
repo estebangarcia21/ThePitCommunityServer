@@ -45,3 +45,4 @@ venv
 .local-server
 tmp
 scripts/buildtools
+dynamodb/docker
