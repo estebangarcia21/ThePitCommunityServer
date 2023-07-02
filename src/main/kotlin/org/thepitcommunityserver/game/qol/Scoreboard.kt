@@ -99,15 +99,26 @@ object PitScoreboard : Listener {
     }
 }
 
-private const val MAX_LINES = 15
+private const val MAX_LINES = 16
 private const val MAX_CHARS = 16
 
 class FlickerlessScoreboard(val scoreboard: Scoreboard) {
-
     private val objective: Objective
     private val teams = mutableMapOf<Int, Team>()
 
     private var updateIndex = 0
+
+    init {
+        scoreboard.clearSlot(DisplaySlot.SIDEBAR)
+        objective = scoreboard.registerNewObjective("sidebar", "dummy")
+        objective.displaySlot = DisplaySlot.SIDEBAR
+
+        val initialTeams = arrayOfNulls<String>(MAX_LINES - 1)
+        initialTeams.forEachIndexed { i, _ ->
+            val scoreIndex = getScoreIndex(i)
+            scoreboard.registerNewTeam(scoreIndex).also { teams[i] = it }.addEntry(scoreIndex)
+        }
+    }
 
     fun update() {
         updateIndex = 0
@@ -120,11 +131,11 @@ class FlickerlessScoreboard(val scoreboard: Scoreboard) {
     fun line(text: String) {
         val team = teams[updateIndex] ?: return
 
-        val (prefix, suffix) = splitStringInMiddle(segmentColors(text))
+        val (prefix, suffix) = splitPrefixAndSuffixFromLine(text)
         team.prefix = prefix
         team.suffix = suffix
 
-        objective.getScore(getScoreIndex(updateIndex)).score = MAX_LINES - updateIndex
+        objective.getScore(getScoreIndex(updateIndex)).score = MAX_LINES - 1 - updateIndex
         updateIndex++
     }
 
@@ -140,59 +151,47 @@ class FlickerlessScoreboard(val scoreboard: Scoreboard) {
         return String(charArrayOf(ChatColor.COLOR_CHAR, ('s'.toInt() + index).toChar()))
     }
 
-    init {
-        scoreboard.clearSlot(DisplaySlot.SIDEBAR)
-        objective = scoreboard.registerNewObjective("sidebar", "dummy")
-        objective.displaySlot = DisplaySlot.SIDEBAR
+    private fun splitPrefixAndSuffixFromLine(rawInput: String): Pair<String, String> {
+        val input = continueColorSegmentsAtSplitPoint(rawInput)
 
-        val initialTeams = arrayOfNulls<String>(MAX_LINES)
-        initialTeams.forEachIndexed { i, _ ->
-            val scoreIndex = getScoreIndex(i)
-            scoreboard.registerNewTeam(scoreIndex).also { teams[i] = it }.addEntry(scoreIndex)
+        val maxLength = MAX_CHARS
+        return if (input.length > maxLength) {
+            val firstHalf = input.substring(0, maxLength)
+            val secondHalf = input.substring(maxLength)
+            Pair(firstHalf, secondHalf)
+        } else {
+            Pair(input, "")
         }
     }
 
-    private fun segmentColors(string: String): String {
-        if (string.length >= 16) {
-            val base = string.substring(0, 16)
-            val end = string.substring(16)
-            val colors = ArrayList<String>()
+    private fun continueColorSegmentsAtSplitPoint(string: String): String {
+        if (string.length < MAX_CHARS) return string
 
-            run loop@ {
-                (base.length - 1 downTo 0).forEach { i ->
-                    if (base[i] == ChatColor.COLOR_CHAR) {
-                        colors.add(base.substring(i, i + 2))
+        val prefix = string.substring(0, MAX_CHARS)
+        val suffix = string.substring(MAX_CHARS, MAX_CHARS * 2)
+        val colors = ArrayList<String>()
 
-                        val charCheck = i - 2
+        run loop@ {
+            (prefix.length - 1 downTo 0).forEach { i ->
+                if (prefix[i] == ChatColor.COLOR_CHAR) {
+                    colors.add(prefix.substring(i, i + 2))
 
-                        if (charCheck < 0) return@forEach
+                    // A color code starts with §?, so backtrack two characters.
+                    val colorCodeCharIndex = i - 2
 
-                        if (base[charCheck] != ChatColor.COLOR_CHAR) return@loop
-                    }
+                    if (colorCodeCharIndex < 0) return@forEach
+                    if (prefix[colorCodeCharIndex] != ChatColor.COLOR_CHAR) return@loop
                 }
             }
-
-            val modifiers = StringBuilder()
-            val colorsSize = colors.size
-
-            (0 until colorsSize - 1).forEach { i ->
-                modifiers.append(colors[i])
-            }
-
-            return base + colors[colorsSize - 1] + modifiers + end
         }
 
-        return string
-    }
-}
+        val modifiers = StringBuilder()
+        val colorLength = colors.size
 
-fun splitStringInMiddle(input: String): Pair<String, String> {
-    val maxLength = MAX_CHARS
-    return if (input.length > maxLength) {
-        val firstHalf = input.substring(0, maxLength)
-        val secondHalf = input.substring(maxLength)
-        Pair(firstHalf, secondHalf)
-    } else {
-        Pair(input, "")
+        (0 until colorLength - 1).forEach { i ->
+            modifiers.append(colors[i])
+        }
+
+        return prefix + colors[colorLength - 1] + modifiers + suffix
     }
 }
