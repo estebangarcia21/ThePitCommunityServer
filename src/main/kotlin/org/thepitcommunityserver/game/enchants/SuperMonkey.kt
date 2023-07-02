@@ -27,7 +27,7 @@ object SuperMonkey : Enchant {
         val player = event.player
         val leggings = player.leggings
 
-        if (isNullItemStack(leggings)) return
+        if (isEmptyItemStack(leggings)) return
         val enchantTier = getEnchantTierForItem(this, leggings) ?: return
 
         val blockInFront = player.location.add(player.eyeLocation.direction.normalize()).block
