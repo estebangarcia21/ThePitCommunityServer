@@ -168,7 +168,7 @@ class FlickerlessScoreboard(val scoreboard: Scoreboard) {
         if (string.length < MAX_CHARS) return string
 
         val prefix = string.substring(0, MAX_CHARS)
-        val suffix = string.substring(MAX_CHARS, MAX_CHARS * 2)
+        val suffix = string.substring(MAX_CHARS, (MAX_CHARS * 2).coerceAtMost(string.length))
         val colors = ArrayList<String>()
 
         run loop@ {
