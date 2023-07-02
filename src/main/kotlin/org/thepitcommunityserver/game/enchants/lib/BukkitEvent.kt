@@ -4,6 +4,7 @@ import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityShootBowEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.events.ArrowWatch
@@ -153,10 +154,8 @@ fun EntityDamageByEntityEvent.playerHitPlayer(callback: (damager: Player, damage
 }
 
 fun ProjectileHitEvent.onArrowLand(enchant: Enchant, callback: EventCallback<ArrowShotWithEnchantContext>) {
-    val shooter = this.entity.shooter
-    val arrow = this.entity
-
-    if (shooter !is Player || arrow !is Arrow) return
+    val shooter = this.entity.shooter as? Player ?: return
+    val arrow = this.entity as? Arrow ?: return
 
     val bow = ArrowWatch.getBowFromArrow(arrow)
     val enchantTier = getEnchantTierForItem(enchant, bow) ?: return
@@ -166,4 +165,67 @@ fun ProjectileHitEvent.onArrowLand(enchant: Enchant, callback: EventCallback<Arr
         enchantTier = enchantTier,
         arrow = arrow
     ))
+}
+
+data class DamagerMeleePlayerKillWithEnchantContext(
+    val damager: Player,
+    val damaged: Player,
+    val enchantTier: Int
+)
+
+fun PlayerDeathEvent.damagerMeleeKillPlayerWithEnchant(enchant: Enchant, callback: EventCallback<DamagerMeleePlayerKillWithEnchantContext>) {
+    val damaged = this.entity ?: return
+    val damager = this.entity.killer ?: return
+
+    val enchantTier = getEnchantTierForItem(enchant, damaged.itemInHand) ?: return
+
+    callback(
+        DamagerMeleePlayerKillWithEnchantContext(
+            damager = damager,
+            damaged = damaged,
+            enchantTier = enchantTier
+        )
+    )
+}
+
+data class DamagerArrowPlayerKillWithEnchantContext(
+    val shooter: Player,
+    val damaged: Player,
+    val enchantTier: Int
+)
+
+fun PlayerDeathEvent.damagerArrowKillPlayerWithEnchant(enchant: Enchant, callback: EventCallback<DamagerArrowPlayerKillWithEnchantContext>) {
+    val shooter = this.entity.killer ?: return
+    val damaged = this.entity ?: return
+
+    val enchantTier = getEnchantTierForItem(enchant, shooter.itemInHand) ?: return
+
+    callback(
+        DamagerArrowPlayerKillWithEnchantContext(
+            shooter = shooter,
+            damaged = damaged,
+            enchantTier = enchantTier
+        )
+    )
+}
+
+data class DamagerAnyKillPlayerWithPantsEnchantContext (
+    val damager: Player,
+    val damaged: Player,
+    val enchantTier: Int,
+)
+
+fun PlayerDeathEvent.damagerAnyKillPlayerWithPantsEnchant(enchant: Enchant, callback: EventCallback<DamagerAnyKillPlayerWithPantsEnchantContext>) {
+    val damaged = this.entity  ?: return
+    val damager = this.entity.killer ?: return
+
+    val enchantTier = getEnchantTierForItem(enchant, damager.leggings) ?: return
+
+    callback(
+        DamagerAnyKillPlayerWithPantsEnchantContext(
+            damager = damager,
+            damaged = damaged,
+            enchantTier = enchantTier
+        )
+    )
 }
