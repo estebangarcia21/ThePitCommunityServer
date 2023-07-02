@@ -51,7 +51,6 @@ object MemoryToDBSynchronizer : Listener {
                 count += 1
                 lastJoinedAt = Date().toString()
             }
-            gold = 100.0
         }
 
         syncMemoryPlayerToDB(playerId)
