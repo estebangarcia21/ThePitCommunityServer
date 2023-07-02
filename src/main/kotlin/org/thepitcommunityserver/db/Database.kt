@@ -16,7 +16,7 @@ private val memoryPlayerData = mutableMapOf<UUID, DBPlayer>()
 val DEBUG_DB = System.getenv("DEBUG_DB")?.toBoolean() ?: false
 fun sendDBDebugMessage(player: Player, msg: String) {
     player.sendMessage(
-        replaceChatColorTags("<yellow><bold>[Debug/DB]</bold></yellow> $msg")
+        "<yellow><bold>[Debug/DB]</bold></yellow> $msg".parseChatColors()
     )
 }
 
