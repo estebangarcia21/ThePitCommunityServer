@@ -180,7 +180,6 @@ class NPC(
 
     init {
         registerEvents(this)
-        setup()
     }
 
     fun spawn() {
@@ -205,15 +204,6 @@ class NPC(
         }) {
             gui.open(player)
         }
-    }
-
-    private fun setup() {
-        val lookCloseTrait = CitizensAPI.getTraitFactory().getTrait(LookClose::class.java)
-        lookCloseTrait.range = 5.0
-        lookCloseTrait.setRealisticLooking(true)
-        lookCloseTrait.toggle()
-
-        npc.addTrait(lookCloseTrait)
     }
 }
 
