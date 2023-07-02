@@ -41,9 +41,7 @@ fun parseDescriptionLore(enchant: Enchant, tier: Int): List<String> {
     val lines = lore.split("<br/>")
 
     lines.forEach { l ->
-        var line = ChatColor.GRAY.toString() + l
-
-        line = replaceChatColorTags(line)
+        val line = replaceChatColorTags(l, defaultColor = ChatColor.GRAY)
 
         acc.add(line)
     }
@@ -51,17 +49,27 @@ fun parseDescriptionLore(enchant: Enchant, tier: Int): List<String> {
     return acc
 }
 
-fun replaceChatColorTags(string: String): String {
-    var acc = string
+fun replaceChatColorTags(string: String, defaultColor: ChatColor = ChatColor.GRAY): String {
+    var acc = defaultColor.toString() + string
 
     ChatColor.values().forEach { c ->
         val name = c.name.lowercase(Locale.getDefault()).replace("_", "-")
 
         acc = acc.replace("<$name>", c.toString())
         acc = acc.replace("</$name>", ChatColor.GRAY.toString())
+
+        acc += defaultColor.toString()
     }
 
     return acc
+}
+
+fun buildLore(vararg lines: String, defaultColor: ChatColor = ChatColor.GRAY): List<String> {
+    return lines.map(::replaceChatColorTags)
+}
+
+fun String.parseChatColors(): String {
+    return replaceChatColorTags(this)
 }
 
 fun setItemLore(item: ItemStack?, lore: List<String>) {
