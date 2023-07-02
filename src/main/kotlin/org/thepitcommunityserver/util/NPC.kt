@@ -10,7 +10,9 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.thepitcommunityserver.db.data
 import org.thepitcommunityserver.registerEvents
 
 private val CITIZENS_REGISTRY = CitizensAPI.getNPCRegistry()
@@ -26,13 +28,36 @@ val worldNPCS = listOf(
         gui = GUI(
             title = "Non-permanent items",
             rows = 3,
-            contents = mapOf(
-                11 to ItemStack(Material.DIAMOND_SWORD),
-                12 to ItemStack(Material.OBSIDIAN, 8),
-                13 to ItemStack(Material.GOLD_PICKAXE),
-                14 to ItemStack(Material.DIAMOND_CHESTPLATE),
-                15 to ItemStack(Material.DIAMOND_BOOTS)
-            ),
+            onOpen = { player ->
+                val diamondSwordPrice = 150.0
+                val gold = player.data.gold
+
+                val purchaseMessage =
+                    if (gold >= diamondSwordPrice) "<yellow>Click to purchase!</yellow>" else "<red>Not enough gold!</red>"
+
+                setContents(
+                    mapOf(
+                        11 to buildItem(
+                            name = "<red>Diamond Sword</red>".parseChatColors(),
+                            material = Material.DIAMOND_SWORD,
+                            itemID = "diamond-sword",
+                            lore = buildLore(
+                                "<blue>+20% damage vs bountied</blue>",
+                                "",
+                                "<italic>Lost on death</italic>",
+                                "Cost: <gold>150g</gold>",
+                                purchaseMessage,
+                                defaultColor = ChatColor.GRAY
+                            ),
+                            flags = listOf(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES)
+                        ),
+                        12 to ItemStack(Material.OBSIDIAN, 8),
+                        13 to ItemStack(Material.GOLD_PICKAXE),
+                        14 to ItemStack(Material.DIAMOND_CHESTPLATE),
+                        15 to ItemStack(Material.DIAMOND_BOOTS)
+                    )
+                )
+            },
             readOnly = true
         ),
         nameHeight = 1.9,
