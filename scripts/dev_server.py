@@ -2,9 +2,33 @@ import platform
 import subprocess
 import os
 import sys
+import urllib.request
 
 MAX_SERVER_MEMORY_GB = 4
 PROJECT_ROOT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+LOCAL_SERVER_DIR = os.path.join(PROJECT_ROOT_DIR, ".local-server")
+PLUGIN_DIR = os.path.join(LOCAL_SERVER_DIR, "plugins")
+DEPENDENCIES = {
+    "Citizens.jar": "https://ci.citizensnpcs.co/job/Citizens2/lastSuccessfulBuild/artifact/dist/target/Citizens-2.0.32-b3147.jar"
+}
+
+
+def download_dependency(dep_url, filename):
+    print(f"Downloading {filename}...")
+    try:
+        opener = urllib.request.build_opener()
+        opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+        urllib.request.install_opener(opener)
+        urllib.request.urlretrieve(dep_url, os.path.join(PLUGIN_DIR, filename))
+        print(f"Downloaded {filename} successfully.")
+    except Exception as e:
+        print(f"Failed to download {filename}: {e}")
+        sys.exit(1)
+
+
+def ensure_directory_exists(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
 
 def run_gradle_task(task):
@@ -35,8 +59,6 @@ def run_gradle_task(task):
 
 
 def start_minecraft_server(max_memory, env_options):
-    local_server_dir = os.path.join(PROJECT_ROOT_DIR, ".local-server")
-
     if platform.system() == "Windows":
         command = [
             "cmd.exe",
@@ -63,7 +85,7 @@ def start_minecraft_server(max_memory, env_options):
 
     process = subprocess.Popen(
         command,
-        cwd=local_server_dir,
+        cwd=LOCAL_SERVER_DIR,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         universal_newlines=True,
@@ -83,6 +105,13 @@ def start_minecraft_server(max_memory, env_options):
 
 print("Building plugin...")
 run_gradle_task("localBuild")
+
+ensure_directory_exists(PLUGIN_DIR)
+
+for dependency, url in DEPENDENCIES.items():
+    dependency_path = os.path.join(PLUGIN_DIR, dependency)
+    if not os.path.exists(dependency_path):
+        download_dependency(url, dependency)
 
 env_options = {}
 if "--" in sys.argv:
