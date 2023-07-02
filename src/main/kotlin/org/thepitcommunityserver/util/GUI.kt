@@ -22,6 +22,7 @@ class GUI(
     title: String,
     rows: Int,
     contents: Map<Int, ItemStack?> = emptyMap(),
+    private val onOpen: GUI.(player: Player) -> Unit = {},
     private val clickHandlers: Map<Int, (ctx: ClickHandlerContext) -> Unit> = emptyMap(),
     private val readOnly: Boolean = true,
 ) : Listener {
@@ -34,10 +35,11 @@ class GUI(
     }
 
     fun open(player: Player) {
+        onOpen(player)
         player.openInventory(gui)
     }
 
-    fun setContents(contents: Map<Int, ItemStack?>) {
+    fun setContents(contents: Map<Int, ItemStack?>, targetPlayer: Player? = null) {
         contents.forEach { (slot, item) ->
             if (isEmptyItemStack(item)) {
                 gui.setItem(slot, ItemStack(Material.AIR))
@@ -45,6 +47,8 @@ class GUI(
                 gui.setItem(slot, item)
             }
         }
+
+        targetPlayer?.updateInventory()
     }
 
     @EventHandler
