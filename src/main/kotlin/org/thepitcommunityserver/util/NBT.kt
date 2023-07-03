@@ -11,6 +11,11 @@ import net.minecraft.server.v1_8_R3.NBTTagString
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
 import org.bukkit.inventory.ItemStack
 
+object NBT {
+    val UNDROPPABLE = "pit:undroppable" to true
+    val PERMANENT_LOSS_ON_DEATH = "pit:lose-on-death" to true
+}
+
 fun setNBTFloat(base: NBTTagCompound?, key: String, value: Float?) {
     if (base == null || value == null) return
 
@@ -95,10 +100,25 @@ fun setNBTCompound(base: NBTTagCompound?, key: String, compound: NBTTagCompound?
     base.set(key, compound)
 }
 
-fun buildNBTCompound(data: Map<String, Any>): NBTTagCompound {
+fun setNBTBoolean(base: NBTTagCompound?, key: String, value: Boolean?) {
+    if (base == null || value == null) return
+
+    base.setBoolean(key, value)
+}
+
+fun getNBTBoolean(base: NBTTagCompound?, key: String): Boolean? {
+    if (base == null || !base.hasKey(key)) return null
+
+    return base.getBoolean(key)
+}
+
+
+typealias DeserializedNBTMap = Map<String, Any>
+
+fun buildNBTCompound(map: DeserializedNBTMap): NBTTagCompound {
     val compound = NBTTagCompound()
 
-    data.entries.forEach { (key, value) ->
+    map.entries.forEach { (key, value) ->
         when (value) {
             is Byte -> compound.setByte(key, value)
             is Short -> compound.setShort(key, value)
@@ -108,6 +128,7 @@ fun buildNBTCompound(data: Map<String, Any>): NBTTagCompound {
             is Double -> compound.setDouble(key, value)
             is String -> compound.setString(key, value)
             is ByteArray -> compound.setByteArray(key, value)
+            is Boolean -> compound.setBoolean(key, value)
             is NBTTagCompound -> compound.set(key, value)
             else -> throw IllegalArgumentException("Unsupported NBT data type: ${value.javaClass}")
         }
@@ -116,7 +137,7 @@ fun buildNBTCompound(data: Map<String, Any>): NBTTagCompound {
     return compound
 }
 
-fun readNBTCompoundAsMap(compound: NBTTagCompound?): Map<String, Any> {
+fun readNBTCompoundAsMap(compound: NBTTagCompound?): DeserializedNBTMap {
     if (compound == null) return emptyMap()
 
     val map = mutableMapOf<String, Any>()
@@ -143,10 +164,16 @@ fun readNBTCompoundAsMap(compound: NBTTagCompound?): Map<String, Any> {
 val NBTTagCompound.keys: List<String>
     get() = this.c().toList()
 
-val ItemStack?.nbt: NBTTagCompound?
+var ItemStack?.nbt: NBTTagCompound?
     get() {
         if (this == null) return null
         val nmsItemStack = CraftItemStack.asNMSCopy(this) ?: return null
 
         return nmsItemStack.tag ?: return null
+    }
+    set(tag) {
+        if (this == null) return
+        val nmsItemStack = CraftItemStack.asNMSCopy(this) ?: return
+
+        nmsItemStack.tag = tag
     }
