@@ -2,7 +2,6 @@ package org.thepitcommunityserver.util
 
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.api.event.NPCRightClickEvent
-import net.citizensnpcs.trait.LookClose
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -11,7 +10,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemFlag
-import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.db.data
 import org.thepitcommunityserver.registerEvents
 
