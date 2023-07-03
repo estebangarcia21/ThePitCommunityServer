@@ -7,9 +7,10 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.util.Vector
+import org.thepitcommunityserver.Main
 import java.io.InputStreamReader
 
-val CurrentWorld: World = Bukkit.getWorld("world")
+val CurrentWorld: World = Main.plugin.server.getWorld("world")
 val CurrentWorldConfig = getMapData().elemental
 
 typealias DeserializedLocation = List<Double>
@@ -47,7 +48,7 @@ data class SpawnPoint(
         return Vector(pos[0], pos[1], pos[2])
     }
 
-    fun toLocation(world: World = CurrentWorld): Location {
+    fun toLocation(world: World? = CurrentWorld): Location {
         return pos.toLocation(world = world, rot = rot.toFloat())
     }
 }
@@ -88,7 +89,7 @@ fun DeserializedLocation.toBukkitVector(): Vector {
     return Vector(this[0], this[1], this[2])
 }
 
-fun DeserializedLocation.toLocation(world: World = CurrentWorld, rot: Float? = null): Location {
+fun DeserializedLocation.toLocation(world: World? = CurrentWorld, rot: Float? = null): Location {
     val loc = this.toBukkitVector().toLocation(world)
     if (rot != null) {
         loc.yaw = rot
