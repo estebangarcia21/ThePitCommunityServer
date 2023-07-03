@@ -1,4 +1,4 @@
-package org.thepitcommunityserver.game.events
+package org.thepitcommunityserver.game.playerExperience
 
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
