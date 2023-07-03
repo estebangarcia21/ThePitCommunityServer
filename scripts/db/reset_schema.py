@@ -27,11 +27,16 @@ def create_table():
     )
 
     try:
-        dynamodb.delete_table(TableName=table_name)
-        waiter = dynamodb.get_waiter('table_not_exists')
-        waiter.wait(TableName=table_name)
-        print('Table deleted successfully.')
+        # Delete the table if it exists
+        try:
+            dynamodb.delete_table(TableName=table_name)
+            waiter = dynamodb.get_waiter('table_not_exists')
+            waiter.wait(TableName=table_name)
+            print('Table deleted successfully.')
+        except dynamodb.exceptions.ResourceNotFoundException:
+            print('Table does not exist.')
 
+        # Create the table
         dynamodb.create_table(
             TableName=table_name,
             AttributeDefinitions=attribute_definitions,
@@ -41,8 +46,7 @@ def create_table():
         waiter = dynamodb.get_waiter('table_exists')
         waiter.wait(TableName=table_name)
         print('Table created successfully.')
-    except dynamodb.exceptions.ResourceNotFoundException:
-        print('Table does not exist.')
+
     except Exception as e:
         print(f'Error creating/deleting table: {str(e)}')
 
