@@ -34,6 +34,7 @@ val Enchants = listOf(
     ComboSwift,
     ComboStun,
     ComboHeal,
+    CounterJanitor,
     SpeedyKill
 )
 
