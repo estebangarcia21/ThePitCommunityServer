@@ -5,7 +5,7 @@ import org.thepitcommunityserver.game.events.BlockControl
 import org.thepitcommunityserver.game.qol.PitScoreboard
 import org.thepitcommunityserver.util.GlobalTimer
 
-val lifecycleListeners = listOf<PluginLifecycleListener>(
+val lifecycleListeners = listOf(
     BlockControl,
     ArrowWatch,
     GlobalTimer

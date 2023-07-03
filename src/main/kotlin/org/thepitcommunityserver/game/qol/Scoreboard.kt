@@ -14,6 +14,7 @@ import org.thepitcommunityserver.db.data
 import org.thepitcommunityserver.game.combat.CombatStatus
 import org.thepitcommunityserver.util.*
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,7 +23,7 @@ object PitScoreboard : Listener {
 
     init {
         GlobalTimer.registerTask("scoreboard-updater", 1 * SECONDS) {
-            CurrentWorld.players.forEach(::renderScoreboardView)
+            CurrentWorld.players?.forEach(::renderScoreboardView)
         }
     }
 
@@ -34,7 +35,7 @@ object PitScoreboard : Listener {
 
         val simpleDateFormat = SimpleDateFormat("MM/dd/yy")
         val date = Date()
-        val decimalFormat = DecimalFormat("#0.00")
+        val decimalFormat = DecimalFormat("#,##0.00", DecimalFormatSymbols.getInstance(Locale.getDefault()))
 
         player.data.apply {
             gold += 10
@@ -62,7 +63,7 @@ object PitScoreboard : Listener {
             formatLine(
                 "Gold",
                 ChatColor.GOLD,
-                decimalFormat.format(playerData.gold),
+                decimalFormat.format(playerData.gold) + "g",
             )
         )
         board.emptyLine()

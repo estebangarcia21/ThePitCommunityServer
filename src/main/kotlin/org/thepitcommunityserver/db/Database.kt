@@ -23,7 +23,7 @@ fun sendDBDebugMessage(player: Player, msg: String) {
 object MemoryToDBSynchronizer : Listener {
     init {
         GlobalTimer.registerTask("memory-to-db-sync", SYNC_TIME) {
-            CurrentWorld.players.forEach {
+            CurrentWorld.players?.forEach {
                 if (DEBUG_DB) sendDBDebugMessage(it, "Synced in-memory data to the database")
 
                 syncMemoryPlayerToDB(it.uniqueId)
@@ -32,7 +32,7 @@ object MemoryToDBSynchronizer : Listener {
 
         if (DEBUG_DB) {
             GlobalTimer.registerTask("db-logger", 5 * SECONDS) {
-                CurrentWorld.players.forEach {
+                CurrentWorld.players?.forEach {
                     sendDBDebugMessage(it, it.data.toString())
                 }
             }
