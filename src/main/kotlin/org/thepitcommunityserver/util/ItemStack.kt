@@ -7,11 +7,12 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 fun buildItem(
-    name: String,
     material: Material,
-    itemID: String,
+    name: String? = null,
+    itemID: String = "disposable*",
     lore: List<String> = emptyList(),
     count: Int = 1,
+    unbreakable: Boolean = false,
     flags: List<ItemFlag> = emptyList()
 ): ItemStack {
     val item = ItemStack(material, count)
@@ -21,7 +22,10 @@ fun buildItem(
     }
 
     val itemMeta = item.itemMeta
-    itemMeta.displayName = name
+
+    if (name != null) itemMeta.displayName = name
+    if (unbreakable) itemMeta.spigot().isUnbreakable = true
+
     itemMeta.addItemFlags(*flags.toTypedArray())
 
     item.itemMeta = itemMeta
