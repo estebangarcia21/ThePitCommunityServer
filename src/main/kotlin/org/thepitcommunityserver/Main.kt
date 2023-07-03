@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.java.JavaPluginLoader
 import org.thepitcommunityserver.db.MemoryToDBSynchronizer
 import org.thepitcommunityserver.game.commands.MysticEnchantCommand
+import org.thepitcommunityserver.game.commands.SpawnCommand
 import org.thepitcommunityserver.game.enchants.lib.ArmorChangeEventDispatcher
 import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.events.*
@@ -65,12 +66,13 @@ class Main : JavaPlugin {
             ArmorChangeEventDispatcher,
             PitScoreboard,
             MemoryToDBSynchronizer,
-            ArmorController
+            ArmorController,
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
 
         plugin.getCommand(MysticEnchantCommand.name).executor = MysticEnchantCommand
+        plugin.getCommand(SpawnCommand.name).executor = SpawnCommand
 
         lifecycleListeners.forEach(PluginLifecycleListener::onPluginEnable)
 
