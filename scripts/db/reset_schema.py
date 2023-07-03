@@ -1,6 +1,4 @@
 import boto3
-from botocore import UNSIGNED
-from botocore.config import Config
 
 
 def create_table():
@@ -24,7 +22,8 @@ def create_table():
         'dynamodb',
         region_name='us-west-2',
         endpoint_url='http://localhost:8147',
-        config=Config(signature_version=UNSIGNED)
+        aws_access_key_id='DUMMYIDEXAMPLE',
+        aws_secret_access_key='DUMMYIDEXAMPLE'
     )
 
     try:
