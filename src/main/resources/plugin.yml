@@ -8,3 +8,6 @@ commands:
   pitenchant:
     description: Use it to enchant some weapons xD xD
     usage: /pitenchant
+  spawn:
+    description: Use it to get to spawn
+    usage: /spawn
