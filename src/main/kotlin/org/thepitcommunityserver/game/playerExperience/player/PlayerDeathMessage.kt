@@ -1,10 +1,9 @@
-package org.thepitcommunityserver.game.playerExperience
+package org.thepitcommunityserver.game.playerExperience.player
 
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
-import org.thepitcommunityserver.registerEvents
 import org.thepitcommunityserver.util.createChatComponent
 import org.thepitcommunityserver.util.replaceChatColorTags
 import org.thepitcommunityserver.util.sendPacketToPlayer

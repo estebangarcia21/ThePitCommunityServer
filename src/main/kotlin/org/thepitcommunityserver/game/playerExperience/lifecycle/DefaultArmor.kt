@@ -1,4 +1,4 @@
-package org.thepitcommunityserver.game.qol
+package org.thepitcommunityserver.game.playerExperience.lifecycle
 
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -7,11 +7,10 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.thepitcommunityserver.game.enchants.lib.isEmptyItemStack
-import org.thepitcommunityserver.util.NBT
 import org.thepitcommunityserver.util.addItemToInventoryEmptySlot
 import org.thepitcommunityserver.util.buildItem
 
-object ArmorController : Listener {
+object DefaultArmor : Listener {
     @EventHandler
     fun onPlayerDeath(event: PlayerDeathEvent) {
         equipArmorContents(event.entity)
