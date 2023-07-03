@@ -33,7 +33,9 @@ val Enchants = listOf(
     Perun,
     ComboSwift,
     ComboStun,
-    ComboHeal
+    ComboHeal,
+    CounterJanitor,
+    SpeedyKill
 )
 
 interface Enchant : Listener {
