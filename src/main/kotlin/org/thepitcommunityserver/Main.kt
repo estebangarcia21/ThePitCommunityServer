@@ -13,6 +13,8 @@ import org.thepitcommunityserver.game.enchants.lib.ArmorChangeEventDispatcher
 import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.events.*
 import org.thepitcommunityserver.game.qol.ArmorController
+import org.thepitcommunityserver.game.events.Spawn
+import org.thepitcommunityserver.game.playerExperience.*
 import org.thepitcommunityserver.game.qol.PitScoreboard
 import org.thepitcommunityserver.util.CurrentWorld
 import org.thepitcommunityserver.util.deregisterAllNPCs
@@ -65,7 +67,9 @@ class Main : JavaPlugin {
             ArmorChangeEventDispatcher,
             PitScoreboard,
             MemoryToDBSynchronizer,
-            ArmorController
+            ArmorController,
+            PlayerDeathMessage
+
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
