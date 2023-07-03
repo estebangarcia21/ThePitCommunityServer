@@ -22,7 +22,7 @@ object PitScoreboard : Listener {
 
     init {
         GlobalTimer.registerTask("scoreboard-updater", 1 * SECONDS) {
-            CurrentWorld.players.forEach(::renderScoreboardView)
+            CurrentWorld.players?.forEach(::renderScoreboardView)
         }
     }
 
@@ -62,7 +62,7 @@ object PitScoreboard : Listener {
             formatLine(
                 "Gold",
                 ChatColor.GOLD,
-                decimalFormat.format(playerData.gold),
+                decimalFormat.format(playerData.gold) + "g",
             )
         )
         board.emptyLine()

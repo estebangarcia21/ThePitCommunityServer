@@ -4,28 +4,40 @@ package org.thepitcommunityserver
 import org.bukkit.Bukkit
 import org.bukkit.entity.EntityType
 import org.bukkit.event.Listener
+import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.plugin.java.JavaPluginLoader
 import org.thepitcommunityserver.db.MemoryToDBSynchronizer
 import org.thepitcommunityserver.game.commands.MysticEnchantCommand
 import org.thepitcommunityserver.game.enchants.lib.ArmorChangeEventDispatcher
 import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.events.*
-import org.thepitcommunityserver.game.events.Spawn
+import org.thepitcommunityserver.game.qol.ArmorController
 import org.thepitcommunityserver.game.qol.PitScoreboard
 import org.thepitcommunityserver.util.CurrentWorld
 import org.thepitcommunityserver.util.deregisterAllNPCs
 import org.thepitcommunityserver.util.worldNPCS
+import java.io.File
 
-@Suppress("unused")
-class Main : JavaPlugin() {
+class Main : JavaPlugin {
     companion object {
         lateinit var plugin: JavaPlugin
     }
 
+    @Suppress("unused")
+    constructor() : super()
+
+    @Suppress("unused")
+    constructor(
+        loader: JavaPluginLoader?,
+        description: PluginDescriptionFile?,
+        dataFolder: File?,
+        file: File?
+    ): super(loader, description, dataFolder, file)
+
     override fun onEnable() {
         plugin = this
-
-        CurrentWorld.entities.filter { it.type == EntityType.ARMOR_STAND }.forEach {
+        CurrentWorld.entities?.filter { it.type == EntityType.ARMOR_STAND }?.forEach {
             it.remove()
         }
 
@@ -52,7 +64,8 @@ class Main : JavaPlugin() {
             NightVision,
             ArmorChangeEventDispatcher,
             PitScoreboard,
-            MemoryToDBSynchronizer
+            MemoryToDBSynchronizer,
+            ArmorController
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
