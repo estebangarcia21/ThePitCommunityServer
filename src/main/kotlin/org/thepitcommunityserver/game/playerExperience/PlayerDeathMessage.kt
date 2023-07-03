@@ -16,7 +16,7 @@ object PlayerDeathMessage : Listener {
 
         val titleMessage = replaceChatColorTags("<red>YOU DIED!</red>")
         val title = createChatComponent(titleMessage)
-        val titlePacket = PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, title, 20, 60, 60)
+        val titlePacket = PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, title, 0, 60, 15)
 
         sendPacketToPlayer(player, titlePacket)
     }
