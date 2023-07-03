@@ -8,8 +8,15 @@ import org.thepitcommunityserver.game.enchants.lib.isEmptyItemStack
 val Player.leggings: ItemStack?
     get() = this.inventory.leggings
 
-fun addItemToInventoryEmptySlot(inventory: Inventory, item: ItemStack) {
+fun addItemToInventoryEmptySlot(inventory: Inventory, item: ItemStack, preferredSlot: Int? = null) {
     val contents = inventory.contents
+
+    if (preferredSlot != null) {
+        if (isEmptyItemStack(inventory.getItem(preferredSlot))) {
+            inventory.setItem(preferredSlot, item)
+            return
+        }
+    }
 
     for (i in contents.indices) {
         val slotItem: ItemStack? = contents[i]

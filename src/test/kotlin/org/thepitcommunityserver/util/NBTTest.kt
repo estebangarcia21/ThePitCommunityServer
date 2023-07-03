@@ -111,4 +111,24 @@ class NBTTest {
 
         assertTrue(keys.containsAll(expectedKeys) && expectedKeys.containsAll(keys))
     }
+
+    @Test
+    fun testMergeNBTCompounds() {
+        val target = NBTTagCompound()
+        target.setFloat("float", 3.14f)
+        target.setString("string", "Hello")
+        target.setBoolean("boolean", true)
+
+        val compound = NBTTagCompound()
+        compound.setString("string", "World")
+        compound.setInt("int", 42)
+        compound.setBoolean("boolean", false)
+
+        val mergedCompound = mergeNBTCompounds(target, compound)
+
+        assertEquals(3.14f, mergedCompound.getFloat("float"))
+        assertEquals("World", mergedCompound.getString("string"))
+        assertEquals(42, mergedCompound.getInt("int"))
+        assertEquals(false, mergedCompound.getBoolean("boolean"))
+    }
 }

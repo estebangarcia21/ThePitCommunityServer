@@ -11,9 +11,12 @@ import net.minecraft.server.v1_8_R3.NBTTagString
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
 import org.bukkit.inventory.ItemStack
 
-object NBT {
-    val UNDROPPABLE = "pit:undroppable" to true
-    val PERMANENT_LOSS_ON_DEATH = "pit:lose-on-death" to true
+enum class NBT(val key: String, val value: Any) {
+    UNDROPPABLE("pit:undroppable", true),
+    LOSE_ON_DEATH("pit:lose-on-death", true);
+
+    val entry: Pair<String, Any>
+        get() = key to value
 }
 
 fun setNBTFloat(base: NBTTagCompound?, key: String, value: Float?) {
@@ -112,6 +115,11 @@ fun getNBTBoolean(base: NBTTagCompound?, key: String): Boolean? {
     return base.getBoolean(key)
 }
 
+fun hasNBTEntryFor(base: NBTTagCompound?, key: String): Boolean {
+    if (base == null) return false
+
+    return base.hasKey(key)
+}
 
 typealias DeserializedNBTMap = Map<String, Any>
 
@@ -135,6 +143,24 @@ fun buildNBTCompound(map: DeserializedNBTMap): NBTTagCompound {
     }
 
     return compound
+}
+
+/**
+ * Merges the `compound` into the `target` `NBTTagCompound`.
+ *
+ * All entries from `compound` will override duplicate entries from `target`.
+ */
+fun mergeNBTCompounds(target: NBTTagCompound?, compound: NBTTagCompound?): NBTTagCompound {
+    val mergedCompound = target ?: compound ?: NBTTagCompound()
+
+    if (compound != null) {
+        for (key in compound.keys) {
+            val value = compound.get(key)
+            mergedCompound.set(key, value)
+        }
+    }
+
+    return mergedCompound
 }
 
 fun readNBTCompoundAsMap(compound: NBTTagCompound?): DeserializedNBTMap {
@@ -176,4 +202,6 @@ var ItemStack?.nbt: NBTTagCompound?
         val nmsItemStack = CraftItemStack.asNMSCopy(this) ?: return
 
         nmsItemStack.tag = tag
+
+        this.itemMeta = CraftItemStack.getItemMeta(nmsItemStack)
     }
