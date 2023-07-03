@@ -7,7 +7,7 @@ dynamodb = boto3.client(
     'dynamodb',
     endpoint_url='http://localhost:8147',
     region_name='us-west-2',
-    config=Config(UNSIGNED)
+    config=Config(signature_version=UNSIGNED)
 )
 table_name = 'ThePit'
 

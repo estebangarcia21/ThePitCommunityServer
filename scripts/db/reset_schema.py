@@ -24,7 +24,7 @@ def create_table():
         'dynamodb',
         region_name='us-west-2',
         endpoint_url='http://localhost:8147',
-        config=Config(UNSIGNED)
+        config=Config(signature_version=UNSIGNED)
     )
 
     try:
