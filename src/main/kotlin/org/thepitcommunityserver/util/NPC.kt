@@ -155,7 +155,7 @@ val worldNPCS = listOf(
             readOnly = true
         ),
         nameHeight = 1.9,
-        initialRotation = 90f
+        initialRotation = 75f
     ),
 )
 

@@ -17,6 +17,7 @@ import org.thepitcommunityserver.game.events.Spawn
 import org.thepitcommunityserver.game.playerExperience.PitScoreboard
 import org.thepitcommunityserver.game.playerExperience.lifecycle.InventoryManager
 import org.thepitcommunityserver.game.playerExperience.player.PlayerDeathMessage
+import org.thepitcommunityserver.game.world.WorldHolograms
 import org.thepitcommunityserver.util.CurrentWorld
 import org.thepitcommunityserver.util.deregisterAllNPCs
 import org.thepitcommunityserver.util.worldNPCS
@@ -70,7 +71,8 @@ class Main : JavaPlugin {
             MemoryToDBSynchronizer,
             DefaultArmor,
             PlayerDeathMessage,
-            InventoryManager
+            InventoryManager,
+            WorldHolograms
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
