@@ -1,4 +1,6 @@
 import boto3
+from botocore import UNSIGNED
+from botocore.config import Config
 
 
 def create_table():
@@ -18,7 +20,12 @@ def create_table():
 
     billing_mode = 'PAY_PER_REQUEST'
 
-    dynamodb = boto3.client('dynamodb', region_name='us-west-2', endpoint_url='http://localhost:8147')
+    dynamodb = boto3.client(
+        'dynamodb',
+        region_name='us-west-2',
+        endpoint_url='http://localhost:8147',
+        config=Config(UNSIGNED)
+    )
 
     try:
         dynamodb.delete_table(TableName=table_name)
