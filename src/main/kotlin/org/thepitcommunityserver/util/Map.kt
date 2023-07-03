@@ -31,6 +31,7 @@ data class MapData(
     val enderChest: DeserializedLocation,
     val keeper: DeserializedLocation,
     val centerHologram: DeserializedLocation,
+    val mysticWell: DeserializedLocation,
 
     // Misc.
     val spawnPoints: List<SpawnPoint>,

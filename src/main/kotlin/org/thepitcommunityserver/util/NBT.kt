@@ -13,7 +13,10 @@ import org.bukkit.inventory.ItemStack
 
 enum class NBT(val key: String, val value: Any) {
     UNDROPPABLE("pit:undroppable", true),
-    LOSE_ON_DEATH("pit:lose-on-death", true);
+    LOSE_ON_DEATH("pit:lose-on-death", true),
+    REMOVE_ON_DROP("pit:remove-on-drop", true),
+    AUTO_EQUIP("pit:auto-equip", true),
+    AUTO_EQUIP_OVERRIDABLE("pit:auto-equip-overrideable", true);
 
     val entry: Pair<String, Any>
         get() = key to value
@@ -119,6 +122,14 @@ fun hasNBTEntryFor(base: NBTTagCompound?, key: String): Boolean {
     if (base == null) return false
 
     return base.hasKey(key)
+}
+
+fun removeNBTTag(base: NBTTagCompound?, key: String): NBTTagCompound {
+    if (base == null) return NBTTagCompound()
+
+    base.remove(key)
+
+    return base
 }
 
 typealias DeserializedNBTMap = Map<String, Any>
