@@ -9,7 +9,7 @@ PROJECT_ROOT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 LOCAL_SERVER_DIR = os.path.join(PROJECT_ROOT_DIR, ".local-server")
 PLUGIN_DIR = os.path.join(LOCAL_SERVER_DIR, "plugins")
 DEPENDENCIES = {
-    "Citizens.jar": "https://ci.citizensnpcs.co/job/Citizens2/lastSuccessfulBuild/artifact/dist/target/Citizens-2.0.32-b3147.jar"
+    "Citizens.jar": "https://ci.citizensnpcs.co/job/Citizens2/lastSuccessfulBuild/artifact/dist/target/Citizens-2.0.32-b3148.jar"
 }
 
 

@@ -1,6 +1,8 @@
 package org.thepitcommunityserver.db
 
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.core.exception.SdkClientException
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable
@@ -17,10 +19,11 @@ import kotlin.system.exitProcess
 
 const val PIT_TABLE_NAME = "ThePit"
 
+// TODO: Configure DynamoDB for production.
 private val llDynamoClient = DynamoDbClient.builder()
     .endpointOverride(URI("http://localhost:8147"))
     .region(Region.US_WEST_2)
-    .credentialsProvider(DefaultCredentialsProvider.create())
+    .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("DUMMYIDEXAMPLE", "DUMMYIDEXAMPLE")))
     .build()
 
 val dynamoClient: DynamoDbEnhancedClient = DynamoDbEnhancedClient.builder().dynamoDbClient(llDynamoClient).build()
