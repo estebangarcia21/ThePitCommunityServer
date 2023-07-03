@@ -1,13 +1,13 @@
-import boto3
-from botocore import UNSIGNED
-from botocore.config import Config
 import json
+
+import boto3
 
 dynamodb = boto3.client(
     'dynamodb',
     endpoint_url='http://localhost:8147',
     region_name='us-west-2',
-    config=Config(signature_version=UNSIGNED)
+    aws_access_key_id='DUMMYIDEXAMPLE',
+    aws_secret_access_key='DUMMYIDEXAMPLE'
 )
 table_name = 'ThePit'
 
