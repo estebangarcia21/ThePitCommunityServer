@@ -4,10 +4,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.thepitcommunityserver.game.enchants.lib.Enchant
-import org.thepitcommunityserver.game.enchants.lib.EnchantConfig
-import org.thepitcommunityserver.game.enchants.lib.EnchantGroup
-import org.thepitcommunityserver.game.enchants.lib.EnchantType
+import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.SECONDS
 import org.thepitcommunityserver.util.Time
 import org.thepitcommunityserver.util.undefPropErr
