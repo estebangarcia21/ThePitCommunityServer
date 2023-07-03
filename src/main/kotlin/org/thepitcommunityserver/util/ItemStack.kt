@@ -13,7 +13,8 @@ fun buildItem(
     count: Int = 1,
     unbreakable: Boolean = false,
     flags: List<ItemFlag> = emptyList(),
-    nbtTags: DeserializedNBTMap = emptyMap()
+    nbtTags: DeserializedNBTMap = emptyMap(),
+    overrideExistingNBTTags: Boolean = false
 ): ItemStack {
     val item = ItemStack(material, count)
 
@@ -31,7 +32,13 @@ fun buildItem(
     item.itemMeta = itemMeta
 
     if (nbtTags.isNotEmpty()) {
-        item.nbt = buildNBTCompound(nbtTags)
+        val builtNbtTags = buildNBTCompound(nbtTags)
+
+        if (overrideExistingNBTTags) {
+            item.nbt = builtNbtTags
+        } else {
+            item.nbt = mergeNBTCompounds(item.nbt, builtNbtTags)
+        }
     }
 
     return item
