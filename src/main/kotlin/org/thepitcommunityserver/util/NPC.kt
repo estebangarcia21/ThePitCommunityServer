@@ -2,7 +2,6 @@ package org.thepitcommunityserver.util
 
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.api.event.NPCRightClickEvent
-import net.citizensnpcs.trait.LookClose
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -11,7 +10,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemFlag
-import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.db.data
 import org.thepitcommunityserver.registerEvents
 
@@ -62,7 +60,6 @@ val worldNPCS = listOf(
                         11 to buildItem(
                             name = purchaseableName(diamondSwordPrice, "Diamond Sword"),
                             material = Material.DIAMOND_SWORD,
-                            itemID = "diamond-sword",
                             lore = purchaseableLore(
                                 diamondSwordPrice,
                                 "<blue>+20% damage vs bountied"
@@ -72,7 +69,6 @@ val worldNPCS = listOf(
                         12 to buildItem(
                             name = purchaseableName(obsidianPrice, "Obsidian"),
                             material = Material.OBSIDIAN,
-                            itemID = "obsidian",
                             lore = purchaseableLore(
                                 obsidianPrice,
                                 "Remains for 120 seconds"
@@ -82,7 +78,6 @@ val worldNPCS = listOf(
                         13 to buildItem(
                             name = purchaseableName(goldenPickaxePrice, "Gold Pickaxe"),
                             material = Material.GOLD_PICKAXE,
-                            itemID = "gold-pickaxe",
                             lore = purchaseableLore(
                                 goldenPickaxePrice,
                                 "Breaks a 5-high pillar of",
@@ -93,7 +88,6 @@ val worldNPCS = listOf(
                         14 to buildItem(
                             name = purchaseableName(diamondChestplatePrice, "Diamond Chestplate"),
                             material = Material.DIAMOND_CHESTPLATE,
-                            itemID = "diamond-chestplate",
                             lore = purchaseableLore(
                                 diamondChestplatePrice,
                                 "Auto-equips on buy!"
@@ -102,7 +96,6 @@ val worldNPCS = listOf(
                         15 to buildItem(
                             name = purchaseableName(diamondBootsPrice, "Diamond Boots"),
                             material = Material.DIAMOND_BOOTS,
-                            itemID = "diamond-boots",
                             lore = purchaseableLore(
                                 diamondBootsPrice,
                                 "Auto-equips on buy!"
@@ -180,7 +173,6 @@ class NPC(
 
     init {
         registerEvents(this)
-        setup()
     }
 
     fun spawn() {
@@ -205,15 +197,6 @@ class NPC(
         }) {
             gui.open(player)
         }
-    }
-
-    private fun setup() {
-        val lookCloseTrait = CitizensAPI.getTraitFactory().getTrait(LookClose::class.java)
-        lookCloseTrait.range = 5.0
-        lookCloseTrait.setRealisticLooking(true)
-        lookCloseTrait.toggle()
-
-        npc.addTrait(lookCloseTrait)
     }
 }
 
