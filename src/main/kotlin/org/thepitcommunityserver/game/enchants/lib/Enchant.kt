@@ -34,7 +34,8 @@ val Enchants = listOf(
     ComboSwift,
     ComboStun,
     ComboHeal,
-    CounterJanitor
+    CounterJanitor,
+    SpeedyKill
 )
 
 interface Enchant : Listener {
