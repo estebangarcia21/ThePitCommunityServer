@@ -60,7 +60,6 @@ val worldNPCS = listOf(
                         11 to buildItem(
                             name = purchaseableName(diamondSwordPrice, "Diamond Sword"),
                             material = Material.DIAMOND_SWORD,
-                            itemID = "diamond-sword",
                             lore = purchaseableLore(
                                 diamondSwordPrice,
                                 "<blue>+20% damage vs bountied"
@@ -70,7 +69,6 @@ val worldNPCS = listOf(
                         12 to buildItem(
                             name = purchaseableName(obsidianPrice, "Obsidian"),
                             material = Material.OBSIDIAN,
-                            itemID = "obsidian",
                             lore = purchaseableLore(
                                 obsidianPrice,
                                 "Remains for 120 seconds"
@@ -80,7 +78,6 @@ val worldNPCS = listOf(
                         13 to buildItem(
                             name = purchaseableName(goldenPickaxePrice, "Gold Pickaxe"),
                             material = Material.GOLD_PICKAXE,
-                            itemID = "gold-pickaxe",
                             lore = purchaseableLore(
                                 goldenPickaxePrice,
                                 "Breaks a 5-high pillar of",
@@ -91,7 +88,6 @@ val worldNPCS = listOf(
                         14 to buildItem(
                             name = purchaseableName(diamondChestplatePrice, "Diamond Chestplate"),
                             material = Material.DIAMOND_CHESTPLATE,
-                            itemID = "diamond-chestplate",
                             lore = purchaseableLore(
                                 diamondChestplatePrice,
                                 "Auto-equips on buy!"
@@ -100,7 +96,6 @@ val worldNPCS = listOf(
                         15 to buildItem(
                             name = purchaseableName(diamondBootsPrice, "Diamond Boots"),
                             material = Material.DIAMOND_BOOTS,
-                            itemID = "diamond-boots",
                             lore = purchaseableLore(
                                 diamondBootsPrice,
                                 "Auto-equips on buy!"
@@ -160,7 +155,7 @@ val worldNPCS = listOf(
             readOnly = true
         ),
         nameHeight = 1.9,
-        initialRotation = 90f
+        initialRotation = 75f
     ),
 )
 

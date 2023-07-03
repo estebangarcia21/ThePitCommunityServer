@@ -1,4 +1,4 @@
-package org.thepitcommunityserver.game.qol
+package org.thepitcommunityserver.game.playerExperience
 
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -23,7 +23,7 @@ object PitScoreboard : Listener {
 
     init {
         GlobalTimer.registerTask("scoreboard-updater", 1 * SECONDS) {
-            CurrentWorld.players?.forEach(::renderScoreboardView)
+            CurrentWorld.players?.forEach(PitScoreboard::renderScoreboardView)
         }
     }
 

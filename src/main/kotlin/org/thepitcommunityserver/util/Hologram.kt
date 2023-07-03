@@ -12,9 +12,10 @@ import org.thepitcommunityserver.registerEvents
 private const val ARMOR_STAND_HEIGHT = 1.975
 
 class Hologram(
-    private val lines: List<String>,
-    private val baseLocation: Location,
-    private val lineHeight: Double = 0.3
+    private var lines: List<String>,
+    private val location: Location,
+    private val lineHeight: Double = 0.3,
+    private val offset: Vector = Vector(0, 0, 0)
 ) : Listener {
     private val entities = mutableListOf<ArmorStand>()
 
@@ -23,15 +24,26 @@ class Hologram(
     }
 
     fun show() {
-        var writerLocation = baseLocation.subtract(Vector(0.0, ARMOR_STAND_HEIGHT, 0.0)).clone()
+        removeCurrentLines()
+
+        var baseLocation = location.clone().subtract(Vector(0.0, ARMOR_STAND_HEIGHT, 0.0)).add(offset)
 
         lines.reversed().forEach {
-            displayHologramLine(it, writerLocation)
-            writerLocation = writerLocation.add(Vector(0.0, lineHeight, 0.0))
+            displayHologramLine(it, baseLocation)
+            baseLocation = baseLocation.add(Vector(0.0, lineHeight, 0.0))
         }
     }
 
+    fun updateLines(newLines: List<String>) {
+        lines = newLines
+        show()
+    }
+
     fun hide() {
+        removeCurrentLines()
+    }
+
+    private fun removeCurrentLines() {
         entities.forEach { it.remove() }
         entities.clear()
     }
@@ -44,6 +56,8 @@ class Hologram(
         entity.canPickupItems = false
         entity.isCustomNameVisible = true
         entity.isVisible = false
+
+        entities += entity
     }
 
     @EventHandler

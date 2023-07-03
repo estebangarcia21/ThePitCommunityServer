@@ -9,11 +9,12 @@ import java.util.*
 fun buildItem(
     material: Material,
     name: String? = null,
-    itemID: String = "disposable*",
     lore: List<String> = emptyList(),
     count: Int = 1,
     unbreakable: Boolean = false,
-    flags: List<ItemFlag> = emptyList()
+    flags: List<ItemFlag> = emptyList(),
+    nbtTags: DeserializedNBTMap = emptyMap(),
+    overrideExistingNBTTags: Boolean = false
 ): ItemStack {
     val item = ItemStack(material, count)
 
@@ -29,6 +30,16 @@ fun buildItem(
     itemMeta.addItemFlags(*flags.toTypedArray())
 
     item.itemMeta = itemMeta
+
+    if (nbtTags.isNotEmpty()) {
+        val builtNbtTags = buildNBTCompound(nbtTags)
+
+        if (overrideExistingNBTTags) {
+            item.nbt = builtNbtTags
+        } else {
+            item.nbt = mergeNBTCompounds(item.nbt, builtNbtTags)
+        }
+    }
 
     return item
 }

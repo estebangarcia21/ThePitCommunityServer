@@ -83,6 +83,7 @@ class NBTTest {
         compound.setByte("byte", 127.toByte())
         compound.setByteArray("byteArray", byteArrayOf(1, 2, 3))
         compound.setString("string", "Hello, World!")
+        compound.setBoolean("boolean", true)
         compound.set("compound", NBTTagCompound().apply { setString("subKey", "SubValue") })
 
         val data = readNBTCompoundAsMap(compound)
@@ -91,6 +92,7 @@ class NBTTest {
         assertEquals(2.718, data["double"])
         assertEquals(42, data["int"])
         assertEquals(123456789L, data["long"])
+        assertEquals(1.toByte(), data["boolean"])
         assertEquals(127.toByte(), data["byte"])
         assertArrayEquals(byteArrayOf(1, 2, 3), data["byteArray"] as ByteArray)
         assertEquals("Hello, World!", data["string"])
@@ -108,5 +110,25 @@ class NBTTest {
         val keys = compound.keys
 
         assertTrue(keys.containsAll(expectedKeys) && expectedKeys.containsAll(keys))
+    }
+
+    @Test
+    fun testMergeNBTCompounds() {
+        val target = NBTTagCompound()
+        target.setFloat("float", 3.14f)
+        target.setString("string", "Hello")
+        target.setBoolean("boolean", true)
+
+        val compound = NBTTagCompound()
+        compound.setString("string", "World")
+        compound.setInt("int", 42)
+        compound.setBoolean("boolean", false)
+
+        val mergedCompound = mergeNBTCompounds(target, compound)
+
+        assertEquals(3.14f, mergedCompound.getFloat("float"))
+        assertEquals("World", mergedCompound.getString("string"))
+        assertEquals(42, mergedCompound.getInt("int"))
+        assertEquals(false, mergedCompound.getBoolean("boolean"))
     }
 }
