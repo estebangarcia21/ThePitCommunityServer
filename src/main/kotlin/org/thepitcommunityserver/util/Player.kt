@@ -3,6 +3,7 @@ package org.thepitcommunityserver.util
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import org.thepitcommunityserver.db.data
 import org.thepitcommunityserver.game.enchants.lib.isEmptyItemStack
 
 val Player.leggings: ItemStack?
@@ -25,4 +26,10 @@ fun addItemToInventoryEmptySlot(inventory: Inventory, item: ItemStack, preferred
             break
         }
     }
+}
+
+fun formatPitPlayerName(player: Player): String {
+    val playerData = player.data
+
+    return "${formatBracketsForLevel(playerData.level, playerData.prestige)} ${player.name}"
 }

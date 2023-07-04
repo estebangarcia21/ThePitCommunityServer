@@ -15,6 +15,7 @@ import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.events.*
 import org.thepitcommunityserver.game.playerExperience.lifecycle.DefaultArmor
 import org.thepitcommunityserver.game.events.Spawn
+import org.thepitcommunityserver.game.playerExperience.PitName
 import org.thepitcommunityserver.game.playerExperience.PitScoreboard
 import org.thepitcommunityserver.game.playerExperience.lifecycle.InventoryManager
 import org.thepitcommunityserver.game.playerExperience.player.PlayerDeathMessage
@@ -73,7 +74,8 @@ class Main : JavaPlugin {
             DefaultArmor,
             PlayerDeathMessage,
             InventoryManager,
-            WorldHolograms
+            WorldHolograms,
+            PitName
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
