@@ -64,6 +64,12 @@ fun getPrestigeColor(prestigeLevel: Int): ChatColor {
     }
 }
 
+fun formatBracketsForLevel(level: Int, prestige: Int): String {
+    val levelColor = getChatColorForLevel(level)
+    val prestigeColor = getPrestigeColor(prestige)
+
+    return "${prestigeColor}[${levelColor}$level${prestigeColor}]"
+}
 
 fun getPrestigeModifier(prestigeLevel: Int): Double {
     val modifiers = listOf(
