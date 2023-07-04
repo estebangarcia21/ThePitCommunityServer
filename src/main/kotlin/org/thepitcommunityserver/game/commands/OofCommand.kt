@@ -19,7 +19,7 @@ object OofCommand: CommandExecutor {
         if (!label.equals(name, ignoreCase = true)) return true
 
         if (isInsideSpawn(sender.location)) {
-            sender.sendMessage("<red:bold><bold>NOPE!</bold></red:bold> Can't /oof in spawn!".parseChatColors())
+            sender.sendMessage("<red:bold>NOPE!</red:bold> Can't /oof in spawn!".parseChatColors())
             return true
         }
 
