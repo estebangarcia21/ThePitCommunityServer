@@ -15,7 +15,15 @@ object Prick : Enchant {
             group = EnchantGroup.A,
             rare = false,
             type = EnchantType.PANTS
-        ) { "Enemies hitting you receive <red>${hearts[it]}${Text.HEART}</red> true damage" }
+        ) { "Enemies hitting you receive <red>${hearts[it]}${Text.HEART}</red><br/>true damage" }
+
+    private val description: EnchantDescription = {
+        if (it == 3) {
+            "Enemies hitting you receive <red>${hearts[it]}${Text.HEART}</red><br/>true damage"
+        } else {
+            "Enemies hitting you receive<br/><red>${hearts[it]}${Text.HEART}</red> true damage"
+        }
+    }
 
     private val damageAmount = mapOf(
         1 to 0.5,

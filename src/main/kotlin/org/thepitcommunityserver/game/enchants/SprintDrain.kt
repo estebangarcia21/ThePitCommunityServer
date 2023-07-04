@@ -35,9 +35,9 @@ object SprintDrain: Enchant {
 
     private val description: EnchantDescription = {
         if (it == 1) {
-            "Arrow shots grant you <yellow>Speed ${intToRoman(amplifier[it]?.inc())}</yellow><br/>({1}s)"
+            "Arrow shots grant you <yellow>Speed ${intToRoman(amplifier[it]?.inc())}</yellow><br/>(${duration[it]?.seconds()}s)"
         } else {
-            "Arrow shots grant you <yellow>Speed ${intToRoman(amplifier[it]?.inc())}</yellow><br/>(${duration[it]}s) and apply <blue>Slowness I</blue><br/>(3s)"
+            "Arrow shots grant you <yellow>Speed ${intToRoman(amplifier[it]?.inc())}</yellow><br/>(${duration[it]?.seconds()}s) and apply <blue>Slowness I</blue><br/>(3s)"
         }
     }
 

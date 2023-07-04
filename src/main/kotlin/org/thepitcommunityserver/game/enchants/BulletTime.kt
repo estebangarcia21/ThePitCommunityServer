@@ -29,7 +29,7 @@ object BulletTime : Enchant {
         if (it == 1) {
             "Blocking destroys arrows that hit<br/>you"
         } else {
-            "Blocking destroys arrows that hit<br/>you. Destroying arrows this way heals <red>${hearts[it]}❤</red>"
+            "Blocking destroys arrows that hit<br/>you. Destroying arrows this way<br/>heals <red>${hearts[it]}❤</red>"
         }
     }
 

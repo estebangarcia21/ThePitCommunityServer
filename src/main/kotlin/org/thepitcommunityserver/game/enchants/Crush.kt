@@ -18,13 +18,20 @@ object Crush : Enchant {
             group = EnchantGroup.A,
             rare = false,
             type = EnchantType.SWORD
-        ) { "Strikes apply <red>Weakness ${intToRoman(amplifier[it])}</red><br/>(lasts, ${duration[it]?.seconds()}, 2s cooldown)" }
+        ) { "Strikes apply <red>Weakness ${intToRoman(amplifier[it]?.inc())}</red><br/>(lasts, ${seconds[it]}, 2s cooldown)" }
 
     private val amplifier = mapOf(
         1 to 4,
         2 to 5,
         3 to 6
     )
+
+    private val seconds = mapOf(
+        1 to 0.2f,
+        2 to 0.4f,
+        3 to 0.5
+    )
+
     private val duration = mapOf(
         1 to Time(4L * TICK),
         2 to Time(8L * TICK),

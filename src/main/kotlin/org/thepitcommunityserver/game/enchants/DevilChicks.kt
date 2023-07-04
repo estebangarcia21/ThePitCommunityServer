@@ -32,14 +32,18 @@ object DevilChicks : Enchant {
             description
         )
 
-    private val description: EnchantDescription = {
-        val word = mapOf(
-            1 to "with",
-            2 to "many",
-            3 to "too many"
-        )[it]
+    val word = mapOf(
+        1 to "with",
+        2 to "many",
+        3 to "too many"
+    )
 
-        "Arrows spawn with $word explosive chickens."
+    private val description: EnchantDescription = {
+        if (it == 1) {
+            "Arrows spawn an explosive chicken"
+        } else {
+            "Arrows spawn ${word[it]} explosive<br/>chickens"
+        }
     }
 
     private val chickAmount = mapOf(

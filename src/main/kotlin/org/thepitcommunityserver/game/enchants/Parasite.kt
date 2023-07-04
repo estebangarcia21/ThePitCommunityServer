@@ -10,12 +10,12 @@ import org.thepitcommunityserver.util.undefPropErr
 object Parasite : Enchant {
     override val config: EnchantConfig
         get() = EnchantConfig(
-            name = "Wasp",
+            name = "Parasite",
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
             type = EnchantType.BOW
-        ) { "Heal <red>${hearts[it]}${Text.HEART}</red>"}
+        ) { "Heal <red>${hearts[it]}${Text.HEART}</red> on arrow hit"}
 
     private val healAmount = mapOf(
         1 to 0.5,

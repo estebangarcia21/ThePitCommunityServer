@@ -19,8 +19,8 @@ object Knockback : Enchant {
 
     private val knockbackAmount = mapOf(
         1 to 3,
-        2 to 4,
-        3 to 6
+        2 to 6,
+        3 to 9
     )
 
     @EventHandler
