@@ -6,9 +6,10 @@ elemental:
   leaderboard: [13.5, 114, 0.5]
   statsVillager: [11.5, 114, 5.5]
   unlockedFeatures: [-6.5, 114, 11.5]
-  enderChest: [-12.5, 11.5, 7.5]
+  enderChest: [-12.5, 114, 7.5]
   keeper: [-11.5, 114, -4.5]
-  centerHologram: [0.5, 115, 0.5]
+  centerHologram: [0.5, 115.5, 0.5]
+  mysticWell: [-12.5, 115, 0.5]
   centerDropdown:
     pos: [0.5, 82, 0.5]
     radius: 9.5

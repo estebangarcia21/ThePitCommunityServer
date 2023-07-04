@@ -103,6 +103,10 @@ object GlobalTimer : PluginLifecycleListener {
      */
     private val tasks = mutableMapOf<String, GlobalTimerHandlerConfig>()
 
+    fun after(ticks: Tick, action: () -> Unit) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin, action, ticks)
+    }
+
     fun registerTask(taskName: String, step: Tick, handler: GlobalTimerHandler) {
         tasks[taskName] = GlobalTimerHandlerConfig(handler, step)
     }
