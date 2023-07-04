@@ -54,6 +54,7 @@ object ComboStun : Enchant {
                 damaged.addPotionEffect(PotionEffect(PotionEffectType.SLOW, duration.ticks().toInt(), 8), true)
                 damaged.addPotionEffect(PotionEffect(PotionEffectType.JUMP, duration.ticks().toInt(), -8), true)
                 damaged.world.playSound(damaged.location, Sound.ANVIL_LAND, 1f, 0.1f)
+                sendMessage(damaged)
             }
         }
     }

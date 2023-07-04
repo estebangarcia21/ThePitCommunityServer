@@ -56,7 +56,10 @@ fun replaceChatColorTags(string: String, defaultColor: ChatColor = ChatColor.GRA
         val name = c.name.lowercase(Locale.getDefault()).replace("_", "-")
 
         acc = acc.replace("<$name>", c.toString())
-        acc = acc.replace("</$name>", ChatColor.GRAY.toString())
+        acc = acc.replace("</$name>", defaultColor.toString())
+
+        acc = acc.replace("<$name:bold>", c.toString() + ChatColor.BOLD.toString())
+        acc = acc.replace("</$name:bold>",ChatColor.RESET.toString() + defaultColor.toString())
 
         acc += defaultColor.toString()
     }
