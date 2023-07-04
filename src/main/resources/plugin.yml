@@ -11,3 +11,6 @@ commands:
   spawn:
     description: Use it to get to spawn
     usage: /spawn
+  oof:
+    description: Kill yourself to get to spawn
+    usage: /oof
