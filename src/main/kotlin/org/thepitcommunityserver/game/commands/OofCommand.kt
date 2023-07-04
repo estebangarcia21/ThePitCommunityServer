@@ -7,33 +7,31 @@ import org.bukkit.entity.Player
 import org.thepitcommunityserver.util.Timer
 import org.thepitcommunityserver.util.isInsideSpawn
 import org.thepitcommunityserver.util.parseChatColors
-import org.thepitcommunityserver.util.randomSpawnLocation
-import java.util.UUID
+import java.util.*
 
-object SpawnCommand : CommandExecutor {
-    const val name = "spawn"
-    private val aliases = listOf("oof")
+object OofCommand: CommandExecutor {
+    const val name = "oof"
 
     private val timer = Timer<UUID>()
 
     override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
-        if (!label.equals(name, ignoreCase = true) && !aliases.contains(label)) return true
+        if (!label.equals(name, ignoreCase = true)) return true
 
         if (isInsideSpawn(sender.location)) {
-            sender.sendMessage("<red>You cannot /respawn here!</red>".parseChatColors())
+            sender.sendMessage("<red><bold>NOPE!</bold></red> Can't /oof in spawn!".parseChatColors())
 
             return true
         }
 
         if (timer.getCooldown(sender.uniqueId) != null) {
-            sender.sendMessage("<red>You may only /respawn every 10 seconds!</red>".parseChatColors())
+            sender.sendMessage("<red><bold>CHILL OUT!</bold></red> You may only /oof every 10 seconds!".parseChatColors())
 
             return true
         }
 
         timer.cooldown(sender.uniqueId, 200) {
-            sender.teleport(randomSpawnLocation)
+            sender.health = 0.0
         }
 
         return true
