@@ -60,11 +60,11 @@ object ComboStun : Enchant {
     }
 
     private fun sendMessage(player: Player) {
-        val titleMessage = replaceChatColorTags("<red>STUNNED!</red> <gold>${player.name.lowercase()}</gold>")
+        val titleMessage = replaceChatColorTags("<red>STUNNED!</red>")
         val title = createChatComponent(titleMessage)
         val titlePacket = PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, title, 0, 60, 0)
 
-        val subtitleMessage = replaceChatColorTags("<yellow>You cannot move!</yellow> <gold${player.name.lowercase()}>")
+        val subtitleMessage = replaceChatColorTags("<yellow>You cannot move!</yellow>")
         val subtitle = createChatComponent(subtitleMessage)
         val subtitlePacket = PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, subtitle, 0, 60, 0)
 

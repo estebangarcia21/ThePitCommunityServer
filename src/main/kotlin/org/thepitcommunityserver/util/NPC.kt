@@ -157,6 +157,22 @@ val worldNPCS = listOf(
         nameHeight = 1.9,
         initialRotation = 75f
     ),
+    NPC(
+        name = listOf(
+            "<dark-aqua:bold>STATS VILLAGER</dark-aqua:bold>",
+            "<gray>Pit stats</gray>"
+        ).map(::replaceChatColorTags),
+        type = EntityType.VILLAGER,
+        location = CurrentWorldConfig.statsVillager.toLocation(),
+        gui = GUI(
+            title = "Stats",
+            rows = 5,
+            contents = mapOf(),
+            readOnly = true
+        ),
+        nameHeight = 1.9,
+        initialRotation = 105f
+    ),
 )
 
 class NPC(
