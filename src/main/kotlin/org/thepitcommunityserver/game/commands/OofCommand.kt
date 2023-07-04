@@ -19,12 +19,12 @@ object OofCommand: CommandExecutor {
         if (!label.equals(name, ignoreCase = true)) return true
 
         if (isInsideSpawn(sender.location)) {
-            sender.sendMessage("<red><bold>NOPE!</bold></red> Can't /oof in spawn!".parseChatColors())
+            sender.sendMessage("<red:bold><bold>NOPE!</bold></red:bold> Can't /oof in spawn!".parseChatColors())
             return true
         }
 
         if (timer.getCooldown(sender.uniqueId) != null) {
-            sender.sendMessage("<red><bold>CHILL OUT!</bold></red> You may only /oof every 10 seconds!".parseChatColors())
+            sender.sendMessage("<red:bold>CHILL OUT!</red:bold> You may only /oof every 10 seconds!".parseChatColors())
             return true
         }
 
