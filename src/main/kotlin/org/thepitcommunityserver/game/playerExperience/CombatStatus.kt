@@ -4,12 +4,10 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.thepitcommunityserver.game.combat.CombatStatusState
 import org.thepitcommunityserver.game.enchants.lib.playerHitPlayer
-import org.thepitcommunityserver.util.SECONDS
-import org.thepitcommunityserver.util.Tick
-import org.thepitcommunityserver.util.Time
-import org.thepitcommunityserver.util.Timer
+import org.thepitcommunityserver.util.*
 
 object CombatStatus : Listener {
     private val combatTimer = Timer<Player>()
@@ -41,6 +39,8 @@ object CombatStatus : Listener {
             val damager = it.damager
             val damaged = it.damaged
 
+            if (isInsideSpawn(damager.location)) return@playerHitPlayer
+
             playerCombatStatus[damager] = CombatStatusState.COMBAT
             playerCombatStatus[damaged] = CombatStatusState.COMBAT
 
@@ -54,5 +54,12 @@ object CombatStatus : Listener {
                 playerCombatStatus[damaged] = CombatStatusState.IDLING
             }
         }
+    }
+
+    @EventHandler
+    fun onPlayerDeath(event: PlayerDeathEvent) {
+        val player = event.entity
+        playerCombatStatus[player] = CombatStatusState.IDLING
+        // TODO Bountied
     }
 }
