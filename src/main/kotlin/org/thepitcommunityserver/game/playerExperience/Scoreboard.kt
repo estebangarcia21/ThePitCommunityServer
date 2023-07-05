@@ -76,14 +76,6 @@ object PitScoreboard : Listener {
         player.scoreboard = board.scoreboard
     }
 
-    private fun formatLevel(level: Int, prestigeLevel: Int): String {
-        val prestigeColor = getPrestigeColor(prestigeLevel)
-        val chatColor = getChatColorForLevel(level)
-        val formattedLevel = if (level >= 60) "${ChatColor.BOLD}$level" else level.toString()
-
-        return "${ChatColor.RESET}${prestigeColor}[${chatColor}$formattedLevel${prestigeColor}]"
-    }
-
     private fun formatLine(key: String, color: ChatColor?, value: String): String {
         val finalColor = color?.toString() ?: ""
         return ChatColor.WHITE.toString() + key + ": " + finalColor + value

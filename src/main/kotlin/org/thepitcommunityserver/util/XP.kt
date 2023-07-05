@@ -64,7 +64,6 @@ fun getPrestigeColor(prestigeLevel: Int): ChatColor {
     }
 }
 
-
 fun getPrestigeModifier(prestigeLevel: Int): Double {
     val modifiers = listOf(
         0.0, 10.0, 20.0, 30.0, 40.0, 50.0,
@@ -76,4 +75,12 @@ fun getPrestigeModifier(prestigeLevel: Int): Double {
     )
     val index = prestigeLevel.coerceIn(0, 30)
     return modifiers[index]
+}
+
+fun formatLevel(level: Int, prestigeLevel: Int): String {
+    val prestigeColor = getPrestigeColor(prestigeLevel)
+    val chatColor = getChatColorForLevel(level)
+    val formattedLevel = if (level >= 60) "${ChatColor.BOLD}$level" else level.toString()
+
+    return "${ChatColor.RESET}${prestigeColor}[${chatColor}$formattedLevel${prestigeColor}]"
 }
