@@ -18,17 +18,37 @@ class Timer<K> {
     val items: MutableSet<K>
         get() = timer.keys
 
-    fun after(id: K, ticks: Tick, onTick: Runnable? = null, operation: Runnable) {
-        setCooldown(id, ticks, false, onTick, operation)
+    /**
+     * Runs code after a certain amount of time.
+     */
+    fun after(
+        id: K,
+        ticks: Tick,
+        onTick: Runnable? = null,
+        resetTime: Boolean = false,
+        operation: Runnable
+    ) {
+        setCooldown(id, ticks, resetTime, onTick, operation)
     }
 
-    fun cooldown(id: K, ticks: Tick, post: (() -> Unit)? = null, resetTime: Boolean = false, onTick: (() -> Unit)? = null, cooldownAction: (() -> Unit)? = null, operation: () -> Unit) {
+    /**
+     * Runs the code immediately, then prevents it from running again for the specified cooldown.
+     */
+    fun cooldown(
+        id: K,
+        ticks: Tick,
+        post: (() -> Unit)? = null,
+        resetTime: Boolean = false,
+        onTick: (() -> Unit)? = null,
+        cooldownAction: (() -> Unit)? = null,
+        operation: () -> Unit
+    ) {
         val cooldown = getCooldown(id)
         if (cooldown == null) {
             operation()
 
             setCooldown(id, ticks, resetTime, onTick, post)
-        } else if (cooldownAction != null ){
+        } else if (cooldownAction != null) {
             cooldownAction()
         }
     }

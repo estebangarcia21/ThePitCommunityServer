@@ -11,8 +11,7 @@ import org.bukkit.scoreboard.Objective
 import org.bukkit.scoreboard.Scoreboard
 import org.bukkit.scoreboard.Team
 import org.thepitcommunityserver.db.data
-import org.thepitcommunityserver.game.combat.CombatEnum
-import org.thepitcommunityserver.game.playerExperience.CombatStatus.playerCombatStatus
+import org.thepitcommunityserver.game.combat.CombatStatusState
 import org.thepitcommunityserver.util.*
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -97,15 +96,20 @@ object PitScoreboard : Listener {
     }
 
     private fun formatStatus(player: Player): String {
-        var combatStatus = playerCombatStatus[player.uniqueId] ?: CombatEnum.IDLING
-        var status = ""
+        val (combatStatus, combatTime) = CombatStatus.getCombatStatus(player)
+        var status = combatStatus.displayName
 
-        if (combatStatus == CombatEnum.COMBAT) {
-            status += combatStatus.displayName + " " + ChatColor.RESET + ChatColor.GRAY
-        } else if (combatStatus == CombatEnum.IDLING){
-            combatStatus = CombatEnum.IDLING
-            status += combatStatus.displayName
+        if (combatStatus == CombatStatusState.COMBAT) {
+            if (combatTime == 0L) {
+                CombatStatus.setCombatStatus(player, CombatStatusState.IDLING)
+                return CombatStatusState.IDLING.displayName
+            }
+
+            if (combatTime <= 5L) {
+                status += ChatColor.GRAY.toString() + " ($combatTime)"
+            }
         }
+
         return status
     }
 }
@@ -159,7 +163,7 @@ class FlickerlessScoreboard(val scoreboard: Scoreboard) {
     }
 
     private fun getScoreIndex(index: Int): String {
-        return String(charArrayOf(ChatColor.COLOR_CHAR, ('s'.toInt() + index).toChar()))
+        return String(charArrayOf(ChatColor.COLOR_CHAR, ('s'.code + index).toChar()))
     }
 
     private fun splitPrefixAndSuffixFromLine(rawInput: String): Pair<String, String> {
