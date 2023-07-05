@@ -16,7 +16,7 @@ object Guts : Enchant {
             group = EnchantGroup.B,
             rare = false,
             type = EnchantType.SWORD
-        ) { "Heal <red>${hearts[it]} ${Text.HEART}</red> on kill" }
+        ) { "Heal <red>${hearts[it]?.toInt()}${Text.HEART}</red> on kill" }
 
     private val healAmount = mapOf(
         1 to 1.0,

@@ -49,9 +49,9 @@ object Perun : Enchant {
         )[it]
 
         if (it == 3) {
-            "Every <yellow>$word</yellow> hit strikes<br/><yellow>lightning</yellow> for <red>${hearts[it]}❤</red> + <red>1❤</red><br/>per <aqua>diamond piece</aqua> on your<br/>victim.<br/>$lastMessage"
+            "Every <yellow>$word</yellow> hit strikes<br/><yellow>lightning</yellow> for <red>${hearts[it]?.toInt()}❤</red> + <red>1❤</red><br/>per <aqua>diamond piece</aqua> on your<br/>victim.<br/>$lastMessage"
         } else {
-            "Every <yellow>$word</yellow> hit strikes<br/><yellow>lightning</yellow> for <red>${hearts[it]}❤</red><br/>$lastMessage"
+            "Every <yellow>$word</yellow> hit strikes<br/><yellow>lightning</yellow> for <red>${hearts[it]?.toInt()}❤</red><br/>$lastMessage"
         }
     }
 

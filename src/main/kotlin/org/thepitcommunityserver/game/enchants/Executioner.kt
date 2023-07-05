@@ -17,7 +17,7 @@ object Executioner : Enchant {
             group = EnchantGroup.B,
             rare = true,
             type = EnchantType.SWORD
-        ) { "Hitting an enemy below <red>${hearts[it]}${Text.HEART}</red> instantly kills them" }
+        ) { "Hitting an enemy below <red>${hearts[it]}${Text.HEART}</red><br/>instantly kills them" }
 
     private val killAmount = mapOf(
         1 to 3.0,
