@@ -12,8 +12,6 @@ import java.util.*
 object OofCommand: CommandExecutor {
     const val name = "oof"
 
-    private val timer = Timer<UUID>()
-
     override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
         if (!label.equals(name, ignoreCase = true)) return true
@@ -23,12 +21,12 @@ object OofCommand: CommandExecutor {
             return true
         }
 
-        if (timer.getCooldown(sender.uniqueId) != null) {
+        if (SpawnCommand.timer.getCooldown(sender.uniqueId) != null) {
             sender.sendMessage("<red:bold>CHILL OUT!</red:bold> You may only /oof every 10 seconds!".parseChatColors())
             return true
         }
 
-        timer.cooldown(sender.uniqueId, 200) {
+        SpawnCommand.timer.cooldown(sender.uniqueId, SpawnCommand.cooldown.ticks()) {
             sender.health = 0.0
         }
 
