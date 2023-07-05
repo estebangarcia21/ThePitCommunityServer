@@ -5,5 +5,6 @@ import org.bukkit.ChatColor
 enum class CombatStatusState(val displayName: String) {
     COMBAT(ChatColor.RED.toString() + "Fighting"),
     IDLING(ChatColor.GREEN.toString() + "Idling"),
-    BOUNTIED(ChatColor.RED.toString() + "Bountied")
+    BOUNTIED(ChatColor.RED.toString() + "Bountied"),
+    EVENT(ChatColor.GOLD.toString() + "Event")
 }
