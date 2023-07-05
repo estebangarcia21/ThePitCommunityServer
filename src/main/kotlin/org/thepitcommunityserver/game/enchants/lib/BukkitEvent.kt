@@ -136,26 +136,31 @@ fun chance(percent: Double): Boolean {
     return Random.nextDouble() <= percent
 }
 
-fun playerDamagedPlayer(event: EntityDamageByEntityEvent): Boolean {
-    if (event.entity !is Player) return false
-
-    return event.damager is Player
-}
-
-
 data class PlayerHitPlayerContext(
-    val damager : Player,
-    val damaged : Player
+    val damager: Player,
+    val damaged: Player
 )
 
 fun EntityDamageByEntityEvent.playerHitPlayer(callback: EventCallback<PlayerHitPlayerContext> ) {
-    val damager = this.damager as? Player ?: return
+    val damager = this.damager
     val damaged = this.entity as? Player ?: return
 
-    callback(PlayerHitPlayerContext(
-        damager = damager,
-        damaged = damaged
-    ))
+    when (damager) {
+        is Player -> {
+            callback(PlayerHitPlayerContext(
+                damager = damager,
+                damaged = damaged
+            ))
+        }
+        is Arrow -> {
+            val shooter = damager.shooter as? Player ?: return
+
+            callback(PlayerHitPlayerContext(
+                damager = shooter,
+                damaged = damaged
+            ))
+        }
+    }
 }
 
 fun ProjectileHitEvent.onArrowLand(enchant: Enchant, callback: EventCallback<ArrowShotWithEnchantContext>) {
