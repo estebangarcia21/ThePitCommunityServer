@@ -15,7 +15,7 @@ object SpeedyHit : Enchant {
             name = "Crush",
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
-            rare = false,
+            rare = true,
             type = EnchantType.SWORD
         ) { "Gain Speed I for <${duration[it]?.seconds()}s</yellow> on hit(${cooldownTime[it]?.seconds()}s<br/>cooldown)" }
 

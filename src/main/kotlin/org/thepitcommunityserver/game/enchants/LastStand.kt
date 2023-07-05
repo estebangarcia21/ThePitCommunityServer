@@ -15,7 +15,7 @@ object LastStand : Enchant {
             group = EnchantGroup.B,
             rare = false,
             type = EnchantType.PANTS
-        ) { "Gain <blue>Resistance ${intToRoman(amplifier[it]?.inc())}</blue> (4<br/>seconds) when reaching <red>3❤</red>" }
+        ) { "Gain <blue>Resistance ${intToRoman(amplifier[it]?.inc())}</blue> (4 seconds)<br/>when reaching <red>3❤</red>" }
 
     private val amplifier = mapOf(
         1 to 0,

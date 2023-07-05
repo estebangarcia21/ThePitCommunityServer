@@ -9,6 +9,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.*
+import org.thepitcommunityserver.util.Timer
 import java.util.*
 
 object ComboStun : Enchant {
@@ -18,13 +19,22 @@ object ComboStun : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.B,
             rare = true,
-            type = EnchantType.SWORD
-        ) { "Every <yellow>${word[it]}</yellow> strike on an enemy<br/>stuns them for ${duration[it]?.seconds()} seconds" }
+            type = EnchantType.SWORD,
+            description
+        )
 
-    private val word = mapOf(
-        1 to "fifth",
-        2 to "fourth",
-        3 to "fourth"
+    private val description: EnchantDescription = {
+        if (it == 3) {
+            "Every <yellow>fifth</yellow> strike on an enemy<br/>stuns them for ${seconds[it]} seconds"
+        } else {
+            "Every <yellow>fifth</yellow> strike on an enemy<br/>stuns them for ${seconds[it]} seconds<br/>(Can only be stunned every 8s)"
+        }
+    }
+
+    private val seconds = mapOf(
+        1 to 0.5f,
+        2 to 0.8f,
+        3 to 1.5f
     )
 
     private val duration = mapOf(
@@ -33,13 +43,9 @@ object ComboStun : Enchant {
         3 to Time(30L)
     )
 
-    private val hitsNeeded = mapOf(
-        1 to 5,
-        2 to 4,
-        3 to 4
-    )
-
+    private val cooldown = Time(8 * SECONDS)
     private val hitCounter = HitCounter<UUID>()
+    private val timer = Timer<UUID>()
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
@@ -47,14 +53,22 @@ object ComboStun : Enchant {
             val damager = it.damager
             val damaged = it.damaged
 
-            val hitsNeeded = hitsNeeded[it.enchantTier] ?: undefPropErr("hitsNeeded", it.enchantTier)
             val duration = duration[it.enchantTier] ?: undefPropErr("duration", it.enchantTier)
 
-            hitCounter.onNthHit(damager.uniqueId, hitsNeeded) {
-                damaged.addPotionEffect(PotionEffect(PotionEffectType.SLOW, duration.ticks().toInt(), 8), true)
-                damaged.addPotionEffect(PotionEffect(PotionEffectType.JUMP, duration.ticks().toInt(), -8), true)
-                damaged.world.playSound(damaged.location, Sound.ANVIL_LAND, 1f, 0.1f)
-                sendMessage(damaged)
+            hitCounter.onNthHit(damager.uniqueId, 5) {
+
+                if (it.enchantTier == 3) {
+                    damaged.addPotionEffect(PotionEffect(PotionEffectType.SLOW, duration.ticks().toInt(), 8), true)
+                    damaged.addPotionEffect(PotionEffect(PotionEffectType.JUMP, duration.ticks().toInt(), -8), true)
+                    damaged.world.playSound(damaged.location, Sound.ANVIL_LAND, 1f, 0.1f)
+                    sendMessage(damaged)
+                }
+                else timer.cooldown(damager.uniqueId, cooldown.ticks()) {
+                    damaged.addPotionEffect(PotionEffect(PotionEffectType.SLOW, duration.ticks().toInt(), 8), true)
+                    damaged.addPotionEffect(PotionEffect(PotionEffectType.JUMP, duration.ticks().toInt(), -8), true)
+                    damaged.world.playSound(damaged.location, Sound.ANVIL_LAND, 1f, 0.1f)
+                    sendMessage(damaged)
+                }
             }
         }
     }
