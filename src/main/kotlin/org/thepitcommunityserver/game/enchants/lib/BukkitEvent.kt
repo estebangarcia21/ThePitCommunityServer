@@ -142,15 +142,20 @@ fun playerDamagedPlayer(event: EntityDamageByEntityEvent): Boolean {
     return event.damager is Player
 }
 
-fun EntityDamageByEntityEvent.playerHitPlayer(callback: (damager: Player, damaged: Player) -> Unit) {
-    if (!playerDamagedPlayer(this)) return
 
-    val damager = damager as? Player
-    val damaged = entity as? Player
+data class PlayerHitPlayerContext(
+    val damager : Player,
+    val damaged : Player
+)
 
-    if (damager != null && damaged != null) {
-        callback(damager, damaged)
-    }
+fun EntityDamageByEntityEvent.playerHitPlayer(callback: EventCallback<PlayerHitPlayerContext> ) {
+    val damager = this.damager as? Player ?: return
+    val damaged = this.entity as? Player ?: return
+
+    callback(PlayerHitPlayerContext(
+        damager = damager,
+        damaged = damaged
+    ))
 }
 
 fun ProjectileHitEvent.onArrowLand(enchant: Enchant, callback: EventCallback<ArrowShotWithEnchantContext>) {
