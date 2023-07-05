@@ -128,7 +128,7 @@ val worldNPCS = listOf(
     NPC(
         name = listOf(
             "<yellow><bold>PRESTIGE</bold></yellow>",
-            "<gray>Resets & Renown</gray>"
+            "<gray>Prestige & Renown</gray>"
         ).map(::replaceChatColorTags),
         type = EntityType.VILLAGER,
         location = CurrentWorldConfig.prestigeVillager.toLocation(),
@@ -149,7 +149,7 @@ val worldNPCS = listOf(
         type = EntityType.VILLAGER,
         location = CurrentWorldConfig.questMaster.toLocation(),
         gui = GUI(
-            title = "Prestige",
+            title = "Quests & Contracts",
             rows = 5,
             contents = mapOf(),
             readOnly = true
@@ -160,7 +160,7 @@ val worldNPCS = listOf(
     NPC(
         name = listOf(
             "<dark-aqua:bold>STATS VILLAGER</dark-aqua:bold>",
-            "<gray>Pit stats</gray>"
+            "<gray>My pit stats</gray>"
         ).map(::replaceChatColorTags),
         type = EntityType.VILLAGER,
         location = CurrentWorldConfig.statsVillager.toLocation(),
