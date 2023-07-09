@@ -25,7 +25,7 @@ class HitCounter<K> {
 
         hits[id] = updatedHits
 
-        timer.cooldown(id, cooldown.ticks(), resetTime = true) {
+        timer.after(id, cooldown.ticks(), resetTime = true) {
             hits.remove(id)
         }
     }
