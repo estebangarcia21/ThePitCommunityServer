@@ -1,9 +1,7 @@
 package org.thepitcommunityserver.game.enchants
 
-import org.bukkit.ChatColor
 import org.bukkit.Effect
 import org.bukkit.Sound
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -14,7 +12,6 @@ import org.thepitcommunityserver.game.events.ArrowWatch
 import org.thepitcommunityserver.util.*
 import org.thepitcommunityserver.util.Timer
 import java.util.*
-import kotlin.time.Duration.Companion.seconds
 
 object Telebow : Enchant {
     override val config: EnchantConfig

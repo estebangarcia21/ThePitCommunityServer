@@ -7,8 +7,6 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityShootBowEvent
-import org.thepitcommunityserver.game.enchants.lib.playerDamagedPlayer
-import org.thepitcommunityserver.game.enchants.lib.playerHitPlayer
 import org.thepitcommunityserver.util.isInsideSpawn
 
 object SpawnProtection : Listener {
