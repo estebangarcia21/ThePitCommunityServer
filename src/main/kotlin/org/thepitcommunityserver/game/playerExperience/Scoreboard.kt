@@ -11,7 +11,7 @@ import org.bukkit.scoreboard.Objective
 import org.bukkit.scoreboard.Scoreboard
 import org.bukkit.scoreboard.Team
 import org.thepitcommunityserver.db.data
-import org.thepitcommunityserver.game.combat.CombatStatus
+import org.thepitcommunityserver.game.combat.CombatStatusState
 import org.thepitcommunityserver.util.*
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -20,6 +20,7 @@ import java.util.*
 
 object PitScoreboard : Listener {
     private val scoreboards = mutableMapOf<Player, FlickerlessScoreboard>()
+
 
     init {
         GlobalTimer.registerTask("scoreboard-updater", 1 * SECONDS) {
@@ -40,6 +41,11 @@ object PitScoreboard : Listener {
         player.data.apply {
             gold += 10
         }
+
+        player.data.apply {
+            xp += 10
+        }
+
         val playerData = player.data
 
         board.title(ChatColor.YELLOW.toString() + ChatColor.BOLD + "THE BLUE HATS PIT")
@@ -90,13 +96,21 @@ object PitScoreboard : Listener {
     }
 
     private fun formatStatus(player: Player): String {
-        val combatStatus = CombatStatus.IDLING // TODO: Implement combat status.
+        val (combatStatus, combatTime) = CombatStatus.getCombatStatus(player)
+        var status = combatStatus.displayName
 
-        return combatStatus.displayName
+        if (combatStatus == CombatStatusState.COMBAT) {
+            if (combatTime == 0L) {
+                CombatStatus.setCombatStatus(player, CombatStatusState.IDLING)
+                return CombatStatusState.IDLING.displayName
+            }
 
-//        return if (combatStatus === CombatStatus.COMBAT) formattedStatus + " " + ChatColor.RESET + ChatColor.GRAY + "(" + combatManager.getCombatTime(
-//            player
-//        ) + ")" else formattedStatus
+            if (combatTime <= 5L) {
+                status += ChatColor.GRAY.toString() + " ($combatTime)"
+            }
+        }
+
+        return status
     }
 }
 
@@ -149,7 +163,7 @@ class FlickerlessScoreboard(val scoreboard: Scoreboard) {
     }
 
     private fun getScoreIndex(index: Int): String {
-        return String(charArrayOf(ChatColor.COLOR_CHAR, ('s'.toInt() + index).toChar()))
+        return String(charArrayOf(ChatColor.COLOR_CHAR, ('s'.code + index).toChar()))
     }
 
     private fun splitPrefixAndSuffixFromLine(rawInput: String): Pair<String, String> {

@@ -136,20 +136,30 @@ fun chance(percent: Double): Boolean {
     return Random.nextDouble() <= percent
 }
 
-fun playerDamagedPlayer(event: EntityDamageByEntityEvent): Boolean {
-    if (event.entity !is Player) return false
+data class PlayerHitPlayerContext(
+    val damager: Player,
+    val damaged: Player
+)
 
-    return event.damager is Player
-}
+fun EntityDamageByEntityEvent.playerHitPlayer(callback: EventCallback<PlayerHitPlayerContext> ) {
+    val damager = this.damager
+    val damaged = this.entity as? Player ?: return
 
-fun EntityDamageByEntityEvent.playerHitPlayer(callback: (damager: Player, damaged: Player) -> Unit) {
-    if (!playerDamagedPlayer(this)) return
+    when (damager) {
+        is Player -> {
+            callback(PlayerHitPlayerContext(
+                damager = damager,
+                damaged = damaged
+            ))
+        }
+        is Arrow -> {
+            val shooter = damager.shooter as? Player ?: return
 
-    val damager = damager as? Player
-    val damaged = entity as? Player
-
-    if (damager != null && damaged != null) {
-        callback(damager, damaged)
+            callback(PlayerHitPlayerContext(
+                damager = shooter,
+                damaged = damaged
+            ))
+        }
     }
 }
 
@@ -229,3 +239,5 @@ fun PlayerDeathEvent.damagerAnyKillPlayerWithPantsEnchant(enchant: Enchant, call
         )
     )
 }
+
+
