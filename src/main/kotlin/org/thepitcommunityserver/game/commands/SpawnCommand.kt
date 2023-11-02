@@ -4,16 +4,14 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.thepitcommunityserver.util.Timer
-import org.thepitcommunityserver.util.isInsideSpawn
-import org.thepitcommunityserver.util.parseChatColors
-import org.thepitcommunityserver.util.randomSpawnLocation
+import org.thepitcommunityserver.util.*
 import java.util.UUID
 
 object SpawnCommand : CommandExecutor {
     const val name = "spawn"
 
-    private val timer = Timer<UUID>()
+    val timer = Timer<UUID>()
+    val cooldown = Time(10L * SECONDS)
 
     override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
@@ -29,7 +27,7 @@ object SpawnCommand : CommandExecutor {
             return true
         }
 
-        timer.cooldown(sender.uniqueId, 200) {
+        timer.cooldown(sender.uniqueId, cooldown.ticks()) {
             sender.teleport(randomSpawnLocation)
         }
 
