@@ -121,13 +121,16 @@ val worldNPCS = listOf(
                     }
 
                     player.data.gold -= price
+
+                    val ironSwordItem = player.inventory.contents.find { it?.type == Material.IRON_SWORD }
+                    if (ironSwordItem != null) {
+                        player.inventory.remove(ironSwordItem)
+                    }
+
                     player.inventory.addItem(
                         buildItem(
-                            name = "<yellow>Diamond Sword</yellow>".parseChatColors(),
+                            name = "Diamond Sword",
                             material = Material.DIAMOND_SWORD,
-                            lore = listOf(
-                                "<blue>+20% damage vs bountied"
-                            ).map(::replaceChatColorTags),
                             flags = listOf(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES)
                         )
                     )
@@ -150,11 +153,8 @@ val worldNPCS = listOf(
                     player.data.gold -= price
                     player.inventory.addItem(
                         buildItem(
-                            name = "<yellow>Obsidian</yellow>".parseChatColors(),
+                            name = "Obsidian",
                             material = Material.OBSIDIAN,
-                            lore = listOf(
-                                "Remains for 120 seconds"
-                            ).map(::replaceChatColorTags),
                             count = 8
                         )
                     )
@@ -174,19 +174,17 @@ val worldNPCS = listOf(
                     }
 
                     player.data.gold -= price
-
                     player.inventory.addItem(
                         buildItem(
-                            name = "<yellow>Gold Pickaxe</yellow>".parseChatColors(),
+                            name = "<gold>Golden Pickaxe</gold>".parseChatColors(),
                             material = Material.GOLD_PICKAXE,
                             lore = listOf(
-                                "Breaks a 5-high pillar of",
-                                "obsidian when 2-tapping it"
+                                "Breaks a 5-high pillar of obsidian",
+                                "when 2-tapping it."
                             ).map(::replaceChatColorTags),
                             flags = listOf(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES)
                         )
                     )
-
                     player.sendMessage(replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>Gold Pickaxe</gold>"))
                     player.playSound(player.location, Sound.LEVEL_UP, 1.0f, 1.0f)
 
@@ -203,8 +201,6 @@ val worldNPCS = listOf(
                     }
 
                     player.data.gold -= price
-
-
                     player.inventory.chestplate = ItemStack(Material.DIAMOND_CHESTPLATE)
                     player.sendMessage(replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>Diamond Chestplate</gold>"))
                     player.playSound(player.location, Sound.HORSE_ARMOR, 1.0f, 1.0f)
@@ -221,9 +217,7 @@ val worldNPCS = listOf(
                     }
 
                     player.data.gold -= price
-
-                    player.inventory.chestplate = ItemStack(Material.DIAMOND_CHESTPLATE)
-
+                    player.inventory.boots = ItemStack(Material.DIAMOND_BOOTS)
                     player.sendMessage(replaceChatColorTags("<bold><green>PURCHASE!</green></bold> <gold>Diamond Boots</gold>"))
                     player.playSound(player.location, Sound.HORSE_ARMOR, 1.0f, 1.0f)
                 }
