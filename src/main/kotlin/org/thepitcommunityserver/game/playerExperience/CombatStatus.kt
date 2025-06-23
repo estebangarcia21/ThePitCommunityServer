@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.event.player.PlayerJoinEvent
 import org.thepitcommunityserver.game.combat.CombatStatusState
 import org.thepitcommunityserver.game.enchants.lib.playerHitPlayer
 import org.thepitcommunityserver.util.*
@@ -29,7 +30,7 @@ object CombatStatus : Listener {
     }
 
     @EventHandler
-    fun onPlayerJoin(event: Player) {
+    fun onPlayerJoin(event: PlayerJoinEvent) {
         playerCombatStatus[event.player] = CombatStatusState.IDLING // TODO: Or bounty.
     }
 
