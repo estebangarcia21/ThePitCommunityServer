@@ -5,15 +5,19 @@ import net.citizensnpcs.api.event.NPCRightClickEvent
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemFlag
+import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.db.data
 import org.thepitcommunityserver.registerEvents
 
 private val CITIZENS_REGISTRY = CitizensAPI.getNPCRegistry()
+
+// TODO UPDATE: DYNAMICALLY ITEMS ARE CURRENTLY HARDCODED BUT THE INVENOTRY SIZE CHANGES BASED ON CERTAIN PERKS AND STUFF
 
 val worldNPCS = listOf(
     NPC(
@@ -104,6 +108,126 @@ val worldNPCS = listOf(
                     )
                 )
             },
+            clickHandlers = mutableMapOf(
+                11 to { ctx ->
+                    val player = ctx.player
+                    val gold = player.data.gold
+                    val price = 150.0
+
+                    if (gold < price) {
+                        player.sendMessage(replaceChatColorTags("<red>Not enough gold!</red>"))
+                        player.playSound(player.location, Sound.VILLAGER_NO, 1.0f, 1.0f)
+                        return@to
+                    }
+
+                    player.data.gold -= price
+                    player.inventory.addItem(
+                        buildItem(
+                            name = "<yellow>Diamond Sword</yellow>".parseChatColors(),
+                            material = Material.DIAMOND_SWORD,
+                            lore = listOf(
+                                "<blue>+20% damage vs bountied"
+                            ).map(::replaceChatColorTags),
+                            flags = listOf(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES)
+                        )
+                    )
+
+                    player.sendMessage(replaceChatColorTags("<bold><green>PURCHASE!</green></bold> <gold>Diamond Sword</gold>"))
+                    // TOOD find Correct sound
+                    player.playSound(player.location, "entity.player.levelup", 1.0f, 1.0f)
+                },
+                12 to { ctx ->
+                    val player = ctx.player
+                    val gold = player.data.gold
+                    val price = 40.0
+
+                    if (gold < price) {
+                        player.sendMessage(replaceChatColorTags("<red>Not enough gold!</red>"))
+                        player.playSound(player.location, Sound.VILLAGER_NO, 1.0f, 1.0f)
+                        return@to
+                    }
+
+                    player.data.gold -= price
+                    player.inventory.addItem(
+                        buildItem(
+                            name = "<yellow>Obsidian</yellow>".parseChatColors(),
+                            material = Material.OBSIDIAN,
+                            lore = listOf(
+                                "Remains for 120 seconds"
+                            ).map(::replaceChatColorTags),
+                            count = 8
+                        )
+                    )
+
+                    player.sendMessage(replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>Diamond Sword</gold>"))
+                    player.playSound(player.location, Sound.LEVEL_UP, 1.0f, 1.0f)
+                },
+                13 to { ctx ->
+                    val player = ctx.player
+                    val gold = player.data.gold
+                    val price = 40.0
+
+                    if (gold < price) {
+                        player.sendMessage(replaceChatColorTags("<red>Not enough gold!</red>"))
+                        player.playSound(player.location, Sound.VILLAGER_NO, 1.0f, 1.0f)
+                        return@to
+                    }
+
+                    player.data.gold -= price
+
+                    player.inventory.addItem(
+                        buildItem(
+                            name = "<yellow>Gold Pickaxe</yellow>".parseChatColors(),
+                            material = Material.GOLD_PICKAXE,
+                            lore = listOf(
+                                "Breaks a 5-high pillar of",
+                                "obsidian when 2-tapping it"
+                            ).map(::replaceChatColorTags),
+                            flags = listOf(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES)
+                        )
+                    )
+
+                    player.sendMessage(replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>Gold Pickaxe</gold>"))
+                    player.playSound(player.location, Sound.LEVEL_UP, 1.0f, 1.0f)
+
+                },
+                14 to { ctx ->
+                    val player = ctx.player
+                    val gold = player.data.gold
+                    val price = 500.0
+
+                    if (gold < price) {
+                        player.sendMessage(replaceChatColorTags("<red>Not enough gold!</red>"))
+                        player.playSound(player.location, Sound.VILLAGER_NO, 1.0f, 1.0f)
+                        return@to
+                    }
+
+                    player.data.gold -= price
+
+
+                    player.inventory.chestplate = ItemStack(Material.DIAMOND_CHESTPLATE)
+                    player.sendMessage(replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>Diamond Chestplate</gold>"))
+                    player.playSound(player.location, Sound.HORSE_ARMOR, 1.0f, 1.0f)
+                },
+                15 to { ctx ->
+                    val player = ctx.player
+                    val gold = player.data.gold
+                    val price = 300.0
+
+                    if (gold < price) {
+                        player.sendMessage(replaceChatColorTags("<red>Not enough gold!</red>"))
+                        player.playSound(player.location, Sound.VILLAGER_NO, 1.0f, 1.0f)
+                        return@to
+                    }
+
+                    player.data.gold -= price
+
+                    player.inventory.chestplate = ItemStack(Material.DIAMOND_CHESTPLATE)
+
+                    player.sendMessage(replaceChatColorTags("<bold><green>PURCHASE!</green></bold> <gold>Diamond Boots</gold>"))
+                    player.playSound(player.location, Sound.HORSE_ARMOR, 1.0f, 1.0f)
+                }
+            ),
             readOnly = true
         ),
         nameHeight = 1.9,
