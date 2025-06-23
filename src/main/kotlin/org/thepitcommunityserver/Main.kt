@@ -23,6 +23,7 @@ import org.thepitcommunityserver.game.playerExperience.lifecycle.InventoryManage
 import org.thepitcommunityserver.game.playerExperience.player.PlayerDeathMessage
 import org.thepitcommunityserver.game.world.WorldHolograms
 import org.thepitcommunityserver.util.CurrentWorld
+import org.thepitcommunityserver.util.NPCClickHandler
 import org.thepitcommunityserver.util.deregisterAllNPCs
 import org.thepitcommunityserver.util.worldNPCS
 import java.io.File
@@ -90,6 +91,7 @@ class Main : JavaPlugin {
         lifecycleListeners.forEach(PluginLifecycleListener::onPluginEnable)
 
         worldNPCS.forEach { it.spawn() }
+        registerEvents(NPCClickHandler)
     }
 
     override fun onDisable() {

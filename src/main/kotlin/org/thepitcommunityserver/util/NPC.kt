@@ -13,9 +13,10 @@ import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.db.data
-import org.thepitcommunityserver.registerEvents
 
 private val CITIZENS_REGISTRY = CitizensAPI.getNPCRegistry()
+private val customNpcRegistry = mutableMapOf<Int, NPC>()
+
 
 // TODO UPDATE: DYNAMICALLY ITEMS ARE CURRENTLY HARDCODED BUT THE INVENOTRY SIZE CHANGES BASED ON CERTAIN PERKS AND STUFF
 
@@ -26,6 +27,7 @@ val worldNPCS = listOf(
             "<gray>Non-permanent items</gray>"
         ).map(::replaceChatColorTags),
         type = EntityType.VILLAGER,
+        level = 0,
         location = CurrentWorldConfig.shopVillager.toLocation(),
         gui = GUI(
             title = "Non-permanent items",
@@ -136,8 +138,8 @@ val worldNPCS = listOf(
                     )
 
                     player.sendMessage(replaceChatColorTags("<bold><green>PURCHASE!</green></bold> <gold>Diamond Sword</gold>"))
-                    // TOOD find Correct sound
-                    player.playSound(player.location, "entity.player.levelup", 1.0f, 1.0f)
+                    player.playSound(player.location, Sound.LEVEL_UP, 1.0f, 1.0f)
+
                 },
                 12 to { ctx ->
                     val player = ctx.player
@@ -159,7 +161,7 @@ val worldNPCS = listOf(
                         )
                     )
 
-                    player.sendMessage(replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>Diamond Sword</gold>"))
+                    player.sendMessage(replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>Obsidian</gold>"))
                     player.playSound(player.location, Sound.LEVEL_UP, 1.0f, 1.0f)
                 },
                 13 to { ctx ->
@@ -185,7 +187,7 @@ val worldNPCS = listOf(
                             flags = listOf(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES)
                         )
                     )
-                    player.sendMessage(replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>Gold Pickaxe</gold>"))
+                    player.sendMessage(replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>Golden Pickaxe</gold>"))
                     player.playSound(player.location, Sound.LEVEL_UP, 1.0f, 1.0f)
 
                 },
@@ -201,7 +203,11 @@ val worldNPCS = listOf(
                     }
 
                     player.data.gold -= price
-                    player.inventory.chestplate = ItemStack(Material.DIAMOND_CHESTPLATE)
+                    if (player.inventory.chestplate != ItemStack(Material.DIAMOND_CHESTPLATE)) {
+                        player.inventory.chestplate = ItemStack(Material.DIAMOND_CHESTPLATE)
+                    } else {
+                        player.inventory.addItem(ItemStack(Material.DIAMOND_CHESTPLATE, 1))
+                    }
                     player.sendMessage(replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>Diamond Chestplate</gold>"))
                     player.playSound(player.location, Sound.HORSE_ARMOR, 1.0f, 1.0f)
                 },
@@ -217,7 +223,11 @@ val worldNPCS = listOf(
                     }
 
                     player.data.gold -= price
-                    player.inventory.boots = ItemStack(Material.DIAMOND_BOOTS)
+                    if (player.inventory.boots != ItemStack(Material.DIAMOND_BOOTS)) {
+                        player.inventory.boots = ItemStack(Material.DIAMOND_BOOTS, 1)
+                    } else {
+                        player.inventory.addItem(ItemStack(Material.DIAMOND_BOOTS, 1))
+                    }
                     player.sendMessage(replaceChatColorTags("<bold><green>PURCHASE!</green></bold> <gold>Diamond Boots</gold>"))
                     player.playSound(player.location, Sound.HORSE_ARMOR, 1.0f, 1.0f)
                 }
@@ -233,6 +243,7 @@ val worldNPCS = listOf(
             "<gray>Permanent</gray>"
         ).map(::replaceChatColorTags),
         type = EntityType.VILLAGER,
+        level = 10,
         location = CurrentWorldConfig.perkVillager.toLocation(),
         gui = GUI(
             title = "Permanent upgrades",
@@ -249,6 +260,7 @@ val worldNPCS = listOf(
             "<gray>Prestige & Renown</gray>"
         ).map(::replaceChatColorTags),
         type = EntityType.VILLAGER,
+        level = 120,
         location = CurrentWorldConfig.prestigeVillager.toLocation(),
         gui = GUI(
             title = "Prestige",
@@ -265,6 +277,7 @@ val worldNPCS = listOf(
             "<gray>Quests & Contracts</gray>"
         ).map(::replaceChatColorTags),
         type = EntityType.VILLAGER,
+        level = 30,
         location = CurrentWorldConfig.questMaster.toLocation(),
         gui = GUI(
             title = "Quests & Contracts",
@@ -281,6 +294,7 @@ val worldNPCS = listOf(
             "<gray>My pit stats</gray>"
         ).map(::replaceChatColorTags),
         type = EntityType.VILLAGER,
+        level = 50,
         location = CurrentWorldConfig.statsVillager.toLocation(),
         gui = GUI(
             title = "Stats",
@@ -293,21 +307,30 @@ val worldNPCS = listOf(
     ),
 )
 
+object NPCClickHandler : Listener {
+    @EventHandler
+    fun onNPCRightClick(event: NPCRightClickEvent) {
+        val player = event.clicker
+        val clickedNpcId = event.npc.id
+        val customNpc = customNpcRegistry[clickedNpcId] ?: return
+
+        customNpc.handleClick(player)
+    }
+}
+
 class NPC(
     name: List<String>,
     nameHeight: Double = 0.0,
     type: EntityType,
+    private val level: Int,
     private val location: Location,
     private val gui: GUI,
     private val initialRotation: Float = 0.0f
-) : Listener {
+
+) {
     private val npc = CITIZENS_REGISTRY.createNPC(type, "")
     private val openCooldowns = Timer<Player>()
     private val nameHologram = Hologram(name, location.clone().add(org.bukkit.util.Vector(0.0, nameHeight, 0.0)))
-
-    init {
-        registerEvents(this)
-    }
 
     fun spawn() {
         npc.setAlwaysUseNameHologram(false)
@@ -317,14 +340,20 @@ class NPC(
         npc.entity.isCustomNameVisible = false
 
         nameHologram.show()
+        customNpcRegistry[npc.id] = this
     }
 
-    @EventHandler
-    fun onNPCRightClick(event: NPCRightClickEvent) {
-        val player = event.clicker
-        val eventNPC = event.npc
+    fun handleClick(player: Player) {
 
-        if (npc.id != eventNPC.id) return
+        val playerLevel = player.data.level
+
+        if (playerLevel < this.level) {
+            player.sendMessage(replaceChatColorTags("<red>You must to be level $level to access this.</red>"))
+            player.playSound(player.location, Sound.VILLAGER_NO, 1.0f, 1.0f)
+            // UNCOMMENT FOR PRODUCTION (TODO: ADD GLOBAL CONFIG)
+//            return
+        }
+
 
         openCooldowns.cooldown(player, 1 * SECONDS, cooldownAction = {
             player.sendMessage(replaceChatColorTags("<red><bold>HOLD IT!</bold></red> You are going too fast!"))
@@ -336,4 +365,5 @@ class NPC(
 
 fun deregisterAllNPCs() {
     CITIZENS_REGISTRY.deregisterAll()
+    customNpcRegistry.clear()
 }
