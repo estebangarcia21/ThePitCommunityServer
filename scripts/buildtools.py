@@ -46,12 +46,6 @@ if platform.system() == "Windows":
     # Adjust the Java command for Windows
     java_command = os.environ.get("BUILD_TOOLS_JAVA_PATH", "")
 
-subprocess.run(f'{java_command} "-jar" {build_tools_file} "--rev" {spigot_version}', cwd=build_tools_dir, shell=True)
-
-try:
-    shutil.rmtree(build_tools_dir)
-    print("buildtools directory removed.")
-except FileNotFoundError:
-    pass
+subprocess.run(f'{java_command} "-jar" {build_tools_file} "--rev" {spigot_version}', cwd=build_tools_dir)
 
 print("Spigot build completed.")
