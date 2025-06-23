@@ -12,5 +12,5 @@ commands:
     description: Use it to get to spawn
     usage: /spawn
   oof:
-    description: : Use it to disappear from the world (in the game)
+    description: Use it to disappear from the world (in the game)
     usage: /oof
