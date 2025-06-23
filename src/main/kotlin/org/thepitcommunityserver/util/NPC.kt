@@ -40,7 +40,7 @@ val worldNPCS = listOf(
                     return buildLore(
                         *lore,
                         "",
-                        "<italic>Lost on death</italic>",
+                        "<italic>Lost on death.</italic>",
                         "Cost: <gold>${price.toInt()}g</gold>",
                         purchaseMessage,
                         defaultColor = ChatColor.GRAY
