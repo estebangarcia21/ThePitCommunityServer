@@ -11,8 +11,11 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.enchants.lib.isEmptyItemStack
 import org.thepitcommunityserver.registerEvents
+import org.thepitcommunityserver.db.data
+
 
 data class ClickHandlerContext(
+    val player: Player,
     val clickType: ClickType,
     val slot: Int,
     val rawSlot: Int
@@ -23,7 +26,7 @@ class GUI(
     rows: Int,
     contents: Map<Int, ItemStack?> = emptyMap(),
     private val onOpen: GUI.(player: Player) -> Unit = {},
-    private val clickHandlers: Map<Int, (ctx: ClickHandlerContext) -> Unit> = emptyMap(),
+    private val clickHandlers: MutableMap<Int, (ctx: ClickHandlerContext) -> Unit> = mutableMapOf(),
     private val readOnly: Boolean = true,
 ) : Listener {
     private val gui: Inventory
@@ -61,6 +64,7 @@ class GUI(
         }
 
         val ctx = ClickHandlerContext(
+            player = event.whoClicked as? Player ?: return,
             clickType = event.click,
             slot = event.slot,
             rawSlot = event.rawSlot
@@ -68,4 +72,5 @@ class GUI(
 
         clickHandlers[ctx.rawSlot]?.let { it(ctx) }
     }
+
 }
