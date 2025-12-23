@@ -21,6 +21,7 @@ import org.thepitcommunityserver.game.playerExperience.CombatStatus
 import org.thepitcommunityserver.game.playerExperience.PitName
 import org.thepitcommunityserver.game.playerExperience.PitScoreboard
 import org.thepitcommunityserver.game.playerExperience.lifecycle.InventoryManager
+import org.thepitcommunityserver.game.playerExperience.player.DamageIndicator
 import org.thepitcommunityserver.game.playerExperience.player.PlayerDeathMessage
 import org.thepitcommunityserver.game.world.WorldHolograms
 import org.thepitcommunityserver.util.CurrentWorld
@@ -90,7 +91,8 @@ class Main : JavaPlugin {
             InventoryManager,
             WorldHolograms,
             PitName,
-            CombatStatus
+            CombatStatus,
+            DamageIndicator
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
