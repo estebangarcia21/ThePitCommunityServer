@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.AtomicDouble
 import org.bukkit.Effect
 import org.bukkit.Location
 import org.bukkit.Sound
-import org.bukkit.entity.Arrow
 import org.bukkit.entity.Chicken
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -18,6 +17,7 @@ import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.TICK
 import org.thepitcommunityserver.util.Timer
 import org.thepitcommunityserver.util.isInsideSpawn
+import org.thepitcommunityserver.util.onArrowLand
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -32,13 +32,13 @@ object DevilChicks : Enchant {
             description
         )
 
-    val word = mapOf(
-        1 to "with",
-        2 to "many",
-        3 to "too many"
-    )
-
     private val description: EnchantDescription = {
+        val word = mapOf(
+            1 to "with",
+            2 to "many",
+            3 to "too many"
+        )
+
         if (it == 1) {
             "Arrows spawn an explosive chicken"
         } else {
@@ -56,18 +56,22 @@ object DevilChicks : Enchant {
 
     @EventHandler
     fun onArrowLand(event: ProjectileHitEvent) {
-        val arrow = event.entity
-        val shooter = arrow.shooter
+        event.onArrowLand(this) {
+            val arrow = it.arrow
+            val shooter = it.shooter
 
-        if (arrow !is Arrow) return
-        if (shooter !is Player) return
+            val bow = ArrowWatch.getBowFromArrow(arrow)
+            val tier = getEnchantTierForItem(this, bow) ?: return@onArrowLand
 
-        if (isInsideSpawn(arrow.location)) return
+            if (isInsideSpawn(arrow.location)) return@onArrowLand
 
-        val bow = ArrowWatch.getBowFromArrow(arrow)
-        val tier = getEnchantTierForItem(this, bow) ?: return
-
-        spawnChicks(tier, shooter, arrow)
+            timer.after(
+                id = arrow.uniqueId,
+                ticks = 1 * TICK,
+                operation = {
+                    spawnChicks(tier, shooter, arrow)
+                })
+        }
     }
 
     private fun spawnChicks(level: Int, shooter: Player, arrow: Projectile) {
@@ -113,7 +117,6 @@ object DevilChicks : Enchant {
                     world.playSound(arrowLocation, Sound.EXPLODE, volume, 1.6f)
                     world.playEffect(chicken.location, Effect.EXPLOSION_LARGE, Effect.EXPLOSION_LARGE.data, 100)
                 }
-
                 chicken.remove()
             }
         }

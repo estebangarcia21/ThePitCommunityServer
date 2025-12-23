@@ -2,7 +2,6 @@ package org.thepitcommunityserver.util
 
 class HitCounter<K> {
     private val timer = Timer<K>()
-    private val cooldown = Time(1 * SECONDS)
 
     private val hits = HashMap<K, Int>()
 
@@ -10,7 +9,7 @@ class HitCounter<K> {
      * When calling this function, 1 will be added to the hit counter. When n is reached in hits, the hits will go back
      * down to zero and the callback will be called.
      */
-    fun onNthHit(id: K, n: Int, onHit: ((n: Int) -> Unit)? = null, onHitsReached: () -> Unit) {
+    fun onNthHit(id: K, n: Int, cooldown: Time = Time(1 * SECONDS), onHit: ((n: Int) -> Unit)? = null, onHitsReached: () -> Unit) {
         val currentHits = hits.getOrPut(id) { 0 }
         val updatedHits = currentHits + 1
 

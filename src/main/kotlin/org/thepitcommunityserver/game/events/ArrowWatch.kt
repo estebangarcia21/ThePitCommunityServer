@@ -27,6 +27,10 @@ object ArrowWatch : Listener, PluginLifecycleListener {
         arrows[arrow] = ArrowContext(bow = shooter.itemInHand, isSneaking = shooter.isSneaking)
     }
 
+    fun registerArrow(arrow: Arrow, bow: ItemStack?, isSneaking: Boolean) {
+        arrows[arrow] = ArrowContext(bow = bow, isSneaking = isSneaking)
+    }
+
     fun getBowFromArrow(arrow: Arrow): ItemStack? {
         return arrows[arrow]?.bow
     }

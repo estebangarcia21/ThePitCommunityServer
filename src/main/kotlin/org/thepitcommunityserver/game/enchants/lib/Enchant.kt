@@ -35,7 +35,12 @@ val Enchants = listOf(
     ComboStun,
     ComboHeal,
     CounterJanitor,
-    SpeedyKill
+    SpeedyKill,
+    Volley,
+    PushComesToShove,
+    PinDown,
+    WhatDoesntKillYou,
+    Explosive
 )
 
 interface Enchant : Listener {
@@ -66,7 +71,7 @@ data class EnchantConfig(
 )
 
 fun enchantByName(name: String): Enchant? {
-    return Enchants.find { it.config.name.equals(name, ignoreCase = true)}
+    return Enchants.find { it.config.name.equals(name, ignoreCase = true) }
 }
 
 /**
@@ -79,13 +84,17 @@ fun getItemMysticEnchantments(item: ItemStack?): Map<String, Int>? {
 
     val compound = nmsItemStack.tag ?: return emptyMap()
 
-    val enchantments = mutableMapOf<String, Int>()
+    val enchantments = linkedMapOf<String, Int>()
     val enchantmentCompound = compound.getCompound("MysticEnchantments")
-    val keySet = enchantmentCompound.c()
 
-    for (key in keySet) {
-        val value = enchantmentCompound.getInt(key)
-        enchantments[key] = value
+    // Read order from a separate string list
+    val orderString = compound.getString("MysticEnchantmentOrder")
+    val orderedKeys = if (orderString.isNotEmpty()) orderString.split(",") else enchantmentCompound.c().toList()
+
+    for (key in orderedKeys) {
+        if (enchantmentCompound.hasKey(key)) {
+            enchantments[key] = enchantmentCompound.getInt(key)
+        }
     }
 
     return enchantments
@@ -104,6 +113,9 @@ fun setItemMysticEnchantments(item: ItemStack?, enchantments: Map<String, Int>) 
     }
 
     compound.set("MysticEnchantments", enchantmentCompound)
+
+    compound.setString("MysticEnchantmentOrder", enchantments.keys.joinToString(","))
+
     nmsItemStack.tag = compound
     item.itemMeta = CraftItemStack.getItemMeta(nmsItemStack)
 

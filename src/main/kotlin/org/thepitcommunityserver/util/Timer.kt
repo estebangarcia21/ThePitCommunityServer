@@ -25,10 +25,20 @@ class Timer<K> {
         id: K,
         ticks: Tick,
         onTick: Runnable? = null,
+        tickInterval: Tick = 1,
         resetTime: Boolean = false,
         operation: Runnable
     ) {
-        setCooldown(id, ticks, resetTime, onTick, operation)
+        var tickCount = 0
+        val throttledOnTick = onTick?.let {
+            Runnable {
+                if ((tickCount % tickInterval).toInt() == 0) {
+                    it.run()
+                }
+                tickCount++
+            }
+        }
+        setCooldown(id, ticks, resetTime, throttledOnTick, operation)
     }
 
     /**
