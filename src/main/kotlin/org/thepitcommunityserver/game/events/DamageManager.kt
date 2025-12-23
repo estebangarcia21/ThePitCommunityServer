@@ -14,7 +14,8 @@ import org.thepitcommunityserver.util.leggings
 
 object DamageManager : Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
-    fun onDamageEvent(event: EntityDamageByEntityEvent) {}
+    fun onDamageEvent(event: EntityDamageByEntityEvent) {
+    }
 
     fun applyTrueDamage(target: Player, damager: Player, raw: Double) {
         fun subtractHealth(player: Player, amount: Double) {
@@ -37,6 +38,16 @@ object DamageManager : Listener {
 
             val reflectionAmount = Mirror.reflectionAmounts[mirrorTier]
             reflectionAmount?.let { subtractHealth(damager, raw * it) }
+        }
+    }
+
+    fun applyVeryTrueDamage(target: Player, amount: Double, cancellable: Cancellable?) {
+        cancellable?.isCancelled = true
+        val targetHealth = target.health - amount
+        if (targetHealth <= 0.0) {
+            target.health = 0.0
+        } else {
+            target.health = targetHealth
         }
     }
 
