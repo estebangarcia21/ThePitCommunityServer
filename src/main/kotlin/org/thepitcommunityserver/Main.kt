@@ -57,6 +57,7 @@ class Main : JavaPlugin {
 
         // Register enchantments.
         Enchants.forEach(::registerEvents)
+        // Register items
         Items.forEach(::registerEvents)
 
         listOf(

@@ -4,6 +4,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.enchants.lib.isEmptyItemStack
+import org.thepitcommunityserver.game.guis.EquipSlot
 
 fun isChestplate(material: Material): Boolean {
     return material == Material.LEATHER_CHESTPLATE || material == Material.CHAINMAIL_CHESTPLATE ||
@@ -45,23 +46,23 @@ fun getEquippedArmorPiece(player: Player, material: Material): ItemStack? {
     }
 }
 
-fun getEquippedArmorPiece(player: Player, slot: org.thepitcommunityserver.game.guis.EquipSlot): ItemStack? {
+fun getEquippedArmorPiece(player: Player, slot: EquipSlot): ItemStack? {
     return when (slot) {
-        _root_ide_package_.org.thepitcommunityserver.game.guis.EquipSlot.HELMET -> player.inventory.helmet
-        _root_ide_package_.org.thepitcommunityserver.game.guis.EquipSlot.CHESTPLATE -> player.inventory.chestplate
-        _root_ide_package_.org.thepitcommunityserver.game.guis.EquipSlot.LEGGINGS -> player.inventory.leggings
-        _root_ide_package_.org.thepitcommunityserver.game.guis.EquipSlot.BOOTS -> player.inventory.boots
+        EquipSlot.HELMET -> player.inventory.helmet
+        EquipSlot.CHESTPLATE -> player.inventory.chestplate
+        EquipSlot.LEGGINGS -> player.inventory.leggings
+        EquipSlot.BOOTS -> player.inventory.boots
     }
 }
 
-fun setArmorPiece(player: Player, slot: org.thepitcommunityserver.game.guis.EquipSlot, item: ItemStack) {
+fun setArmorPiece(player: Player, slot: EquipSlot, item: ItemStack) {
     when (slot) {
-        _root_ide_package_.org.thepitcommunityserver.game.guis.EquipSlot.HELMET -> player.inventory.helmet = item
-        _root_ide_package_.org.thepitcommunityserver.game.guis.EquipSlot.CHESTPLATE -> player.inventory.chestplate =
+        EquipSlot.HELMET -> player.inventory.helmet = item
+        EquipSlot.CHESTPLATE -> player.inventory.chestplate =
             item
 
-        _root_ide_package_.org.thepitcommunityserver.game.guis.EquipSlot.LEGGINGS -> player.inventory.leggings = item
-        _root_ide_package_.org.thepitcommunityserver.game.guis.EquipSlot.BOOTS -> player.inventory.boots = item
+        EquipSlot.LEGGINGS -> player.inventory.leggings = item
+        EquipSlot.BOOTS -> player.inventory.boots = item
     }
 }
 

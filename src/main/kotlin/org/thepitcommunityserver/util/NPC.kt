@@ -8,7 +8,9 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.util.Vector
 import org.thepitcommunityserver.db.data
+import org.thepitcommunityserver.game.guis.buildShopGUI
 
 private val CITIZENS_REGISTRY = CitizensAPI.getNPCRegistry()
 private val customNpcRegistry = mutableMapOf<Int, NPC>()
@@ -30,7 +32,7 @@ private val npcDefinitions = listOf(
         location = { CurrentWorldConfig.shopVillager.toLocation() },
         guiTitle = "Non-permanent items",
         rotation = 180f,
-        gui = _root_ide_package_.org.thepitcommunityserver.game.guis.buildShopGUI()
+        gui = buildShopGUI()
     ),
     NPCDefinition(
         name = listOf("<green><bold>UPGRADES</bold></green>", "<gray>Permanent</gray>"),
@@ -97,7 +99,7 @@ class NPC(
 ) {
     private val npc = CITIZENS_REGISTRY.createNPC(type, "")
     private val openCooldowns = Timer<Player>()
-    private val nameHologram = Hologram(name, location.clone().add(org.bukkit.util.Vector(0.0, nameHeight, 0.0)))
+    private val nameHologram = Hologram(name, location.clone().add(Vector(0.0, nameHeight, 0.0)))
 
     fun spawn() {
         npc.setAlwaysUseNameHologram(false)

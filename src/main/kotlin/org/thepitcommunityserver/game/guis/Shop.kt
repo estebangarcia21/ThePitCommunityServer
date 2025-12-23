@@ -12,7 +12,7 @@ import org.thepitcommunityserver.game.items.defaultItems.IronBoots
 import org.thepitcommunityserver.game.items.defaultItems.IronChestplate
 import org.thepitcommunityserver.game.items.defaultItems.IronLeggings
 import org.thepitcommunityserver.game.items.shopItems.*
-import org.thepitcommunityserver.util.parseChatColors
+import org.thepitcommunityserver.util.*
 
 
 data class ShopItem(
@@ -47,14 +47,14 @@ private fun Player.canAfford(price: Double) = data.gold >= price
 
 private fun Player.purchase(price: Double, itemName: String, action: () -> Boolean) {
     if (!canAfford(price)) {
-        sendMessage(_root_ide_package_.org.thepitcommunityserver.util.replaceChatColorTags("<red>Not enough gold!</red>"))
+        sendMessage(replaceChatColorTags("<red>Not enough gold!</red>"))
         playSound(location, Sound.VILLAGER_NO, 1.0f, 1.0f)
         return
     }
 
     if (action()) {
         data.gold -= price
-        sendMessage(_root_ide_package_.org.thepitcommunityserver.util.replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>$itemName</gold>"))
+        sendMessage(replaceChatColorTags("<green><bold>PURCHASE!</bold></green> <gold>$itemName</gold>"))
     }
 }
 
@@ -63,7 +63,7 @@ private fun Player.giveItem(item: ItemStack, equipSlot: EquipSlot? = null): Bool
 
     fun addToInventory(): Boolean {
         if (inventory.firstEmpty() == -1) {
-            sendMessage(_root_ide_package_.org.thepitcommunityserver.util.replaceChatColorTags("<red>Your inventory is full!</red>"))
+            sendMessage(replaceChatColorTags("<red>Your inventory is full!</red>"))
             return false
         }
         player.inventory.addItem(item)
@@ -72,16 +72,16 @@ private fun Player.giveItem(item: ItemStack, equipSlot: EquipSlot? = null): Bool
     }
 
     fun equipArmor(slot: EquipSlot): Boolean {
-        val currentPiece = _root_ide_package_.org.thepitcommunityserver.util.getEquippedArmorPiece(player, slot)
+        val currentPiece = getEquippedArmorPiece(player, slot)
 
-        if (currentPiece.isEmpty() || _root_ide_package_.org.thepitcommunityserver.util.isArmorPieceStronger(
+        if (currentPiece.isEmpty() || isArmorPieceStronger(
                 this,
                 item.type
             )
         ) {
-            _root_ide_package_.org.thepitcommunityserver.util.setArmorPiece(this, slot, item)
+            setArmorPiece(this, slot, item)
             if (!currentPiece.isEmpty()) {
-                _root_ide_package_.org.thepitcommunityserver.util.addItemToPlayerInventory(this, currentPiece)
+                addItemToPlayerInventory(this, currentPiece)
             }
             playSound(location, Sound.HORSE_ARMOR, 1f, 1f)
             return true
@@ -120,7 +120,7 @@ private fun buildShopItemStack(shopItem: ShopItem, player: Player): ItemStack {
         else -> "red" to "<red>Not enough gold!</red>"
     }
 
-    val lore = _root_ide_package_.org.thepitcommunityserver.util.buildLore(
+    val lore = buildLore(
         *description.toTypedArray(),
         "",
         "<italic>Lost on death.</italic>",
@@ -129,7 +129,7 @@ private fun buildShopItemStack(shopItem: ShopItem, player: Player): ItemStack {
         defaultColor = ChatColor.GRAY
     )
 
-    return _root_ide_package_.org.thepitcommunityserver.util.buildItem(
+    return buildItem(
         name = "<$nameColor>${shopItem.name}</$nameColor>".parseChatColors(),
         material = shopItem.material,
         data = shopItem.data,
@@ -143,17 +143,17 @@ private fun buildShopItemStack(shopItem: ShopItem, player: Player): ItemStack {
 private val IronPackBehavior = MultiItem(
     getPrice = { player ->
         var price = 100.0
-        if (!_root_ide_package_.org.thepitcommunityserver.util.isArmorPieceStronger(
+        if (!isArmorPieceStronger(
                 player,
                 Material.IRON_CHESTPLATE
             )
         ) price -= 50.0
-        if (!_root_ide_package_.org.thepitcommunityserver.util.isArmorPieceStronger(
+        if (!isArmorPieceStronger(
                 player,
                 Material.IRON_LEGGINGS
             )
         ) price -= 25.0
-        if (!_root_ide_package_.org.thepitcommunityserver.util.isArmorPieceStronger(
+        if (!isArmorPieceStronger(
                 player,
                 Material.IRON_BOOTS
             )
@@ -168,19 +168,19 @@ private val IronPackBehavior = MultiItem(
         listOf(
             "Contains:",
             armorLine(
-                !_root_ide_package_.org.thepitcommunityserver.util.isArmorPieceStronger(
+                !isArmorPieceStronger(
                     player,
                     Material.IRON_CHESTPLATE
                 ), "Iron Chestplate"
             ),
             armorLine(
-                !_root_ide_package_.org.thepitcommunityserver.util.isArmorPieceStronger(
+                !isArmorPieceStronger(
                     player,
                     Material.IRON_LEGGINGS
                 ), "Iron Leggings"
             ),
             armorLine(
-                !_root_ide_package_.org.thepitcommunityserver.util.isArmorPieceStronger(
+                !isArmorPieceStronger(
                     player,
                     Material.IRON_BOOTS
                 ), "Iron Boots"
@@ -189,21 +189,21 @@ private val IronPackBehavior = MultiItem(
     },
     getItems = { player ->
         buildList {
-            if (_root_ide_package_.org.thepitcommunityserver.util.isArmorPieceStronger(
+            if (isArmorPieceStronger(
                     player,
                     Material.IRON_CHESTPLATE
                 )
             ) {
                 add(IronChestplate to EquipSlot.CHESTPLATE)
             }
-            if (_root_ide_package_.org.thepitcommunityserver.util.isArmorPieceStronger(
+            if (isArmorPieceStronger(
                     player,
                     Material.IRON_LEGGINGS
                 )
             ) {
                 add(IronLeggings to EquipSlot.LEGGINGS)
             }
-            if (_root_ide_package_.org.thepitcommunityserver.util.isArmorPieceStronger(player, Material.IRON_BOOTS)) {
+            if (isArmorPieceStronger(player, Material.IRON_BOOTS)) {
                 add(IronBoots to EquipSlot.BOOTS)
             }
         }
@@ -338,6 +338,7 @@ private val unlockableShopItems = listOf(
     ShopItem(
         name = "Jump Boost IV",
         material = Material.POTION,
+        data = 10,
         item = JumpBoostPotion,
         price = 150.0,
         description = listOf("Grants Jump Boost II for 30 seconds"),
@@ -384,8 +385,8 @@ private fun getRowsForPlayerGUI(player: Player): Int {
     }
 }
 
-fun buildShopGUI(): org.thepitcommunityserver.util.GUI {
-    return _root_ide_package_.org.thepitcommunityserver.util.GUI(
+fun buildShopGUI(): GUI {
+    return GUI(
         title = "Non-permanent items",
         rows = { player -> getRowsForPlayerGUI(player) },
         onOpen = { player ->
@@ -397,15 +398,15 @@ fun buildShopGUI(): org.thepitcommunityserver.util.GUI {
         onClickBuilder = { player ->
             val gui = this
             getShopItemsForPlayer(player).associate { (slot, shopItem) ->
-                slot to { ctx: org.thepitcommunityserver.util.ClickHandlerContext ->
+                slot to { ctx: ClickHandlerContext ->
                     val player = ctx.player
 
 
                     if (!shopItem.canPurchase(player)) {
                         if (player.inventory.firstEmpty() == -1) {
-                            player.sendMessage(_root_ide_package_.org.thepitcommunityserver.util.replaceChatColorTags("<red>Your inventory is full!</red>"))
+                            player.sendMessage(replaceChatColorTags("<red>Your inventory is full!</red>"))
                         } else {
-                            player.sendMessage(_root_ide_package_.org.thepitcommunityserver.util.replaceChatColorTags("<red>This item can't be purchased in your current state!</red>"))
+                            player.sendMessage(replaceChatColorTags("<red>This item can't be purchased in your current state!</red>"))
                         }
 
                         player.playSound(player.location, Sound.VILLAGER_NO, 1.0f, 1.0f)
