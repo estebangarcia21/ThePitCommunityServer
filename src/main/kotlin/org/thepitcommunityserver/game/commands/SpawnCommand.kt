@@ -7,8 +7,9 @@ import org.bukkit.entity.Player
 import org.thepitcommunityserver.util.*
 import java.util.UUID
 
-object SpawnCommand : CommandExecutor {
-    const val name = "spawn"
+object SpawnCommand : PluginCommand {
+
+    override val name = "spawn"
 
     val timer = Timer<UUID>()
     val cooldown = Time(10L * SECONDS)
