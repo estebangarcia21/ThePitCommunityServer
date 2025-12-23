@@ -144,6 +144,7 @@ fun buildNBTCompound(map: DeserializedNBTMap): NBTTagCompound {
             is ByteArray -> compound.setByteArray(key, value)
             is Boolean -> compound.setBoolean(key, value)
             is NBTTagCompound -> compound.set(key, value)
+            is NBTTagList -> compound.set(key, value)
             else -> throw IllegalArgumentException("Unsupported NBT data type: ${value.javaClass}")
         }
     }
