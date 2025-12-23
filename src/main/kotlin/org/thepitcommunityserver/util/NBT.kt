@@ -1,13 +1,6 @@
 package org.thepitcommunityserver.util
 
-import net.minecraft.server.v1_8_R3.NBTTagByte
-import net.minecraft.server.v1_8_R3.NBTTagByteArray
-import net.minecraft.server.v1_8_R3.NBTTagCompound
-import net.minecraft.server.v1_8_R3.NBTTagDouble
-import net.minecraft.server.v1_8_R3.NBTTagFloat
-import net.minecraft.server.v1_8_R3.NBTTagInt
-import net.minecraft.server.v1_8_R3.NBTTagLong
-import net.minecraft.server.v1_8_R3.NBTTagString
+import net.minecraft.server.v1_8_R3.*
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
 import org.bukkit.inventory.ItemStack
 
@@ -16,7 +9,9 @@ enum class NBT(val key: String, val value: Any) {
     LOSE_ON_DEATH("pit:lose-on-death", true),
     REMOVE_ON_DROP("pit:remove-on-drop", true),
     AUTO_EQUIP("pit:auto-equip", true),
-    AUTO_EQUIP_OVERRIDABLE("pit:auto-equip-overrideable", true);
+    AUTO_EQUIP_OVERRIDABLE("pit:auto-equip-overrideable", true),
+    KEPT_ON_DEATH("pit:kept-on-death", true),
+    DISABLE_PICKUP_EXISTS_IN_INVENTORY("pit:disable-pickup-exists-in-inventory", true);
 
     val entry: Pair<String, Any>
         get() = key to value
