@@ -2,32 +2,43 @@ package org.thepitcommunityserver.util
 
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
 fun buildItem(
     material: Material,
+    data: Byte? = 0,
     name: String? = null,
+    itemColor: String? = null,
     lore: List<String> = emptyList(),
     count: Int = 1,
     unbreakable: Boolean = false,
     flags: List<ItemFlag> = emptyList(),
     nbtTags: DeserializedNBTMap = emptyMap(),
-    overrideExistingNBTTags: Boolean = false
+    overrideExistingNBTTags: Boolean = false,
+    player: Player? = null, // Debugging can remove if needed but tbh might need in future
 ): ItemStack {
-    val item = ItemStack(material, count)
-
-    if (lore.isNotEmpty()) {
-        setItemLore(item, lore)
-    }
+    var item = ItemStack(material, count, 0, data ?: 0)
+    var lore = lore
 
     val itemMeta = item.itemMeta
 
-    if (name != null) itemMeta.displayName = name
-    if (unbreakable) itemMeta.spigot().isUnbreakable = true
+    if (name != null) {
+        val coloredName = if (itemColor != null) {
+            "<reset><${itemColor}>${name}</${itemColor}>"
+        } else {
+            "<reset>${name}"
+        }
+        itemMeta.displayName = coloredName.parseChatColors()
+    }
 
     itemMeta.addItemFlags(*flags.toTypedArray())
+    if (unbreakable && !flags.contains(ItemFlag.HIDE_UNBREAKABLE)) {
+        itemMeta.spigot().isUnbreakable = true
+        itemMeta.removeItemFlags(ItemFlag.HIDE_UNBREAKABLE)
+    }
 
     item.itemMeta = itemMeta
 
@@ -39,6 +50,13 @@ fun buildItem(
         } else {
             item.nbt = mergeNBTCompounds(item.nbt, builtNbtTags)
         }
+    }
+
+    if (hasNBTEntryFor(item.nbt, NBT.KEPT_ON_DEATH.key)) {
+        lore = listOf("<gray>Kept on death</gray>") + lore
+    }
+    if (lore.isNotEmpty()) {
+        setItemLore(item, lore.map { it.parseChatColors() })
     }
 
     return item
