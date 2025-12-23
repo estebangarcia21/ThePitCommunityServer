@@ -1,4 +1,3 @@
-
 package org.thepitcommunityserver
 
 import org.bukkit.Bukkit
@@ -15,8 +14,7 @@ import org.thepitcommunityserver.game.commands.SpawnCommand
 import org.thepitcommunityserver.game.enchants.lib.ArmorChangeEventDispatcher
 import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.events.*
-import org.thepitcommunityserver.game.playerExperience.lifecycle.DefaultArmor
-import org.thepitcommunityserver.game.events.Spawn
+import org.thepitcommunityserver.game.items.Items
 import org.thepitcommunityserver.game.playerExperience.CombatStatus
 import org.thepitcommunityserver.game.playerExperience.PitName
 import org.thepitcommunityserver.game.playerExperience.PitScoreboard
@@ -45,7 +43,7 @@ class Main : JavaPlugin {
         description: PluginDescriptionFile?,
         dataFolder: File?,
         file: File?
-    ): super(loader, description, dataFolder, file)
+    ) : super(loader, description, dataFolder, file)
 
     override fun onEnable() {
         plugin = this
