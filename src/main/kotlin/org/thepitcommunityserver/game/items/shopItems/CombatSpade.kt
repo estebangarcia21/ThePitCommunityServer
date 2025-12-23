@@ -7,6 +7,8 @@ import org.bukkit.inventory.ItemFlag
 import org.thepitcommunityserver.game.items.Item
 import org.thepitcommunityserver.game.items.ItemConfig
 import org.thepitcommunityserver.util.NBT
+import org.thepitcommunityserver.util.attackDamageModifier
+import org.thepitcommunityserver.util.playerHitPlayer
 
 
 object CombatSpade : Item {
@@ -18,12 +20,29 @@ object CombatSpade : Item {
             lore = listOf("Deals <blue>+1 damage</blue> per", "<aqua>diamond piece</aqua> on enemy."),
             unbreakable = true,
             flags = listOf(ItemFlag.HIDE_UNBREAKABLE),
-            nbtTags = mapOf(NBT.LOSE_ON_DEATH.entry)
+            nbtTags = mapOf(NBT.LOSE_ON_DEATH.entry, attackDamageModifier(7.0))
         )
 
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
+        event.playerHitPlayer {
+            val damager = it.damager
+            val damaged = it.damaged
 
+            if (damager.itemInHand.type == Material.DIAMOND_SPADE) {
+                val diamondPieces = listOf(
+                    damaged.inventory.helmet,
+                    damaged.inventory.leggings,
+                    damaged.inventory.boots,
+                    damaged.inventory.chestplate,
+                ).count { armorPiece ->
+                    armorPiece != null && armorPiece.type.name.contains("DIAMOND")
+                }
+                if (diamondPieces > 0) {
+                    event.damage += diamondPieces.toDouble()
+                }
+            }
+        }
     }
 }

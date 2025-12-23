@@ -157,7 +157,7 @@ private val IronPackBehavior = MultiItem(
                 player,
                 Material.IRON_BOOTS
             )
-        ) price -= 25.8
+        ) price -= 25.0
         price
     },
     getDescription = { player ->
