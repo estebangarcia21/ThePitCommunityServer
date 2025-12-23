@@ -22,5 +22,5 @@ elemental:
       rot: -180.0
   bounds:
     spawn:
-      lower: [305, 106, -26.5]
+      lower: [305, 101, -26.5]
       upper: [-20.5, 142, 25.5]
