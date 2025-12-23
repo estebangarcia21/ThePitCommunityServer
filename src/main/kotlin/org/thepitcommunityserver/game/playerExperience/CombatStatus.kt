@@ -7,7 +7,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.thepitcommunityserver.game.combat.CombatStatusState
-import org.thepitcommunityserver.game.enchants.lib.playerHitPlayer
+import org.thepitcommunityserver.util.playerHitPlayer
 import org.thepitcommunityserver.util.*
 
 object CombatStatus : Listener {
