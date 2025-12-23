@@ -98,11 +98,6 @@ class Main : JavaPlugin {
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
-
-        plugin.getCommand(MysticEnchantCommand.name).executor = MysticEnchantCommand
-        plugin.getCommand(SpawnCommand.name).executor = SpawnCommand
-        plugin.getCommand(OofCommand.name).executor = OofCommand
-
         lifecycleListeners.forEach(PluginLifecycleListener::onPluginEnable)
 
         worldNPCS.forEach { it.spawn() }
