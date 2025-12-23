@@ -2,11 +2,13 @@ package org.thepitcommunityserver.game.events
 
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityShootBowEvent
+import org.bukkit.event.player.PlayerBucketEmptyEvent
 import org.thepitcommunityserver.util.isInsideSpawn
 
 object SpawnProtection : Listener {
@@ -27,6 +29,15 @@ object SpawnProtection : Listener {
         }
 
         if (isInsideSpawn(block.location)) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    fun onBucketEmpty(event: PlayerBucketEmptyEvent) {
+        val blockLocation = event.blockClicked.location
+
+        if (isInsideSpawn(blockLocation)) {
             event.isCancelled = true
         }
     }
