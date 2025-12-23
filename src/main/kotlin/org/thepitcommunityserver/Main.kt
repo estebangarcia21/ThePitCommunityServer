@@ -83,6 +83,7 @@ class Main : JavaPlugin {
             ClearArrows,
             ArrowWatch,
             NightVision,
+            StopFireDamage,
             ArmorChangeEventDispatcher,
             PitScoreboard,
             MemoryToDBSynchronizer,
