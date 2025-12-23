@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPluginLoader
 import org.thepitcommunityserver.db.MemoryToDBSynchronizer
 import org.thepitcommunityserver.game.commands.MysticEnchantCommand
 import org.thepitcommunityserver.game.commands.OofCommand
+import org.thepitcommunityserver.game.commands.SetStats
 import org.thepitcommunityserver.game.commands.SpawnCommand
 import org.thepitcommunityserver.game.enchants.lib.ArmorChangeEventDispatcher
 import org.thepitcommunityserver.game.enchants.lib.Enchants
@@ -56,6 +57,16 @@ class Main : JavaPlugin {
 
         // Register enchantments.
         Enchants.forEach(::registerEvents)
+        Items.forEach(::registerEvents)
+
+        listOf(
+            MysticEnchantCommand,
+            SpawnCommand,
+            OofCommand,
+            SetStats
+        ).forEach {
+            plugin.getCommand(it.name).executor = it
+        }
 
         registerEvents(DamageManager)
 

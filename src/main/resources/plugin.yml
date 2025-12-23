@@ -14,3 +14,6 @@ commands:
   oof:
     description: Use it to disappear from the world (in the game)
     usage: /oof
+  set:
+    description: Use it to set your gold amount
+    usage: /set <stat> <amount>
