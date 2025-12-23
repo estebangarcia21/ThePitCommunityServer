@@ -5,6 +5,7 @@ import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
+import org.thepitcommunityserver.game.events.ArrowWatch
 import org.thepitcommunityserver.util.*
 import org.thepitcommunityserver.util.Timer
 import java.util.*
@@ -17,35 +18,50 @@ object Assassin : Enchant {
             group = EnchantGroup.A,
             rare = true,
             type = EnchantType.PANTS,
-            {"Sneaking teleports you behind<br/>your attacker. (${cooldownTime[it]?.seconds()}s cooldown)"}
+            description
         )
 
-    private val cooldownTime = mapOf(
+    private val description: EnchantDescription = {
+        if (it == 1) {
+            "Sneaking teleports you behind<br/>players bowing you. (${cooldown[it]?.seconds()}s cooldown)"
+        } else {
+            "Sneaking teleports you behind your<br/>attacker. (${cooldown[it]?.seconds()}s cooldown)"
+        }
+    }
+    private val timer = Timer<UUID>()
+    private val cooldown = mapOf(
         1 to Time(10L * SECONDS),
         2 to Time(5L * SECONDS),
         3 to Time(3L * SECONDS)
     )
 
-    private val timer = Timer<UUID>()
-
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
         event.damagedReceivedAnyHitWithPantsEnchant(this) {
-            val cooldownTime = cooldownTime[it.enchantTier] ?: undefPropErr("cooldownTime", it.enchantTier)
+            val damager = it.damager
+            val damaged = it.damaged
+            val arrow = it.arrow
+            val cooldown = cooldown[it.enchantTier] ?: undefPropErr("cooldown", it.enchantTier)
 
-            if (!it.damaged.isSneaking) return@damagedReceivedAnyHitWithPantsEnchant
+            // If tier 1, only teleport if damaged by bow
+            if (arrow != null && it.enchantTier == 1) {
+                val bow = ArrowWatch.getBowFromArrow(arrow)
+                if (bow == null) return@damagedReceivedAnyHitWithPantsEnchant
+            }
 
-            timer.cooldown(it.damaged.uniqueId, cooldownTime.ticks()) {
-                val tpLoc = it.damager.location.subtract(it.damager.eyeLocation.direction.normalize())
-                tpLoc.y = it.damager.location.y
+            if (!damaged.isSneaking) return@damagedReceivedAnyHitWithPantsEnchant
+
+            timer.cooldown(damaged.uniqueId, cooldown.ticks()) {
+                val tpLoc = damager.location.subtract(damager.eyeLocation.direction.normalize())
+                tpLoc.y = damager.location.y
 
                 if (tpLoc.block.type == Material.AIR) {
-                    it.damaged.teleport(tpLoc)
+                    damaged.teleport(tpLoc)
                 } else {
-                    it.damaged.teleport(it.damager)
+                    damaged.teleport(damager)
                 }
 
-                it.damaged.world.playSound(it.damaged.location, Sound.ENDERMAN_TELEPORT, 1f, 2f)
+                damaged.world.playSound(damaged.location, Sound.ENDERMAN_TELEPORT, 1f, 2f)
             }
         }
     }

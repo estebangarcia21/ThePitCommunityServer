@@ -5,9 +5,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.Text
+import org.thepitcommunityserver.util.damagerArrowHitPlayerWithEnchant
 import org.thepitcommunityserver.util.undefPropErr
 
-object Chipping : Enchant{
+object Chipping : Enchant {
     override val config: EnchantConfig
         get() = EnchantConfig(
             name = "Chipping",
@@ -18,16 +19,14 @@ object Chipping : Enchant{
             description
         )
 
+    private val description: EnchantDescription = { "Deals <red>${hearts[it]}${Text.HEART}</red> extra true damage" }
+
     private val damageAmount = mapOf(
         1 to 1.0,
         2 to 2.0,
         3 to 3.0,
-        4 to 3.5,
-        5 to 4.0,
     )
     private val hearts = damageAmount.mapValues { it.value / 2f }
-
-    private val description: EnchantDescription = {"Deals <red>${hearts[it]}${Text.HEART}</red> extra true damage"}
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {

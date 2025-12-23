@@ -5,6 +5,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.Text
+import org.thepitcommunityserver.util.damagedReceivedAnyHitWithPantsEnchant
 import org.thepitcommunityserver.util.undefPropErr
 
 object Prick : Enchant {
@@ -14,8 +15,9 @@ object Prick : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.PANTS
-        ) { "Enemies hitting you receive <red>${hearts[it]}${Text.HEART}</red><br/>true damage" }
+            type = EnchantType.PANTS,
+            description
+        )
 
     private val description: EnchantDescription = {
         if (it == 3) {

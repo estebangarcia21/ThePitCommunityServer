@@ -8,7 +8,7 @@ import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.*
 import java.util.*
 
-object ComboSwift: Enchant {
+object ComboSwift : Enchant {
     override val config: EnchantConfig
         get() = EnchantConfig(
             name = "Combo: Swift",
@@ -16,13 +16,19 @@ object ComboSwift: Enchant {
             group = EnchantGroup.B,
             rare = false,
             type = EnchantType.SWORD,
-        ) { "Every <yellow>${word[it]}</yellow> strike gain<br/><yellow>Speed ${intToRoman(amplifier[it]?.inc())}</yellow> (${duration[it]?.seconds()}s)" }
+            description
+        )
 
-    private val word = mapOf(
-        1 to "fourth",
-        2 to "third",
-        3 to "third"
-    )
+    private val description: EnchantDescription = {
+        val word = mapOf(
+            1 to "fourth",
+            2 to "third",
+            3 to "third"
+        )
+
+        "Every <yellow>${word[it]}</yellow> strike gain<br/><yellow>Speed ${intToRoman(amplifier[it]?.inc())}</yellow> (${duration[it]?.seconds()}s)"
+    }
+
 
     private val duration = mapOf(
         1 to Time(3L * SECONDS),
@@ -54,7 +60,8 @@ object ComboSwift: Enchant {
             val hitsNeeded = hitsNeeded[it.enchantTier] ?: undefPropErr("hitsNeeded", it.enchantTier)
 
             hitCounter.onNthHit(damager.uniqueId, hitsNeeded) {
-                damager.addPotionEffect(PotionEffect(PotionEffectType.SPEED, duration.ticks().toInt(), amplifier), true
+                damager.addPotionEffect(
+                    PotionEffect(PotionEffectType.SPEED, duration.ticks().toInt(), amplifier), true
                 )
             }
         }

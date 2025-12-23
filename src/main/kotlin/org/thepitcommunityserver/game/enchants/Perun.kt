@@ -1,15 +1,12 @@
 package org.thepitcommunityserver.game.enchants
 
-import net.minecraft.server.v1_8_R3.ItemArmor
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
-import org.thepitcommunityserver.util.HitCounter
-import org.thepitcommunityserver.util.intToRoman
-import org.thepitcommunityserver.util.undefPropErr
+import org.thepitcommunityserver.util.*
 import java.util.*
 
 object Perun : Enchant {
@@ -32,9 +29,9 @@ object Perun : Enchant {
     private val hitCounter = HitCounter<UUID>()
 
     private val hitsNeeded = mapOf(
-        1 to 5,
-        2 to 4,
-        3 to 4
+        1 to 6,
+        2 to 5,
+        3 to 5
     )
 
     val hearts = damageAmount.mapValues { it.value / 2f }
@@ -49,9 +46,9 @@ object Perun : Enchant {
         )[it]
 
         if (it == 3) {
-            "Every <yellow>$word</yellow> hit strikes<br/><yellow>lightning</yellow> for <red>${hearts[it]?.toInt()}❤</red> + <red>1❤</red><br/>per <aqua>diamond piece</aqua> on your<br/>victim.<br/>$lastMessage"
+            "Every <yellow>$word</yellow> hit strikes<br/><yellow>lightning</yellow> for <red>${hearts[it]?.toInt()}${Text.HEART}</red> + <red>1${Text.HEART}</red><br/>per <aqua>diamond piece</aqua> on your<br/>victim.<br/>$lastMessage"
         } else {
-            "Every <yellow>$word</yellow> hit strikes<br/><yellow>lightning</yellow> for <red>${hearts[it]?.toInt()}❤</red><br/>$lastMessage"
+            "Every <yellow>$word</yellow> hit strikes<br/><yellow>lightning</yellow> for <red>${hearts[it]?.toInt()}${Text.HEART}</red><br/>$lastMessage"
         }
     }
 
@@ -64,9 +61,9 @@ object Perun : Enchant {
             var damageAmount = damageAmount[it.enchantTier] ?: undefPropErr("damageAmount", it.enchantTier)
             val hitsNeeded = hitsNeeded[it.enchantTier] ?: undefPropErr("hitsNeeded", it.enchantTier)
 
-            hitCounter.onNthHit(damager.uniqueId, hitsNeeded) {
+            hitCounter.onNthHit(damager.uniqueId, hitsNeeded, cooldown = Time(3 * SECONDS)) {
                 if (it.enchantTier == 3) {
-                    damaged.inventory.armorContents.filterNotNull().forEach{ a ->
+                    damaged.inventory.armorContents.filterNotNull().forEach { a ->
 
                         damageAmount += addArmorDamage(a)
                     }
@@ -77,6 +74,7 @@ object Perun : Enchant {
             }
         }
     }
+
     private fun addArmorDamage(armor: ItemStack): Double {
         val name = armor.type.name.split("_")[0]
 

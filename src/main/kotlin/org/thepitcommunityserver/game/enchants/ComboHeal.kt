@@ -7,6 +7,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.HitCounter
+import org.thepitcommunityserver.util.Text
+import org.thepitcommunityserver.util.damagerMeleeHitPlayerWithEnchant
 import org.thepitcommunityserver.util.undefPropErr
 import java.util.*
 
@@ -18,7 +20,11 @@ object ComboHeal : Enchant {
             group = EnchantGroup.B,
             rare = false,
             type = EnchantType.SWORD,
-        ) { "Every <yellow>fourth</yellow> strike heals<br/><red>${hearts[it]}❤</red> and grants <gold>${hearts[it]}❤</gold><br/>absorption" }
+            description
+        )
+
+    private val description: EnchantDescription =
+        { "Every <yellow>fourth</yellow> strike heals<br/><red>${hearts[it]}${Text.HEART}</red> and grants <gold>${hearts[it]}${Text.HEART}</gold><br/>absorption" }
 
     private val healAmount = mapOf(
         1 to .8,
@@ -27,6 +33,7 @@ object ComboHeal : Enchant {
     )
 
     private val hearts = healAmount.mapValues { it.value / 2 }
+
     private val hitCounter = HitCounter<UUID>()
 
     @EventHandler

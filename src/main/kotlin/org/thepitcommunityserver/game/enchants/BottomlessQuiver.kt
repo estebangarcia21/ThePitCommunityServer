@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.enchants.lib.*
+import org.thepitcommunityserver.util.damagerArrowHitPlayerWithEnchant
 import org.thepitcommunityserver.util.undefPropErr
 
 object BottomlessQuiver : Enchant {
@@ -14,8 +15,11 @@ object BottomlessQuiver : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.BOW
-        ) { "Get <white>${arrowsGiven[it]} arrows</white> on arrow hit" }
+            type = EnchantType.BOW,
+            description
+        )
+
+    private val description: EnchantDescription = { "Get <white>${arrowsGiven[it]} arrows</white> on arrow hit" }
 
     private val arrowsGiven = mapOf(
         1 to 1,
