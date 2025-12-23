@@ -11,13 +11,20 @@ import java.util.*
 
 object MegaLongbow : Enchant {
     override val config: EnchantConfig
-    get() = EnchantConfig(
-        name = "Mega Longbow",
-        tiers = listOf(1, 2, 3),
-        group = EnchantGroup.B,
-        rare = true,
-        type = EnchantType.BOW
-    ) { "One shot per second, this bow is<br/>automatically fully drawn and<br/>grants <green>Jump Boost ${intToRoman(amplifier[it]?.inc())}</green> (2s)" }
+        get() = EnchantConfig(
+            name = "Mega Longbow",
+            tiers = listOf(1, 2, 3),
+            group = EnchantGroup.B,
+            rare = true,
+            type = EnchantType.BOW,
+            description
+        )
+
+    private val description: EnchantDescription = {
+        "One shot per second, this bow is<br/>automatically fully drawn and<br/>grants <green>Jump Boost ${
+            intToRoman(amplifier[it]?.inc())
+        }</green> (2s)"
+    }
 
     private val amplifier = mapOf(
         1 to 1,
@@ -30,7 +37,7 @@ object MegaLongbow : Enchant {
     private val potionCooldown = Time(2L * SECONDS)
 
     @EventHandler
-    fun onArrowShoot(event: EntityShootBowEvent) {
+    fun onArrowShot(event: EntityShootBowEvent) {
         event.arrowShotWithEnchant(this, getBowOnShoot = true) {
             val arrow = it.arrow
             val damager = it.shooter
@@ -41,7 +48,14 @@ object MegaLongbow : Enchant {
                 arrow.isCritical = true
                 arrow.velocity = damager.location.direction.multiply(2.9)
                 damager.removePotionEffect(PotionEffectType.JUMP)
-                damager.addPotionEffect(PotionEffect(PotionEffectType.JUMP, potionCooldown.ticks().toInt(), amplifier, true))
+                damager.addPotionEffect(
+                    PotionEffect(
+                        PotionEffectType.JUMP,
+                        potionCooldown.ticks().toInt(),
+                        amplifier,
+                        true
+                    )
+                )
             }
         }
     }

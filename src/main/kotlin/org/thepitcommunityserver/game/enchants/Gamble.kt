@@ -6,6 +6,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.Text
+import org.thepitcommunityserver.util.chance
+import org.thepitcommunityserver.util.damagerMeleeHitPlayerWithEnchant
 import org.thepitcommunityserver.util.undefPropErr
 
 object Gamble : Enchant {
@@ -16,8 +18,11 @@ object Gamble : Enchant {
             group = EnchantGroup.A,
             rare = true,
             type = EnchantType.SWORD,
-        ) { "<light-purple>50% chance</light-purple> to deal <red>${hearts[it]?.toInt()}${Text.HEART}</red> true<br/>damage to whoever you hit, or to<br/>yourself" }
+            description,
+        )
 
+    private val description: EnchantDescription =
+        { "<light-purple>50% chance</light-purple> to deal <red>${hearts[it]?.toInt()}${Text.HEART}</red> true<br/>damage to whoever you hit, or to<br/>yourself" }
     private const val PROC_CHANCE = 0.5
 
     private val damageAmount = mapOf(
@@ -32,7 +37,7 @@ object Gamble : Enchant {
         event.damagerMeleeHitPlayerWithEnchant(this) {
             val damaged = it.damaged
             val damager = it.damager
-            
+
             val damage = damageAmount[it.enchantTier] ?: undefPropErr("damageAmount", it.enchantTier)
 
             if (chance(PROC_CHANCE)) {

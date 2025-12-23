@@ -5,7 +5,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.*
-import java.util.UUID
+import org.thepitcommunityserver.util.Timer
+import java.util.*
 
 object Healer : Enchant {
     override val config: EnchantConfig
@@ -15,7 +16,12 @@ object Healer : Enchant {
             group = EnchantGroup.B,
             rare = true,
             type = EnchantType.SWORD,
-        ) { "Your hits <green>heal</green> you for <red>${damagedHearts[it]?.toInt()}${Text.HEART}</red><br/>and them for <red>${damagerHearts[it]?.toInt()}${Text.HEART}</red> (1s cooldown)" }
+            description
+        )
+
+    private val description: EnchantDescription = {
+        "Your hits <green>heal</green> you for <red>${damagedHearts[it]?.toInt()}${Text.HEART}</red><br/>and them for <red>${damagerHearts[it]?.toInt()}${Text.HEART}</red> ($cooldown}s cooldown)"
+    }
 
     private val damagedHealAmount = mapOf(
         1 to 4.0,
@@ -33,7 +39,7 @@ object Healer : Enchant {
     private val damagerHearts = damagerHealAmount.mapValues { it.value / 2f }
 
     private val timer = Timer<UUID>()
-    private val cooldownTime = Time(1L * SECONDS)
+    private val cooldown = Time(1L * SECONDS)
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
@@ -44,7 +50,7 @@ object Healer : Enchant {
             val damagedHealAmount = damagedHealAmount[it.enchantTier] ?: undefPropErr("healAmount", it.enchantTier)
             val damagerHealAmount = damagerHealAmount[it.enchantTier] ?: undefPropErr("healAmount", it.enchantTier)
 
-            timer.cooldown(damager.uniqueId, cooldownTime.ticks()) {
+            timer.cooldown(damager.uniqueId, cooldown.ticks()) {
                 DamageManager.applyHeal(damager, damagerHealAmount)
                 DamageManager.applyHeal(damaged, damagedHealAmount)
             }

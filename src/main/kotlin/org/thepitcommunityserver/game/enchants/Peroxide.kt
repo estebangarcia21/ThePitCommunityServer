@@ -7,6 +7,7 @@ import org.bukkit.potion.PotionEffectType.*
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.SECONDS
 import org.thepitcommunityserver.util.Time
+import org.thepitcommunityserver.util.damagedReceivedAnyHitWithPantsEnchant
 import org.thepitcommunityserver.util.intToRoman
 import org.thepitcommunityserver.util.undefPropErr
 
@@ -17,8 +18,13 @@ object Peroxide : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.PANTS
-        ) { "Gain <red>Regen ${intToRoman(amplifier[it]?.inc())}</red> (${duration[it]?.seconds()}s) when hit" }
+            type = EnchantType.PANTS,
+            description
+        )
+
+    private val description : EnchantDescription = {
+        "Gain <red>Regen ${intToRoman(amplifier[it]?.inc())}</red> (${duration[it]?.seconds()}s) when hit"
+    }
 
     private val amplifier = mapOf(
         1 to 0,

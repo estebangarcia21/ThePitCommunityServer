@@ -16,18 +16,22 @@ object SpeedyHit : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = true,
-            type = EnchantType.SWORD
-        ) { "Gain Speed I for <${duration[it]?.seconds()}s</yellow> on hit(${cooldownTime[it]?.seconds()}s<br/>cooldown)" }
+            type = EnchantType.SWORD,
+            description,
+        )
+
+    private val description: EnchantDescription =
+        { "Gain Speed I for <${duration[it]?.seconds()}s</yellow> on hit(${cooldown[it]?.seconds()}s<br/>cooldown)" }
+
+
+    private val timer = Timer<UUID>()
 
     private val duration = mapOf(
         1 to Time(5L * SECONDS),
         2 to Time(7L * SECONDS),
         3 to Time(9L * SECONDS)
     )
-
-    private val timer = Timer<UUID>()
-
-    private val cooldownTime  = mapOf(
+    private val cooldown = mapOf(
         1 to Time(3L * SECONDS),
         2 to Time(2L * SECONDS),
         3 to Time(1L * SECONDS)
@@ -39,7 +43,7 @@ object SpeedyHit : Enchant {
             val enchantTier = it.enchantTier
 
             val duration = duration[enchantTier] ?: undefPropErr("duration", enchantTier)
-            val cooldownTime = cooldownTime[enchantTier] ?: undefPropErr("cooldownTime", enchantTier)
+            val cooldownTime = cooldown[enchantTier] ?: undefPropErr("cooldownTime", enchantTier)
 
             timer.cooldown(it.damager.uniqueId, cooldownTime.ticks()) {
                 it.damager.addPotionEffect(PotionEffect(PotionEffectType.SPEED, duration.ticks().toInt(), 0, true))

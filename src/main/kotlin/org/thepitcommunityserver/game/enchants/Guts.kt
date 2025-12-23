@@ -5,7 +5,7 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.Text
-import org.thepitcommunityserver.util.intToRoman
+import org.thepitcommunityserver.util.damagerMeleeKillPlayerWithEnchant
 import org.thepitcommunityserver.util.undefPropErr
 
 object Guts : Enchant {
@@ -15,8 +15,11 @@ object Guts : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.B,
             rare = false,
-            type = EnchantType.SWORD
-        ) { "Heal <red>${hearts[it]?.toInt()}${Text.HEART}</red> on kill" }
+            type = EnchantType.SWORD,
+            description
+        )
+
+    private val description: EnchantDescription = { "Heal <red>${hearts[it]?.toInt()}${Text.HEART}</red> on kill" }
 
     private val healAmount = mapOf(
         1 to 1.0,

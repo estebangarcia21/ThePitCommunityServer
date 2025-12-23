@@ -23,13 +23,8 @@ object ComboStun : Enchant {
             description
         )
 
-    private val description: EnchantDescription = {
-        if (it == 3) {
-            "Every <yellow>fifth</yellow> strike on an enemy<br/>stuns them for ${seconds[it]} seconds"
-        } else {
-            "Every <yellow>fifth</yellow> strike on an enemy<br/>stuns them for ${seconds[it]} seconds<br/>(Can only be stunned every 8s)"
-        }
-    }
+    private val description: EnchantDescription =
+        { "Every <yellow>fifth</yellow> strike on an enemy<br/>stuns them for ${seconds[it]} seconds<br/><italic>(Can only be stunned every ${cooldown.seconds()}s)</italic>" }
 
     private val seconds = mapOf(
         1 to 0.5f,
@@ -43,9 +38,10 @@ object ComboStun : Enchant {
         3 to Time(30L)
     )
 
-    private val cooldown = Time(8 * SECONDS)
     private val hitCounter = HitCounter<UUID>()
+
     private val timer = Timer<UUID>()
+    private val cooldown = Time(8 * SECONDS)
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
@@ -62,8 +58,7 @@ object ComboStun : Enchant {
                     damaged.addPotionEffect(PotionEffect(PotionEffectType.JUMP, duration.ticks().toInt(), -8), true)
                     damaged.world.playSound(damaged.location, Sound.ANVIL_LAND, 1f, 0.1f)
                     sendMessage(damaged)
-                }
-                else timer.cooldown(damager.uniqueId, cooldown.ticks()) {
+                } else timer.cooldown(damager.uniqueId, cooldown.ticks()) {
                     damaged.addPotionEffect(PotionEffect(PotionEffectType.SLOW, duration.ticks().toInt(), 8), true)
                     damaged.addPotionEffect(PotionEffect(PotionEffectType.JUMP, duration.ticks().toInt(), -8), true)
                     damaged.world.playSound(damaged.location, Sound.ANVIL_LAND, 1f, 0.1f)
@@ -82,7 +77,7 @@ object ComboStun : Enchant {
         val subtitle = createChatComponent(subtitleMessage)
         val subtitlePacket = PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, subtitle, 0, 60, 0)
 
-        sendPacketToPlayer(player,titlePacket)
-        sendPacketToPlayer(player,subtitlePacket)
+        sendPacketToPlayer(player, titlePacket)
+        sendPacketToPlayer(player, subtitlePacket)
     }
 }

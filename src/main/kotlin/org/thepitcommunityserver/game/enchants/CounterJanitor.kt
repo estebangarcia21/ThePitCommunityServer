@@ -7,6 +7,7 @@ import org.bukkit.potion.PotionEffectType
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.SECONDS
 import org.thepitcommunityserver.util.Time
+import org.thepitcommunityserver.util.damagerMeleeKillPlayerWithEnchant
 import org.thepitcommunityserver.util.undefPropErr
 
 object CounterJanitor : Enchant {
@@ -16,8 +17,11 @@ object CounterJanitor : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.SWORD
-        ) { "Gain <yellow>Resistance I</yellow> (${duration[it]?.seconds()}s) on kill " }
+            type = EnchantType.SWORD,
+            description
+        )
+
+    private val description : EnchantDescription =  { "Gain <yellow>Resistance I</yellow> (${duration[it]?.seconds()}s) on kill " }
 
     private val duration = mapOf(
         1 to Time(2L * SECONDS),

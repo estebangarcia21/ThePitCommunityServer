@@ -7,6 +7,7 @@ import org.bukkit.potion.PotionEffectType
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.SECONDS
 import org.thepitcommunityserver.util.Time
+import org.thepitcommunityserver.util.damagerArrowHitPlayerWithEnchant
 import org.thepitcommunityserver.util.intToRoman
 import org.thepitcommunityserver.util.undefPropErr
 
@@ -17,8 +18,11 @@ object Wasp : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.BOW
-        ) { "Apply <red>Weakness ${intToRoman(amplifier[it]?.inc())}</red> (${duration[it]?.seconds()}s) on hit" }
+            type = EnchantType.BOW,
+            description
+        )
+
+    private val description : EnchantDescription = { "Apply <red>Weakness ${intToRoman(amplifier[it]?.inc())}</red> (${duration[it]?.seconds()}s) on hit" }
 
     private val amplifier = mapOf(
         1 to 1,

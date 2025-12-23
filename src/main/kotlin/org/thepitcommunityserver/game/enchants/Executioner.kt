@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.Text
-import org.thepitcommunityserver.util.intToRoman
+import org.thepitcommunityserver.util.damagerMeleeHitPlayerWithEnchant
 import org.thepitcommunityserver.util.undefPropErr
 
 object Executioner : Enchant {
@@ -16,8 +16,11 @@ object Executioner : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.B,
             rare = true,
-            type = EnchantType.SWORD
-        ) { "Hitting an enemy below <red>${hearts[it]}${Text.HEART}</red><br/>instantly kills them" }
+            type = EnchantType.SWORD,
+            description
+        )
+
+    private val description : EnchantDescription = { "Hitting an enemy below <red>${hearts[it]}${Text.HEART}</red> instantly kills them" }
 
     private val killAmount = mapOf(
         1 to 3.0,
@@ -39,7 +42,7 @@ object Executioner : Enchant {
                 damaged.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "EXECUTED!" + ChatColor.GRAY + " by "
                         + damager.name
                         + damaged.name + ChatColor.GRAY + " (insta-kill below " + ChatColor.RED
-                        + killAmount / 2f + "❤" + ChatColor.GRAY + ")"
+                        + killAmount / 2f + Text.HEART + ChatColor.GRAY + ")"
                 )
 
                 damaged.world.playSound(damaged.location, Sound.VILLAGER_DEATH, 1f, 0.5f)

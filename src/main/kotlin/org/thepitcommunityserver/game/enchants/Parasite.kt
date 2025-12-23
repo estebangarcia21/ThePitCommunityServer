@@ -5,6 +5,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.DamageManager
 import org.thepitcommunityserver.util.Text
+import org.thepitcommunityserver.util.damagerArrowHitPlayerWithEnchant
 import org.thepitcommunityserver.util.undefPropErr
 
 object Parasite : Enchant {
@@ -14,8 +15,11 @@ object Parasite : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.BOW
-        ) { "Heal <red>${hearts[it]}${Text.HEART}</red> on arrow hit"}
+            type = EnchantType.BOW,
+            description
+        )
+
+    private val description: EnchantDescription = { "Heal <red>${hearts[it]}${Text.HEART}</red> on arrow hit" }
 
     private val healAmount = mapOf(
         1 to 0.5,

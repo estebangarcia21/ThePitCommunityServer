@@ -17,11 +17,14 @@ object SuperMonkey : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.B,
             rare = true,
-            type = EnchantType.PANTS
-        ) { "Climb like <yellow>in4red</yellow>. Gives <green>Jump Boost II</green> and <yellow>Speed II</yellow> 30s." }
+            type = EnchantType.PANTS,
+            description
+        )
 
+    private val description : EnchantDescription = { "Climb like <yellow>in4red</yellow>. Gives <green>Jump Boost II</green> and <yellow>Speed II</yellow> 30s." }
 
     private val duration = Time(30L * SECONDS)
+
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
         val player = event.player

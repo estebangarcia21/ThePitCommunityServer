@@ -21,9 +21,11 @@ object BatPack : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.BOW
-        ) { "Embrace the malevolent power of <red>'Bat Pack'</red>:<br/>Summon colossal terror every 5s, as a<br/>nightmarish abomination devours all in its path." }
+            type = EnchantType.BOW,
+            description
+        )
 
+    private val description : EnchantDescription = { "Embrace the malevolent power of <red>'Bat Pack'</red>:<br/>Summon colossal terror every 5s, as a<br/>nightmarish abomination devours all in its path." }
     private val tracker = LeggingsEnchantTracker(this, ::onEquip, ::onUnequip)
     private val timer = Timer<Player>()
     private val entityTimer = Timer<Entity>()
