@@ -13,7 +13,15 @@ data class DBPlayer(
     var xp: Int = 0,
     var gold: Double = 0.0,
     var prestige: Int = 0,
+    var renown: Int = 0,
     var level: Int = 1,
+
+    // Prestige
+    var shopUnlocks: MutableList<String> = mutableListOf<String>(),
+    var perkUnlocks: MutableList<String> = mutableListOf<String>(),
+    var cosmeticsUnlocks: MutableList<String> = mutableListOf<String>(),
+    var prestigeUnlocks: MutableList<String> = mutableListOf<String>(),
+
 
     var login: LoginInformation = LoginInformation()
 )
