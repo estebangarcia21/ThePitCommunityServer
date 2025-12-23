@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   dynamodb-local:
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data -port 8147"
@@ -9,3 +8,21 @@ services:
     volumes:
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
+    networks:
+      - dynamodb-network
+
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin
+    container_name: dynamodb-admin
+    ports:
+      - "8001:8001"
+    environment:
+      - DYNAMO_ENDPOINT=http://dynamodb-local:8147
+    depends_on:
+      - dynamodb-local
+    networks:
+      - dynamodb-network
+
+networks:
+  dynamodb-network:
+    driver: bridge
