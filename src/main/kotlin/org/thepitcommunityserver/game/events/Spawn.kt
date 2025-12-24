@@ -2,7 +2,6 @@ package org.thepitcommunityserver.game.events
 
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -10,7 +9,11 @@ import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
-import org.thepitcommunityserver.util.*
+import org.thepitcommunityserver.game.items.shopItems.TacticalInsertion.respawnLocations
+import org.thepitcommunityserver.util.TICK
+import org.thepitcommunityserver.util.Timer
+import org.thepitcommunityserver.util.asCraftPlayer
+import org.thepitcommunityserver.util.randomSpawnLocation
 
 object Spawn : Listener {
     private val respawnTimer = Timer<Unit>()
@@ -33,7 +36,12 @@ object Spawn : Listener {
 
     private fun handleAutoSpawn(player: Player) {
         player.health = player.maxHealth
-        player.teleport(randomSpawnLocation)
+        if (respawnLocations.isEmpty()) {
+            player.teleport(randomSpawnLocation)
+        } else {
+            val location = respawnLocations.remove(player.uniqueId)
+            player.teleport(location)
+        }
 
         respawnTimer.after(Unit, 1L * TICK) {
             for (effect in player.activePotionEffects) {

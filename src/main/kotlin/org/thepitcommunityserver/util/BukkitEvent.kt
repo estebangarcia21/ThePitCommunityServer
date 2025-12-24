@@ -1,11 +1,14 @@
 package org.thepitcommunityserver.util
 
+import org.bukkit.block.Block
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
+import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.entity.ProjectileHitEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.game.enchants.lib.Enchant
 import org.thepitcommunityserver.game.enchants.lib.getEnchantTierForItem
@@ -280,5 +283,45 @@ fun PlayerDeathEvent.damagerAnyKillPlayerWithPantsEnchant(
         )
     )
 }
+
+data class PlayerHitBlockContext(
+    val player: Player,
+    val block: Block
+)
+
+fun PlayerInteractEvent.playerHitBlock(callback: EventCallback<PlayerHitBlockContext>) {
+    val player = this.player
+    val block = this.clickedBlock ?: return
+
+    if (this.action != Action.LEFT_CLICK_BLOCK) return
+
+    callback(
+        PlayerHitBlockContext(
+            player = player,
+            block = block
+        )
+    )
+}
+
+data class PlayerRightClickItemContext(
+    val player: Player,
+    val item: ItemStack
+)
+
+fun PlayerInteractEvent.playerRightClickItem(callback: EventCallback<PlayerRightClickItemContext>) {
+    val player = this.player
+    val item = this.item ?: return
+
+    if (this.action != Action.RIGHT_CLICK_AIR && this.action != Action.RIGHT_CLICK_BLOCK) return
+
+    callback(
+        PlayerRightClickItemContext(
+            player = player,
+            item = item
+        )
+    )
+}
+
+
 
 
