@@ -1,11 +1,13 @@
 package org.thepitcommunityserver.game.items
 
 
+import FirstAidEgg
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.thepitcommunityserver.game.items.mysticItems.MysticPants
 import org.thepitcommunityserver.game.items.shopItems.*
 import org.thepitcommunityserver.util.DeserializedNBTMap
 import org.thepitcommunityserver.util.NBT
@@ -22,7 +24,8 @@ val Items = listOf(
     Obsidian,
     DiamondBoots,
     DiamondSword,
-    DiamondChestplate
+    DiamondChestplate,
+    MysticPants,
 )
 
 interface Item : Listener {
@@ -53,7 +56,6 @@ data class ItemConfig(
     val unbreakable: Boolean = false,
     val flags: List<ItemFlag> = listOf(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES),
     val nbtTags: DeserializedNBTMap = mapOf(NBT.LOSE_ON_DEATH.entry),
-    val keptOnDeath: Boolean = false,
     val data: Byte? = 0,
 )
 

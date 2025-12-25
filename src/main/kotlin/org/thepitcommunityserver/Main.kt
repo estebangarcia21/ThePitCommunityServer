@@ -7,10 +7,7 @@ import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.java.JavaPluginLoader
 import org.thepitcommunityserver.db.MemoryToDBSynchronizer
-import org.thepitcommunityserver.game.commands.MysticEnchantCommand
-import org.thepitcommunityserver.game.commands.OofCommand
-import org.thepitcommunityserver.game.commands.SetStats
-import org.thepitcommunityserver.game.commands.SpawnCommand
+import org.thepitcommunityserver.game.commands.*
 import org.thepitcommunityserver.game.enchants.lib.ArmorChangeEventDispatcher
 import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.events.*
@@ -64,7 +61,8 @@ class Main : JavaPlugin {
             MysticEnchantCommand,
             SpawnCommand,
             OofCommand,
-            SetStats
+            SetStats,
+            FreshPantsCommand
         ).forEach {
             plugin.getCommand(it.name).executor = it
         }

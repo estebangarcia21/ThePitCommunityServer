@@ -7,6 +7,13 @@ import org.thepitcommunityserver.game.enchants.lib.enchantByName
 import org.thepitcommunityserver.game.enchants.lib.getItemMysticEnchantments
 import java.util.*
 
+enum class CustomColor(val chatColor: ChatColor) {
+    SEWER(ChatColor.DARK_AQUA),
+    RAGE(ChatColor.DARK_RED),
+    BLACK(ChatColor.DARK_PURPLE),
+}
+
+
 fun syncLoreWithEnchantments(item: ItemStack?) {
     val enchants = getItemMysticEnchantments(item) ?: return
 
@@ -66,6 +73,16 @@ fun replaceChatColorTags(string: String, defaultColor: ChatColor = ChatColor.GRA
         acc = acc.replace("</$name:bold>", ChatColor.RESET.toString() + defaultColor.toString())
 
         acc += defaultColor.toString()
+    }
+
+    CustomColor.values().forEach { c ->
+        val name = c.name.lowercase(Locale.getDefault()).replace("_", "-")
+
+        acc = acc.replace("<$name>", c.chatColor.toString())
+        acc = acc.replace("</$name>", defaultColor.toString())
+
+        acc = acc.replace("<$name:bold>", c.chatColor.toString() + ChatColor.BOLD.toString())
+        acc = acc.replace("</$name:bold>", ChatColor.RESET.toString() + defaultColor.toString())
     }
 
     return acc
