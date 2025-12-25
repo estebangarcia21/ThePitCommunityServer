@@ -260,6 +260,24 @@ fun PlayerDeathEvent.damagerArrowKillPlayerWithEnchant(
     )
 }
 
+data class PlayerKillPlayerContext(
+    val killer: Player,
+    val killed: Player
+)
+
+fun PlayerDeathEvent.playerKillPlayer(callback: EventCallback<PlayerKillPlayerContext>) {
+    val killed = this.entity ?: return
+    val killer = this.entity.killer ?: return
+
+    callback(
+        PlayerKillPlayerContext(
+            killer = killer,
+            killed = killed
+        )
+    )
+}
+
+
 data class DamagerAnyKillPlayerWithPantsEnchantContext(
     val damager: Player,
     val damaged: Player,

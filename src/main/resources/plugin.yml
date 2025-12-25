@@ -2,7 +2,7 @@ name: ThePitCommunityServer
 version: 1.0.0
 main: org.thepitcommunityserver.Main
 description: A community driven pit server.
-depend: [Citizens]
+depend: [ Citizens ]
 
 commands:
   pitenchant:
@@ -17,3 +17,6 @@ commands:
   set:
     description: Use it to set your gold amount
     usage: /set <stat> <amount>
+  freshpants:
+    description: Use it to get fresh pants
+    usage: /freshpants <color>
