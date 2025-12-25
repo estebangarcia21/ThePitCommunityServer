@@ -1,5 +1,6 @@
 package org.thepitcommunityserver.game.guis
 
+import FirstAidEgg
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
