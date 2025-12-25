@@ -30,6 +30,31 @@ fun isHelmet(material: Material): Boolean {
             material == Material.DIAMOND_HELMET
 }
 
+fun isLeather(material: Material): Boolean {
+    return material == Material.LEATHER_HELMET || material == Material.LEATHER_CHESTPLATE ||
+            material == Material.LEATHER_LEGGINGS || material == Material.LEATHER_BOOTS
+}
+
+fun isChainmail(material: Material): Boolean {
+    return material == Material.CHAINMAIL_HELMET || material == Material.CHAINMAIL_CHESTPLATE ||
+            material == Material.CHAINMAIL_LEGGINGS || material == Material.CHAINMAIL_BOOTS
+}
+
+fun isGold(material: Material): Boolean {
+    return material == Material.GOLD_HELMET || material == Material.GOLD_CHESTPLATE ||
+            material == Material.GOLD_LEGGINGS || material == Material.GOLD_BOOTS
+}
+
+fun isIron(material: Material): Boolean {
+    return material == Material.IRON_HELMET || material == Material.IRON_CHESTPLATE ||
+            material == Material.IRON_LEGGINGS || material == Material.IRON_BOOTS
+}
+
+fun isDiamond(material: Material): Boolean {
+    return material == Material.DIAMOND_HELMET || material == Material.DIAMOND_CHESTPLATE ||
+            material == Material.DIAMOND_LEGGINGS || material == Material.DIAMOND_BOOTS
+}
+
 fun isArmor(material: Material): Boolean {
     return isHelmet(material) || isChestplate(material) ||
             isLeggings(material) || isBoots(material)
@@ -79,6 +104,17 @@ fun equipArmorPiece(player: Player, newPiece: ItemStack, currentPiece: ItemStack
 
     if (!isEmptyItemStack(currentPiece)) {
         addItemToPlayerInventory(player, currentPiece)
+    }
+}
+
+fun armorType(material: Material): String? {
+    return when {
+        isLeather(material) -> "leather"
+        isChainmail(material) -> "chainmail"
+        isGold(material) -> "gold"
+        isIron(material) -> "iron"
+        isDiamond(material) -> "diamond"
+        else -> null
     }
 }
 
