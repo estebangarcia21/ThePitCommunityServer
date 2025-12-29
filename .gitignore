@@ -43,6 +43,7 @@ venv
 ### Mac OS ###
 .DS_Store
 .local-server
+.local-server-genericArmor/*
 tmp
 scripts/buildtools
 dynamodb/docker
