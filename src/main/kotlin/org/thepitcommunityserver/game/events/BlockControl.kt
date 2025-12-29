@@ -15,6 +15,9 @@ import org.thepitcommunityserver.util.isInsideSpawn
 object BlockControl : Listener, PluginLifecycleListener {
     private val timer = Timer<Block>()
 
+
+    // Remove lava placed if player is in spawn or after 2 minutes
+
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockPlace(event: BlockPlaceEvent) {
         val block = event.blockPlaced

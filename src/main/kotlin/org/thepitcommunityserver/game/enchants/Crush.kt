@@ -4,7 +4,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.thepitcommunityserver.game.enchants.lib.Enchant
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.*
 import org.thepitcommunityserver.util.Timer
@@ -17,8 +16,12 @@ object Crush : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = false,
-            type = EnchantType.SWORD
-        ) { "Strikes apply <red>Weakness ${intToRoman(amplifier[it]?.inc())}</red><br/>(lasts, ${seconds[it]}, 2s cooldown)" }
+            type = EnchantType.SWORD,
+            description
+        )
+
+    private val description: EnchantDescription =
+        { "Strikes apply <red>Weakness ${intToRoman(amplifier[it]?.inc())}</red><br/>(lasts ${seconds[it]}, 1.5s cooldown)" }
 
     private val amplifier = mapOf(
         1 to 4,
@@ -27,9 +30,9 @@ object Crush : Enchant {
     )
 
     private val seconds = mapOf(
-        1 to 0.2f,
+        1 to 0.3f,
         2 to 0.4f,
-        3 to 0.5
+        3 to 0.5f
     )
 
     private val duration = mapOf(
@@ -38,9 +41,8 @@ object Crush : Enchant {
         3 to Time(10L * TICK)
     )
 
-    private val cooldown = Time(2L * SECONDS)
-
     private val timer = Timer<UUID>()
+    private val cooldown = Time(30)
 
     @EventHandler
     fun onDamageEvent(event: EntityDamageByEntityEvent) {
@@ -51,7 +53,14 @@ object Crush : Enchant {
             val duration = duration[enchantTier] ?: undefPropErr("duration", enchantTier)
 
             timer.cooldown(it.damager.uniqueId, cooldown.seconds()) {
-                it.damaged.addPotionEffect(PotionEffect(PotionEffectType.WEAKNESS, duration.ticks().toInt(), amplifier, true))
+                it.damaged.addPotionEffect(
+                    PotionEffect(
+                        PotionEffectType.WEAKNESS,
+                        duration.ticks().toInt(),
+                        amplifier,
+                        true
+                    )
+                )
             }
         }
     }

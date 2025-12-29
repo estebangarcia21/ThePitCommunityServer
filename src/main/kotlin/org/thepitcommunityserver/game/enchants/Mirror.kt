@@ -1,5 +1,6 @@
 package org.thepitcommunityserver.game.enchants
 
+import org.bukkit.event.EventHandler
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.formatPercentage
 
@@ -27,4 +28,10 @@ object Mirror : Enchant {
         2 to 0.25,
         3 to 0.5
     )
+
+    // TODO: Implement true damage reflection logic
+    @EventHandler
+    fun onDamageTaken() {
+        // Implementation goes here
+    }
 }

@@ -6,7 +6,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.ProjectileHitEvent
-import org.thepitcommunityserver.game.enchants.lib.Enchant
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.game.events.ArrowWatch
 import org.thepitcommunityserver.util.*
@@ -20,16 +19,21 @@ object Telebow : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.A,
             rare = true,
-            type = EnchantType.BOW
-        ) {"Sneak to shoot a teleportation<br/>arrow (${cooldownTime[it]?.seconds()} cooldown, -3s per bow<br/>hit)" }
+            type = EnchantType.BOW,
+            description,
+        )
 
-    private val cooldownTime = mapOf(
+    private val description: EnchantDescription =
+        { "Sneak to shoot a teleportation<br/>arrow (${cooldown[it]?.seconds()} cooldown, -${cooldownReduction}s per bow<br/>hit)" }
+
+    private val timer = Timer<UUID>()
+
+    private val cooldown = mapOf(
         1 to Time(90L * SECONDS),
         2 to Time(45L * SECONDS),
         3 to Time(20L * SECONDS)
     )
 
-    private val timer = Timer<UUID>()
     private val cooldownReduction = Time(3L * SECONDS)
 
     @EventHandler
@@ -37,7 +41,7 @@ object Telebow : Enchant {
         event.onArrowLand(this) {
             val arrow = it.arrow
             val shooter = it.shooter
-            val cooldownTime = cooldownTime[it.enchantTier] ?: undefPropErr("cooldownTime", it.enchantTier)
+            val cooldownTime = cooldown[it.enchantTier] ?: undefPropErr("cooldownTime", it.enchantTier)
 
             val isSneaking = ArrowWatch.isArrowSneaking(arrow)
 
@@ -68,7 +72,7 @@ object Telebow : Enchant {
 
     private fun sendCooldownMessage(player: Player) {
         val cooldown = timer.getCooldown(player.uniqueId) ?: return
-        val message = replaceChatColorTags("<yellow>Telebow:</yellow> <red>${cooldown/20}s cooldown!</red>")
+        val message = replaceChatColorTags("<yellow>Telebow:</yellow> <red>${cooldown / 20}s cooldown!</red>")
         val packet = createChatPacket(message)
 
         sendPacketToPlayer(player, packet)

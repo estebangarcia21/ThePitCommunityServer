@@ -7,16 +7,27 @@ import org.thepitcommunityserver.game.enchants.lib.enchantByName
 import org.thepitcommunityserver.game.enchants.lib.getItemMysticEnchantments
 import java.util.*
 
+enum class CustomColor(val chatColor: ChatColor) {
+    SEWER(ChatColor.DARK_AQUA),
+    RAGE(ChatColor.DARK_RED),
+    BLACK(ChatColor.DARK_PURPLE),
+}
+
+
 fun syncLoreWithEnchantments(item: ItemStack?) {
     val enchants = getItemMysticEnchantments(item) ?: return
 
-    val lore = arrayListOf("""
+    val lore = arrayListOf(
+        """
         <gray>Lives: </gray><green>${Text.INFINITY}</green>/<gray>${Text.INFINITY}</green>
-    """.trimIndent(), "")
+    """.trimIndent(), ""
+    )
 
-    enchants.entries.forEach { (name, tier) -> enchantByName(name)?.let {
-        enchant -> lore += getEnchantLore(enchant, tier) + ""
-    } }
+    enchants.entries.forEach { (name, tier) ->
+        enchantByName(name)?.let { enchant ->
+            lore += getEnchantLore(enchant, tier) + ""
+        }
+    }
 
     // Remove the trailing line break in the lore.
     lore.removeLast()
@@ -59,9 +70,19 @@ fun replaceChatColorTags(string: String, defaultColor: ChatColor = ChatColor.GRA
         acc = acc.replace("</$name>", defaultColor.toString())
 
         acc = acc.replace("<$name:bold>", c.toString() + ChatColor.BOLD.toString())
-        acc = acc.replace("</$name:bold>",ChatColor.RESET.toString() + defaultColor.toString())
+        acc = acc.replace("</$name:bold>", ChatColor.RESET.toString() + defaultColor.toString())
 
         acc += defaultColor.toString()
+    }
+
+    CustomColor.values().forEach { c ->
+        val name = c.name.lowercase(Locale.getDefault()).replace("_", "-")
+
+        acc = acc.replace("<$name>", c.chatColor.toString())
+        acc = acc.replace("</$name>", defaultColor.toString())
+
+        acc = acc.replace("<$name:bold>", c.chatColor.toString() + ChatColor.BOLD.toString())
+        acc = acc.replace("</$name:bold>", ChatColor.RESET.toString() + defaultColor.toString())
     }
 
     return acc
@@ -82,4 +103,11 @@ fun setItemLore(item: ItemStack?, lore: List<String>) {
     meta.lore = lore
 
     item.itemMeta = meta
+}
+
+fun getItemLore(item: ItemStack?): List<String> {
+    if (item == null) return emptyList()
+
+    val meta = item.itemMeta ?: return emptyList()
+    return meta.lore ?: emptyList()
 }

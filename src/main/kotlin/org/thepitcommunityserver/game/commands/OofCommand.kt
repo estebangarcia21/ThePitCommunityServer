@@ -9,8 +9,8 @@ import org.thepitcommunityserver.util.isInsideSpawn
 import org.thepitcommunityserver.util.parseChatColors
 import java.util.*
 
-object OofCommand: CommandExecutor {
-    const val name = "oof"
+object OofCommand: PluginCommand {
+    override val name = "oof"
 
     override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
         if (sender !is Player) return false

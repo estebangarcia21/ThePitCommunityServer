@@ -48,7 +48,12 @@ object PitName : Listener {
             val t = (t0 as CraftPlayer).handle
             val connection = t.playerConnection
 
-            connection.sendPacket(PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, t))
+            connection.sendPacket(
+                PacketPlayOutPlayerInfo(
+                    PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER,
+                    t
+                )
+            )
             connection.sendPacket(PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, t))
         }
 
@@ -57,5 +62,10 @@ object PitName : Listener {
         for (other in Bukkit.getOnlinePlayers()) {
             sendNewPackets(other)
         }
+    }
+
+    private fun getDisplayName(player: Player): String {
+        val handle = (player as CraftPlayer).handle
+        return handle.listName.toString()
     }
 }

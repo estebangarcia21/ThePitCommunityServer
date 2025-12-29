@@ -6,6 +6,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.thepitcommunityserver.game.enchants.lib.*
+import org.thepitcommunityserver.util.Text
+import org.thepitcommunityserver.util.arrowHitBlockingPlayer
 import org.thepitcommunityserver.util.undefPropErr
 
 object BulletTime : Enchant {
@@ -18,19 +20,24 @@ object BulletTime : Enchant {
             type = EnchantType.SWORD,
             description
         )
-    private val healAmount = mapOf(
-        1 to 0.0,
-        2 to 2.0,
-        3 to 3.0
-    )
-    private val hearts = healAmount.mapValues { it.value / 2f }
 
     private val description: EnchantDescription = {
         if (it == 1) {
             "Blocking destroys arrows that hit<br/>you"
         } else {
-            "Blocking destroys arrows that hit<br/>you. Destroying arrows this way<br/>heals <red>${hearts[it]}❤</red>"
+            "Blocking destroys arrows that hit<br/>you. Destroying arrows this way<br/>heals <red>${hearts[it]}${Text.HEART}</red>"
         }
+    }
+
+    private val healAmount = mapOf(
+        1 to 0.0,
+        2 to 2.0,
+        3 to 3.0
+    )
+
+    private val hearts = healAmount.mapValues {
+        val h = it.value / 2.0
+        if (h % 1 == 0.0) h.toInt() else h
     }
 
     @EventHandler(priority = EventPriority.HIGH)

@@ -1,5 +1,6 @@
 package org.thepitcommunityserver.game.enchants
 
+import jdk.jfr.Description
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.potion.PotionEffect
@@ -14,8 +15,11 @@ object LastStand : Enchant {
             tiers = listOf(1, 2, 3),
             group = EnchantGroup.B,
             rare = false,
-            type = EnchantType.PANTS
-        ) { "Gain <blue>Resistance ${intToRoman(amplifier[it]?.inc())}</blue> (4 seconds)<br/>when reaching <red>3❤</red>" }
+            type = EnchantType.PANTS,
+            description
+        )
+
+    private val description : EnchantDescription = { "Gain <blue>Resistance ${intToRoman(amplifier[it]?.inc())}</blue> (4 seconds)<br/>when reaching <red>3${Text.HEART}</red>" }
 
     private val amplifier = mapOf(
         1 to 0,

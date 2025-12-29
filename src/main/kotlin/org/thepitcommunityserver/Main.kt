@@ -1,4 +1,3 @@
-
 package org.thepitcommunityserver
 
 import org.bukkit.Bukkit
@@ -8,21 +7,21 @@ import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.java.JavaPluginLoader
 import org.thepitcommunityserver.db.MemoryToDBSynchronizer
-import org.thepitcommunityserver.game.commands.MysticEnchantCommand
-import org.thepitcommunityserver.game.commands.OofCommand
-import org.thepitcommunityserver.game.commands.SpawnCommand
+import org.thepitcommunityserver.game.commands.*
 import org.thepitcommunityserver.game.enchants.lib.ArmorChangeEventDispatcher
 import org.thepitcommunityserver.game.enchants.lib.Enchants
 import org.thepitcommunityserver.game.events.*
-import org.thepitcommunityserver.game.playerExperience.lifecycle.DefaultArmor
-import org.thepitcommunityserver.game.events.Spawn
+import org.thepitcommunityserver.game.items.Items
 import org.thepitcommunityserver.game.playerExperience.CombatStatus
 import org.thepitcommunityserver.game.playerExperience.PitName
 import org.thepitcommunityserver.game.playerExperience.PitScoreboard
+import org.thepitcommunityserver.game.playerExperience.lifecycle.DefaultArmor
 import org.thepitcommunityserver.game.playerExperience.lifecycle.InventoryManager
+import org.thepitcommunityserver.game.playerExperience.player.DamageIndicator
 import org.thepitcommunityserver.game.playerExperience.player.PlayerDeathMessage
 import org.thepitcommunityserver.game.world.WorldHolograms
 import org.thepitcommunityserver.util.CurrentWorld
+import org.thepitcommunityserver.util.NPCClickHandler
 import org.thepitcommunityserver.util.deregisterAllNPCs
 import org.thepitcommunityserver.util.worldNPCS
 import java.io.File
@@ -41,7 +40,7 @@ class Main : JavaPlugin {
         description: PluginDescriptionFile?,
         dataFolder: File?,
         file: File?
-    ): super(loader, description, dataFolder, file)
+    ) : super(loader, description, dataFolder, file)
 
     override fun onEnable() {
         plugin = this
@@ -55,6 +54,18 @@ class Main : JavaPlugin {
 
         // Register enchantments.
         Enchants.forEach(::registerEvents)
+        // Register items
+        Items.forEach(::registerEvents)
+
+        listOf(
+            MysticEnchantCommand,
+            SpawnCommand,
+            OofCommand,
+            SetStats,
+            FreshPantsCommand
+        ).forEach {
+            plugin.getCommand(it.name).executor = it
+        }
 
         registerEvents(DamageManager)
 
@@ -70,6 +81,7 @@ class Main : JavaPlugin {
             ClearArrows,
             ArrowWatch,
             NightVision,
+            StopFireDamage,
             ArmorChangeEventDispatcher,
             PitScoreboard,
             MemoryToDBSynchronizer,
@@ -78,18 +90,15 @@ class Main : JavaPlugin {
             InventoryManager,
             WorldHolograms,
             PitName,
-            CombatStatus
+            CombatStatus,
+            DamageIndicator
         ).forEach(::registerEvents)
 
         enableGameRulesForDefaultWorld()
-
-        plugin.getCommand(MysticEnchantCommand.name).executor = MysticEnchantCommand
-        plugin.getCommand(SpawnCommand.name).executor = SpawnCommand
-        plugin.getCommand(OofCommand.name).executor = OofCommand
-
         lifecycleListeners.forEach(PluginLifecycleListener::onPluginEnable)
 
         worldNPCS.forEach { it.spawn() }
+        registerEvents(NPCClickHandler)
     }
 
     override fun onDisable() {

@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 import org.thepitcommunityserver.Main
+import org.thepitcommunityserver.util.EventCallback
 import org.thepitcommunityserver.util.TICK
 import org.thepitcommunityserver.util.Timer
 

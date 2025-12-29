@@ -7,6 +7,7 @@ import org.bukkit.potion.PotionEffectType
 import org.thepitcommunityserver.game.enchants.lib.*
 import org.thepitcommunityserver.util.SECONDS
 import org.thepitcommunityserver.util.Time
+import org.thepitcommunityserver.util.damagerArrowHitPlayerWithEnchant
 import org.thepitcommunityserver.util.intToRoman
 import org.thepitcommunityserver.util.undefPropErr
 
